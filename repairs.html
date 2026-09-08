@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURUM JEWELS - Repair Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #020617; color: white; margin: 0; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; border: 2px solid #020617; }
+        ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
+
+        .gold-text { color: #D4AF37; }
+        .gold-bg { background-color: #D4AF37; }
+        .card-bg { background-color: #0f172a; border: 1px solid #1e293b; }
+        .modal { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); }
+
+        /* Timeline / Pipeline Styles */
+        .step-circle {
+            width: 44px; height: 44px; border-radius: 50%; border: 2px solid #1e293b;
+            background: #0f172a; display: flex; align-items: center; justify-content: center;
+            font-size: 16px; position: relative; z-index: 10; transition: 0.4s;
+        }
+        .step-active { background: #D4AF37; color: #000; border-color: #D4AF37; box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+        .step-line { position: absolute; top: 22px; left: 0; width: 100%; height: 2px; background: #1e293b; z-index: 1; }
+
+        /* Sidebar Active State */
+        .sidebar-active {
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0) 100%);
+            color: #fbbf24 !important;
+            border-left: 4px solid #fbbf24;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+<!-- 1. SIDEBAR CONTAINER -->
+<div id="sidebar-container" class="h-full flex-shrink-0">
+    <!-- sidebar.html will be loaded here via JS -->
+</div>
+
+<!-- 2. MAIN CONTENT WRAPPER -->
+<div class="flex-1 flex flex-col h-full overflow-hidden">
+
+    <!-- TOP HEADER BAR -->
+    <header class="h-20 flex justify-between items-center px-8 sticky top-0 bg-[#020617]/90 backdrop-blur-md z-30 border-b border-slate-800/50 flex-shrink-0">
+        <div>
+            <h2 class="text-xl font-bold tracking-widest text-white uppercase leading-none italic">AURUM <span class="gold-text">JEWELS</span></h2>
+            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-1 italic">Repair & Service Management</p>
+        </div>
+
+        <div class="flex items-center gap-6">
+            <!-- Search Bar -->
+            <div class="relative group hidden xl:block">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
+                <input type="text" placeholder="Search Repair ID or Customer..."
+                       class="bg-slate-900 border border-slate-800 rounded-full py-2.5 pl-12 pr-6 text-xs text-white focus:outline-none focus:border-yellow-600 transition w-80 shadow-inner">
+            </div>
+            <!-- Profile Indicator -->
+            <div class="flex items-center gap-3 bg-slate-900 border border-slate-800 py-1.5 pl-1.5 pr-4 rounded-full">
+                <div class="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center font-bold text-black text-xs shadow-lg">A</div>
+                <div class="hidden sm:block text-left">
+                    <p class="text-[11px] font-bold text-white uppercase">Admin</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN SCROLLABLE BODY -->
+    <main class="flex-1 p-10 overflow-y-auto">
+        <div class="max-w-5xl mx-auto">
+            <header class="flex justify-between items-end mb-12">
+                <div>
+                    <h2 class="text-4xl font-bold tracking-tight text-white">Repair Pipeline</h2>
+                    <p class="text-slate-400 mt-2 italic">Track every repair order from reception to delivery.</p>
+                </div>
+                <button onclick="toggleRepairModal()"
+                        class="gold-bg text-black px-8 py-4 rounded-2xl font-bold flex items-center gap-2 hover:scale-105 transition shadow-lg shadow-yellow-600/20 active:scale-95">
+                    <i class="fas fa-plus"></i> Add New Job
+                </button>
+            </header>
+
+            <!-- REPAIR CARDS LIST -->
+            <div class="space-y-8">
+
+                <!-- Example Repair Card -->
+                <div class="card-bg p-10 rounded-[3rem] relative group border border-slate-800/50 shadow-2xl hover:border-yellow-600/30 transition duration-500">
+                    <div class="flex justify-between items-start mb-12">
+                        <div class="flex gap-6">
+                            <div class="w-16 h-16 bg-yellow-500/10 rounded-2xl flex items-center justify-center shadow-inner">
+                                <i class="fas fa-tools gold-text text-2xl"></i>
+                            </div>
+                            <div>
+                                <div class="flex items-center gap-3">
+                                    <h4 class="text-xl font-bold text-white tracking-wide italic uppercase">RPR-2041</h4>
+                                    <span class="text-slate-600">•</span>
+                                    <h4 class="text-xl font-medium text-slate-300">Meena Sharma</h4>
+                                </div>
+                                <p class="gold-text text-sm font-bold mt-1 uppercase tracking-widest italic">22K Gold Bangle Set</p>
+                                <p class="text-xs text-slate-500 mt-2 italic">Issue: Resize larger and re-polishing required.</p>
+                            </div>
+                        </div>
+                        <!-- Staff Update Button -->
+                        <button class="gold-bg text-black px-6 py-3 rounded-2xl font-bold text-sm flex items-center gap-2 hover:scale-105 transition shadow-lg">
+                            Update Status <i class="fas fa-chevron-right text-[10px]"></i>
+                        </button>
+                    </div>
+
+                    <!-- PIPELINE PROGRESS UI -->
+                    <div class="max-w-3xl mx-auto relative px-4 pb-4">
+                        <!-- Background Connect Line -->
+                        <div class="step-line"></div>
+
+                        <div class="flex justify-between items-center relative z-10">
+                            <!-- Step 1: Received (Active) -->
+                            <div class="flex flex-col items-center gap-4">
+                                <div class="step-circle step-active"><i class="fas fa-check"></i></div>
+                                <span class="text-[10px] font-bold uppercase tracking-[0.2em] gold-text">Received</span>
+                            </div>
+                            <!-- Step 2: Melting -->
+                            <div class="flex flex-col items-center gap-4">
+                                <div class="step-circle text-slate-600"><i class="fas fa-fire"></i></div>
+                                <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600">Melting</span>
+                            </div>
+                            <!-- Step 3: Crafting -->
+                            <div class="flex flex-col items-center gap-4">
+                                <div class="step-circle text-slate-600"><i class="fas fa-hammer"></i></div>
+                                <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600">Crafting</span>
+                            </div>
+                            <!-- Step 4: Ready -->
+                            <div class="flex flex-col items-center gap-4">
+                                <div class="step-circle text-slate-600"><i class="fas fa-box-open"></i></div>
+                                <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600 text-center">Ready for<br>Pickup</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card list ends -->
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ADD REPAIR MODAL -->
+<div id="repairModal" class="modal fixed inset-0 hidden flex items-center justify-center z-50 p-6">
+    <div class="bg-[#0f172a] w-full max-w-[550px] rounded-[3rem] p-10 border border-slate-700 shadow-2xl">
+        <div class="flex justify-between items-center mb-10">
+            <h3 class="text-2xl font-bold tracking-tight italic">Register <span class="gold-text">New Job</span></h3>
+            <button onclick="toggleRepairModal()" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form class="space-y-6">
+            <div>
+                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2 ml-1">Customer Search</label>
+                <input type="text" placeholder="Enter name or Phone number..."
+                       class="w-full bg-slate-900 border border-slate-800 rounded-2xl p-4 outline-none focus:border-yellow-600 transition text-sm italic">
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2 ml-1">Item Description</label>
+                <input type="text" placeholder="e.g. 22K Gold Chain (12.5g)"
+                       class="w-full bg-slate-900 border border-slate-800 rounded-2xl p-4 outline-none focus:border-yellow-600 transition text-sm italic">
+            </div>
+            <div>
+                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2 ml-1">Repair Details</label>
+                <textarea placeholder="e.g. Polish and fix broken link..."
+                          class="w-full bg-slate-900 border border-slate-800 rounded-2xl p-4 h-28 outline-none focus:border-yellow-600 transition text-sm italic resize-none"></textarea>
+            </div>
+            <div class="flex gap-4 pt-6">
+                <button type="button" onclick="toggleRepairModal()" class="flex-1 bg-slate-800 p-4 rounded-2xl font-bold hover:bg-slate-700 transition">Cancel</button>
+                <button type="submit" class="flex-1 gold-bg text-black p-4 rounded-2xl font-bold shadow-lg shadow-yellow-600/20 hover:scale-105 transition">Register Job</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleRepairModal() {
+        document.getElementById('repairModal').classList.toggle('hidden');
+    }
+
+    // Sidebar load with active state logic
+    fetch('sidebar.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('sidebar-container').innerHTML = data;
+            const currentPath = window.location.pathname.split("/").pop() || "dashboard.html";
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('sidebar-active');
+                }
+            });
+        });
+</script>
+</body>
+</html>

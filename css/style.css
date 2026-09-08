@@ -1,0 +1,92 @@
+/* ප්ලාස්ටික් ගතිය නැති කරලා Premium look එකක් දෙන font එකක් */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --gold-primary: #D4AF37;
+    --gold-dark: #996515;
+    --gold-light: #F9E29C;
+    --dark-bg: #111827;
+    --card-bg: #ffffff;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f3f4f6;
+    margin: 0;
+}
+
+/* Gold Price Card එක දිලිසෙන්න දෙන ලස්සන animation එකක් */
+.gold-card {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold-primary), var(--gold-light));
+    position: relative;
+    overflow: hidden;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+.gold-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(184, 134, 11, 0.3);
+}
+
+/* රත්තරන් පාටින් දිලිසෙන ඉරක් (Shine Effect) */
+.gold-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(45deg);
+    transition: 0.5s;
+    pointer-events: none;
+}
+
+.gold-card:hover::after {
+    left: 100%;
+    top: 100%;
+}
+
+/* Sidebar එකේ style එක */
+.sidebar {
+    background-color: var(--dark-bg);
+    min-height: 100vh;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+}
+
+.nav-link {
+    color: #9ca3af;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    transition: 0.3s;
+}
+
+.nav-link:hover, .nav-link.active {
+    background-color: var(--gold-primary);
+    color: white;
+}
+
+/* Table එක ලස්සන කරන්න */
+.custom-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.custom-table tr {
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    border-radius: 10px;
+}
+
+.custom-table td, .custom-table th {
+    padding: 15px;
+}
+
+.custom-table tr td:first-child { border-radius: 10px 0 0 10px; }
+.custom-table tr td:last-child { border-radius: 0 10px 10px 0; }

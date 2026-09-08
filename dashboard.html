@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURUM JEWELS - Management Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+            margin: 0;
+        }
+
+        /* Custom Scrollbar for the whole system */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #020617; }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 10px;
+            border: 2px solid #020617;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
+
+        /* Theme Colors */
+        .gold-text { color: #D4AF37; }
+        .gold-bg { background-color: #D4AF37; }
+        .card-bg { background-color: #0f172a; border: 1px solid #1e293b; }
+
+        /* Sidebar Active State (Load වන විට JS මගින් එකතු වේ) */
+        .sidebar-active {
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0) 100%);
+            color: #fbbf24 !important;
+            border-left: 4px solid #fbbf24;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+<!-- 1. SIDEBAR NAVIGATION CONTAINER -->
+<div id="sidebar-container" class="h-full flex-shrink-0">
+    <!-- sidebar.html will be loaded here -->
+</div>
+
+<!-- 2. MAIN CONTENT AREA -->
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-[#020617]">
+
+    <!-- TOP HEADER BAR -->
+    <header class="h-20 flex justify-between items-center px-8 sticky top-0 bg-[#020617]/90 backdrop-blur-md z-30 border-b border-slate-800/50 flex-shrink-0">
+        <div>
+            <h2 class="text-xl font-bold tracking-widest text-white uppercase leading-none italic">AURUM <span class="gold-text">JEWELS</span></h2>
+            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-1">Management Dashboard v1.0</p>
+        </div>
+
+        <div class="flex items-center gap-6">
+            <!-- Search Bar -->
+            <div class="relative group hidden xl:block">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs group-focus-within:text-yellow-500 transition"></i>
+                <input type="text" placeholder="Search orders, customers, items..."
+                       class="bg-slate-900 border border-slate-800 rounded-full py-2.5 pl-12 pr-6 text-xs text-white focus:outline-none focus:border-yellow-600 transition w-80 shadow-inner">
+            </div>
+
+            <!-- Notifications -->
+            <button class="relative p-2.5 bg-slate-900 border border-slate-800 rounded-full hover:bg-slate-800 transition group">
+                <i class="fas fa-bell text-slate-400 text-sm group-hover:text-yellow-500"></i>
+                <span class="absolute top-0 right-0 w-3 h-3 bg-yellow-500 border-2 border-[#020617] rounded-full animate-pulse"></span>
+            </button>
+
+            <!-- User Profile Dropdown -->
+            <div class="flex items-center gap-3 bg-slate-900 border border-slate-800 py-1.5 pl-1.5 pr-4 rounded-full cursor-pointer hover:border-yellow-600/50 transition">
+                <div class="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center font-bold text-black text-sm shadow-lg shadow-yellow-600/20">A</div>
+                <div class="hidden sm:block text-left">
+                    <p class="text-[11px] font-bold text-white leading-none uppercase tracking-wider">Admin</p>
+                    <p class="text-[9px] text-slate-500 leading-none mt-1 uppercase font-semibold">Store Manager</p>
+                </div>
+                <i class="fas fa-chevron-down text-[10px] text-slate-500 ml-1"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- DASHBOARD SCROLLABLE BODY -->
+    <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+
+        <!-- Welcome Section & Date -->
+        <div class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+                <h3 class="text-3xl font-bold text-white tracking-tight">Good morning, Admin</h3>
+                <p class="text-slate-400 mt-1">System status is optimal. Here is your daily overview.</p>
+            </div>
+            <div class="bg-slate-900/50 border border-slate-800 px-6 py-3 rounded-2xl text-right">
+                <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Rate Reference Date</p>
+                <p class="text-yellow-500 font-bold text-lg" id="dateDisplay">-- --, ----</p>
+            </div>
+        </div>
+
+        <!-- DAILY GOLD PRICES -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+            <!-- 22K Card -->
+            <div class="card-bg p-8 rounded-[2.5rem] relative group hover:border-yellow-600/50 transition duration-500 shadow-2xl overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 bg-yellow-500/10 rounded-2xl flex items-center justify-center shadow-inner">
+                            <i class="fas fa-coins gold-text text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-slate-300 font-semibold">Daily 22K Price</p>
+                            <p class="text-slate-500 text-[10px]">Reference: LKR per 1g</p>
+                        </div>
+                    </div>
+                    <span class="bg-yellow-500/20 text-yellow-500 text-[10px] font-bold px-4 py-1.5 rounded-full border border-yellow-500/30 uppercase tracking-widest">22 Karat</span>
+                </div>
+                <div class="mt-8">
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-2xl font-bold text-slate-500 italic">Rs.</span>
+                        <h4 class="text-6xl font-bold text-white tracking-tighter">198,542</h4>
+                    </div>
+                    <p class="text-slate-500 text-[10px] mt-4 uppercase tracking-widest font-bold"><i class="fas fa-clock mr-1"></i> Updated 09:15 AM</p>
+                </div>
+                <button class="absolute bottom-8 right-8 gold-bg text-black px-6 py-3 rounded-2xl font-bold text-sm flex items-center gap-2 hover:scale-105 transition shadow-xl shadow-yellow-600/20">
+                    <i class="fas fa-edit"></i> Update Rate
+                </button>
+            </div>
+
+            <!-- 24K Card -->
+            <div class="card-bg p-8 rounded-[2.5rem] relative group hover:border-yellow-600/50 transition duration-500 shadow-2xl overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 bg-yellow-500/10 rounded-2xl flex items-center justify-center shadow-inner">
+                            <i class="fas fa-coins gold-text text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-slate-300 font-semibold">Daily 24K Price</p>
+                            <p class="text-slate-500 text-[10px]">Reference: LKR per 1g</p>
+                        </div>
+                    </div>
+                    <span class="bg-yellow-500/20 text-yellow-500 text-[10px] font-bold px-4 py-1.5 rounded-full border border-yellow-500/30 uppercase tracking-widest">24 Karat</span>
+                </div>
+                <div class="mt-8">
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-2xl font-bold text-slate-500 italic">Rs.</span>
+                        <h4 class="text-6xl font-bold text-white tracking-tighter">215,376</h4>
+                    </div>
+                    <p class="text-slate-500 text-[10px] mt-4 uppercase tracking-widest font-bold"><i class="fas fa-clock mr-1"></i> Updated 09:15 AM</p>
+                </div>
+                <button class="absolute bottom-8 right-8 gold-bg text-black px-6 py-3 rounded-2xl font-bold text-sm flex items-center gap-2 hover:scale-105 transition shadow-xl shadow-yellow-600/20">
+                    <i class="fas fa-edit"></i> Update Rate
+                </button>
+            </div>
+        </div>
+
+        <!-- STATS GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
+            <!-- Sales Card -->
+            <div class="card-bg p-6 rounded-3xl relative overflow-hidden group">
+                <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Today's Total Sales</p>
+                <h4 class="text-2xl font-bold text-white mt-2">Rs. 842,500</h4>
+                <p class="text-green-500 text-[10px] font-bold mt-1">32 orders completed</p>
+                <i class="fas fa-receipt absolute right-6 top-6 text-slate-800 text-2xl group-hover:text-yellow-600/20 transition"></i>
+            </div>
+
+            <!-- Repairs Card -->
+            <div class="card-bg p-6 rounded-3xl relative overflow-hidden group">
+                <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Active Repairs</p>
+                <h4 class="text-3xl font-bold text-white mt-2">18</h4>
+                <p class="text-yellow-500 text-[10px] font-bold mt-1">5 items ready for pickup</p>
+                <i class="fas fa-tools absolute right-6 top-6 text-slate-800 text-2xl group-hover:text-yellow-600/20 transition"></i>
+            </div>
+
+            <!-- Stock Card -->
+            <div class="card-bg p-6 rounded-3xl relative overflow-hidden group border-red-900/20">
+                <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Low Stock Alerts</p>
+                <h4 class="text-3xl font-bold text-white mt-2">07</h4>
+                <p class="text-red-500 text-[10px] font-bold mt-1">Requires re-stocking</p>
+                <i class="fas fa-exclamation-triangle absolute right-6 top-6 text-red-900/20 text-2xl group-hover:scale-110 transition"></i>
+            </div>
+
+            <!-- Savings Card -->
+            <div class="card-bg p-6 rounded-3xl relative overflow-hidden group">
+                <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Savings Members</p>
+                <h4 class="text-3xl font-bold text-white mt-2">1,246</h4>
+                <p class="text-green-500 text-[10px] font-bold mt-1">+24 new this month</p>
+                <i class="fas fa-piggy-bank absolute right-6 top-6 text-slate-800 text-2xl group-hover:text-green-600/20 transition"></i>
+            </div>
+        </div>
+
+        <!-- RECENT TRANSACTIONS TABLE Placeholder -->
+        <div class="card-bg rounded-[2.5rem] overflow-hidden border border-slate-800/50 shadow-2xl">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/30">
+                <h5 class="text-white font-bold text-xs tracking-widest uppercase ml-2">Recent Activity Log</h5>
+                <button class="text-[10px] gold-text font-bold uppercase tracking-widest border border-yellow-600/30 px-5 py-2 rounded-full hover:bg-yellow-600/10 transition">View Full Report</button>
+            </div>
+            <div class="p-16 text-center text-slate-600">
+                <div class="w-16 h-16 bg-slate-900 border border-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-database text-xl opacity-20"></i>
+                </div>
+                <p class="text-sm italic font-medium">Waiting for Spring Boot API connection...</p>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<!-- JAVASCRIPT: LOGIC FOR SIDEBAR & DATE -->
+<script>
+    // 1. Sidebar load logic
+    fetch('sidebar.html')
+        .then(response => {
+            if (!response.ok) throw new Error('Sidebar not found');
+            return response.text();
+        })
+        .then(data => {
+            document.getElementById('sidebar-container').innerHTML = data;
+
+            // Sidebar active state logic
+            const currentPath = window.location.pathname.split("/").pop() || "dashboard.html";
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('sidebar-active');
+                }
+            });
+        })
+        .catch(err => console.error(err));
+
+    // 2. Date Display logic
+    const dateOptions = { month: 'long', day: 'numeric', year: 'numeric' };
+    document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-US', dateOptions);
+</script>
+</body>
+</html>

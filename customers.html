@@ -1,0 +1,41 @@
+<!-- customers.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #020617; color: white; margin: 0; }
+        .gold-text { color: #D4AF37; }
+        .card-bg { background-color: #0f172a; border: 1px solid #1e293b; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+<div id="sidebar-container" class="h-full"></div>
+<main class="flex-1 p-10 overflow-y-auto">
+    <header class="flex justify-between items-center mb-10">
+        <h2 class="text-3xl font-bold">Customer <span class="gold-text">Registry</span></h2>
+        <div class="relative"><i class="fas fa-search absolute left-4 top-3 text-slate-500"></i><input type="text" placeholder="Search customer..." class="bg-slate-900 border border-slate-800 rounded-full py-2 pl-12 pr-6 text-sm"></div>
+    </header>
+
+    <div class="card-bg rounded-[2.5rem] overflow-hidden">
+        <table class="w-full text-left">
+            <thead class="bg-slate-900/50 text-slate-500 text-[10px] uppercase font-bold tracking-widest">
+            <tr><th class="p-6">Name</th><th class="p-6">Contact</th><th class="p-6">Loyalty Points</th><th class="p-6">Total Spent</th><th class="p-6">Actions</th></tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800/50">
+            <tr>
+                <td class="p-6 font-bold">Kamantha Perera</td>
+                <td class="p-6 text-slate-400">077 123 4567</td>
+                <td class="p-6 gold-text font-bold"><i class="fas fa-star mr-2"></i> 1,450 pts</td>
+                <td class="p-6">Rs. 845,000</td>
+                <td class="p-6"><button class="text-slate-500 hover:text-white"><i class="fas fa-eye"></i> View</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<script>fetch('sidebar.html').then(r => r.text()).then(d => { document.getElementById('sidebar-container').innerHTML = d; });</script>
+</body>
+</html>

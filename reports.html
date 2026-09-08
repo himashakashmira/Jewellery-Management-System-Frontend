@@ -1,0 +1,39 @@
+<!-- reports.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #020617; color: white; margin: 0; }
+        .gold-text { color: #D4AF37; }
+        .card-bg { background-color: #0f172a; border: 1px solid #1e293b; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+<div id="sidebar-container" class="h-full"></div>
+<main class="flex-1 p-10 overflow-y-auto">
+    <h2 class="text-3xl font-bold mb-10 italic">Business <span class="gold-text">Performance</span></h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+        <div class="card-bg p-6 rounded-3xl">
+            <p class="text-slate-500 text-xs font-bold uppercase mb-2">Monthly Revenue</p>
+            <h4 class="text-2xl font-bold italic">Rs. 4.2 M</h4>
+            <p class="text-green-500 text-[10px] mt-1">+12% vs last month</p>
+        </div>
+        <!-- More Summary Cards -->
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="card-bg p-8 rounded-[2.5rem] h-80 flex items-center justify-center italic text-slate-500">
+            [ Sales Trends Graph will load here ]
+        </div>
+        <div class="card-bg p-8 rounded-[2.5rem] h-80 flex items-center justify-center italic text-slate-500">
+            [ Category-wise Distribution Chart ]
+        </div>
+    </div>
+</main>
+<script>fetch('sidebar.html').then(r => r.text()).then(d => { document.getElementById('sidebar-container').innerHTML = d; });</script>
+</body>
+</html>

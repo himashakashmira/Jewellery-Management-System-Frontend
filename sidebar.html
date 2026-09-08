@@ -1,0 +1,89 @@
+<!-- sidebar.html -->
+<div class="w-72 bg-[#020617] border-r border-slate-800 flex flex-col h-screen">
+    <!-- Logo Section -->
+    <div class="p-8 flex items-center gap-3">
+        <div class="w-10 h-10 border-2 border-yellow-600 rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(212,175,55,0.2)]">
+            <i class="fas fa-gem text-[#D4AF37] text-xl"></i>
+        </div>
+        <div>
+            <h1 class="font-bold text-xl tracking-widest uppercase text-white leading-none">AURUM</h1>
+            <p class="text-[10px] tracking-[0.3em] text-[#D4AF37] font-bold mt-1">JEWELS</p>
+        </div>
+    </div>
+
+    <!-- Menu Links -->
+    <div class="mt-4 px-4 flex-1 overflow-y-auto">
+        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] ml-4 mb-4">Management Menu</p>
+        <nav class="space-y-1" id="nav-menu">
+            <a href="dashboard.html" class="nav-link flex items-center gap-4 py-3 px-4 rounded-lg transition text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <i class="fas fa-th-large w-5 text-sm"></i>
+                <span class="text-sm font-medium">Dashboard</span>
+            </a>
+            <a href="inventory.html" class="nav-link flex items-center gap-4 py-3 px-4 rounded-lg transition text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <i class="fas fa-box w-5 text-sm"></i>
+                <span class="text-sm font-medium">Inventory</span>
+            </a>
+            <a href="gold-rates.html" class="nav-link flex items-center gap-4 py-3 px-4 rounded-lg transition text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <i class="fas fa-coins w-5 text-sm"></i>
+                <span class="text-sm font-medium">Daily Gold Rates</span>
+            </a>
+            <a href="pos.html" class="nav-link flex items-center gap-4 py-3 px-4 rounded-lg transition text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <i class="fas fa-file-invoice-dollar w-5 text-sm"></i>
+                <span class="text-sm font-medium">Billing / Sales</span>
+            </a>
+            <a href="repairs.html" class="nav-link flex items-center gap-4 py-3 px-4 rounded-lg transition text-slate-400 hover:text-white hover:bg-slate-800/50">
+                <i class="fas fa-tools w-5 text-sm"></i>
+                <span class="text-sm font-medium">Repair Management</span>
+            </a>
+            <a href="savings.html" class="nav-link flex items-center gap-4 py-3 px-4 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg transition">
+                <i class="fas fa-piggy-bank w-5 text-sm"></i>
+                <span class="text-sm font-medium">Savings Schemes</span>
+            </a>
+            <a href="customers.html" class="nav-link flex items-center gap-4 py-3 px-4 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg transition">
+                <i class="fas fa-users w-5 text-sm"></i>
+                <span class="text-sm font-medium">Customers</span>
+            </a>
+            <a href="reports.html" class="nav-link flex items-center gap-4 py-3 px-4 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg transition">
+                <i class="fas fa-chart-pie w-5 text-sm"></i>
+                <span class="text-sm font-medium">Reports</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Sidebar Footer -->
+    <div class="p-6 border-t border-slate-800">
+        <button class="flex items-center gap-3 text-slate-500 hover:text-red-400 transition text-sm">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+</div>
+
+<style>
+    .sidebar-active {
+        background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0) 100%);
+        color: #fbbf24 !important;
+        border-left: 4px solid #fbbf24;
+    }
+
+    /* මුළු පේජ් එකේම Scrollbar එක සඳහා */
+    ::-webkit-scrollbar {
+        width: 8px; /* පටු (Slim) scrollbar එකක් */
+    }
+
+    /* Scrollbar එක යන පාර (Track) */
+    ::-webkit-scrollbar-track {
+        background: #020617; /* Sidebar එකේ background පාටට සමානයි */
+    }
+
+    /* අදින කොටස (Thumb) */
+    ::-webkit-scrollbar-thumb {
+        background: #1e293b; /* තද අළු පාටක් */
+        border-radius: 10px; /* රවුම් දාර */
+        border: 2px solid #020617; /* Track එකෙන් වෙන් වෙලා පේන්න */
+    }
+
+    /* Mouse එක උඩට ගෙනිච්චම (Hover) රත්තරන් පාටින් පේන්න */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #D4AF37; /* අපේ Gold color එක */
+    }
+</style>

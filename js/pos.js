@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    loadProductsForPOS(); // බඩු ටික පෙන්වන්න
+    loadProductsForPOS(); // seen the product
 });
 
 // fetch items to the selection grid
@@ -36,6 +36,47 @@ function calculateBillItem(productId) {
         success: function(finalPrice) {
             // add this price to the right-side bill summary
             updateBillSummary(finalPrice);
+        }
+    });
+}
+
+// collect items in an array
+let cart = [];
+
+function addToCart(id, name, price) {
+    cart.push({ productId: id, qty: 1, name: name, price: price });
+    renderCart();
+}
+
+function completeSale() {
+    if (cart.length === 0) {
+        alert("Cart is empty!");
+        return;
+    }
+
+    // create the data object for backend
+    const orderData = {
+        customerId: 1, // temporary static ID, later get from input
+        discount: 500.0,
+        items: cart.map(item => ({
+            productId: item.productId,
+            qty: item.qty
+        }))
+    };
+
+    // AJAX call to place order
+    $.ajax({
+        url: "http://localhost:8080/api/v1/orders/place",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(orderData),
+        success: function(res) {
+            alert(res);
+            cart = []; // clear cart after success
+            renderCart();
+        },
+        error: function(err) {
+            alert("Order Failed!");
         }
     });
 }

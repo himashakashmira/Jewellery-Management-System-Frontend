@@ -1,193 +1,419 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AURUM JEWELS - Gold Savings Schemes</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #020617; color: white; margin: 0; }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #020617; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; border: 2px solid #020617; }
-        ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
-
-        .gold-text { color: #D4AF37; }
-        .gold-bg { background-color: #D4AF37; }
-        .card-bg { background-color: #0f172a; border: 1px solid #1e293b; }
-        .modal { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); }
-
-        .sidebar-active {
-            background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0) 100%);
-            color: #fbbf24 !important;
-            border-left: 4px solid #fbbf24;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURUM JEWELS | Gold Savings Wallet & Bullion Deposits</title>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Unified Internal Dashboard Stylesheet -->
+  <link rel="stylesheet" href="css/internal.css">
 </head>
-<body class="flex h-screen overflow-hidden">
+<body>
 
-<!-- 1. SIDEBAR CONTAINER -->
-<div id="sidebar-container" class="h-full flex-shrink-0">
-    <!-- sidebar.html will be loaded here -->
-</div>
+<div class="app-wrapper">
+  
+  <!-- 1. FLOATING MINIMALIST SIDEBAR -->
+  <div id="sidebar-container"></div>
 
-<!-- 2. MAIN CONTENT WRAPPER -->
-<div class="flex-1 flex flex-col h-full overflow-hidden">
-
+  <!-- 2. MAIN VIEWPORT -->
+  <div class="main-viewport">
+    
     <!-- TOP HEADER BAR -->
-    <header class="h-20 flex justify-between items-center px-8 bg-[#020617]/90 backdrop-blur-md z-30 border-b border-slate-800/50 flex-shrink-0">
-        <div>
-            <h2 class="text-xl font-bold tracking-widest text-white uppercase leading-none italic">AURUM <span class="gold-text">JEWELS</span></h2>
-            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-1 italic">Savings & Investment Management</p>
+    <header class="top-header">
+      <div class="header-left">
+        <div class="page-breadcrumb">
+          <span class="breadcrumb-tag">Prestige Wealth &bull; Bullion Reserve</span>
+          <h2 class="breadcrumb-title font-serif">Gold Savings Wallet</h2>
         </div>
-        <div class="flex items-center gap-6">
-            <div class="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center font-bold text-black text-sm">A</div>
-            <p class="text-xs font-bold hidden sm:block">Admin</p>
+
+        <!-- Global Search Bar -->
+        <div class="global-search-wrap">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" class="global-search-input" placeholder="Search deposit ref, ledger ID, gold weight..." aria-label="Global Search">
+          <span class="search-shortcut-badge">⌘K</span>
         </div>
+      </div>
+
+      <!-- Header Right Actions -->
+      <div class="header-right">
+        <!-- Live Rate Ticker -->
+        <div class="header-rate-ticker">
+          <i class="fa-solid fa-coins" style="color: var(--gold-primary);"></i>
+          <span>22K: <span class="gold-val">Rs. 347,000</span></span>
+        </div>
+
+        <!-- Notifications -->
+        <button class="header-action-btn" title="Atelier Notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span class="header-badge-dot"></span>
+        </button>
+
+        <!-- User Profile: Amal Mendis - Admin -->
+        <div class="user-profile-badge" title="Account Settings">
+          <div class="user-avatar-gold">AM</div>
+          <div class="user-info-text">
+            <span class="user-name-title">Amal Mendis</span>
+            <span class="user-role-tag">Admin &bull; Atelier Director</span>
+          </div>
+          <i class="fa-solid fa-chevron-down" style="font-size: 10px; color: var(--text-subtle); margin-left: 4px;"></i>
+        </div>
+      </div>
     </header>
 
-    <!-- MAIN SCROLLABLE BODY -->
-    <main class="flex-1 p-10 overflow-y-auto">
-        <div class="max-w-6xl mx-auto">
-            <header class="mb-10">
-                <h2 class="text-4xl font-bold italic text-white">Gold <span class="gold-text">Savings Schemes</span></h2>
-                <p class="text-slate-400 mt-2 italic">Manage customer gold investment plans and monthly deposits.</p>
-            </header>
-
-            <!-- STATS & ACTION ROW -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <div class="card-bg p-8 rounded-[2rem] flex flex-col justify-center">
-                    <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Total Gold Held</p>
-                    <h3 class="text-4xl font-bold mt-2">4,250.50 <span class="text-sm gold-text font-normal italic">grams</span></h3>
-                </div>
-                <div class="card-bg p-8 rounded-[2rem] flex flex-col justify-center text-center">
-                    <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Active Accounts</p>
-                    <h3 class="text-4xl font-bold mt-2">142</h3>
-                </div>
-                <!-- IMPORTANT: Added onclick here -->
-                <button onclick="toggleSchemeModal()" class="gold-bg text-black rounded-[2rem] font-bold text-xl hover:scale-105 transition shadow-lg shadow-yellow-600/20 active:scale-95">
-                    <i class="fas fa-plus-circle mr-2 text-sm"></i> Create New Scheme
-                </button>
+    <!-- CONTENT BODY (Pure White with Light Gray Sections) -->
+    <main class="content-body">
+      
+      <!-- GOLD WALLET HERO BALANCE SECTION (Antigravity Grand Card) -->
+      <section class="antigravity-card card-gold-accent-top" style="padding: 36px 40px; margin-bottom: 28px; background: linear-gradient(180deg, #FFFFFF 0%, #FAFAF8 100%);">
+        <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px; align-items: center;">
+          
+          <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+              <span class="status-pill gold"><i class="fa-solid fa-vault"></i> Sovereign Vault Account</span>
+              <span style="font-size: 11.5px; color: var(--text-muted); letter-spacing: 0.04em;">A/C: #GLD-7704-LK</span>
             </div>
 
-            <!-- ACCOUNTS TABLE -->
-            <div class="card-bg rounded-[2.5rem] overflow-hidden shadow-2xl">
-                <div class="p-8 border-b border-slate-800 bg-slate-900/30 flex justify-between items-center">
-                    <h5 class="text-white font-bold tracking-widest uppercase text-sm italic">Customer Account Registry</h5>
-                    <div class="relative">
-                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-                        <input type="text" placeholder="Search account..." class="bg-slate-900 border border-slate-800 rounded-full py-2 pl-10 pr-4 text-xs outline-none">
-                    </div>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-slate-900/50 text-slate-500 text-[10px] uppercase tracking-[0.2em] font-bold">
-                        <tr>
-                            <th class="p-8">Account ID</th>
-                            <th class="p-8">Customer</th>
-                            <th class="p-8 text-right">Gold Balance (g)</th>
-                            <th class="p-8">Last Payment Status</th>
-                            <th class="p-8 text-center">Status</th>
-                        </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-800/50 text-sm">
-                        <tr class="hover:bg-slate-800/30 transition">
-                            <td class="p-8 gold-text font-bold uppercase tracking-widest">GSA-772</td>
-                            <td class="p-8 font-bold text-white">Sunil Shantha<br><span class="text-[10px] text-slate-500 font-normal">077 123 4567</span></td>
-                            <td class="p-8 text-right font-bold text-slate-200">12.450 g</td>
-                            <td class="p-8 text-slate-400">Rs. 15,000 <span class="text-[10px] italic ml-1">(Oct 10, 2024)</span></td>
-                            <td class="p-8 text-center">
-                                <span class="bg-green-500/10 text-green-500 px-4 py-1.5 rounded-full text-[10px] font-bold border border-green-500/20">ACTIVE</span>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </main>
-</div>
+            <p style="font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); font-weight: 600;">
+              Total Accumulated Bullion Holdings
+            </p>
 
-<!-- CREATE NEW SCHEME MODAL -->
-<div id="schemeModal" class="modal fixed inset-0 hidden flex items-center justify-center z-50 p-6">
-    <div class="bg-[#0f172a] w-full max-w-[550px] rounded-[3rem] p-10 border border-slate-700 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-        <div class="flex justify-between items-center mb-10">
-            <h3 class="text-2xl font-bold tracking-tight italic">Activate <span class="gold-text">New Scheme</span></h3>
-            <button onclick="toggleSchemeModal()" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition">
-                <i class="fas fa-times text-sm"></i>
+            <!-- Big Gram Balance Display -->
+            <div style="display: flex; align-items: baseline; gap: 14px; margin: 8px 0 16px 0;">
+              <h1 class="font-serif" style="font-size: 52px; font-weight: 700; color: var(--text-main); line-height: 1;">
+                48.750 <span style="font-size: 26px; color: var(--gold-deep); font-weight: 600;">Grams</span>
+              </h1>
+              <span style="font-size: 15px; color: var(--text-muted); font-weight: 500;">
+                (&approx; 6.09 Sovereigns)
+              </span>
+            </div>
+
+            <!-- Current Market Value -->
+            <div style="display: flex; align-items: center; gap: 18px; flex-wrap: wrap;">
+              <div style="background: #FFFFFF; border: 1px solid var(--border-gold); padding: 8px 18px; border-radius: var(--radius-md); box-shadow: var(--shadow-floating-sm);">
+                <span style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Current Market Worth:</span>
+                <strong style="font-family: 'Playfair Display', serif; font-size: 18px; color: var(--text-main); margin-left: 8px;">
+                  Rs. 2,114,531.25
+                </strong>
+              </div>
+
+              <span class="trend-badge-up" style="font-size: 13px;">
+                <i class="fa-solid fa-arrow-trend-up"></i> +3.250g added this month (+8.4% YoY)
+              </span>
+            </div>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div style="display: flex; flex-direction: column; gap: 14px; justify-content: center;">
+            <button class="btn-gold-primary" onclick="openDepositModal();" style="justify-content: center; padding: 16px; font-size: 13.5px;">
+              <i class="fa-solid fa-plus-circle" style="font-size: 16px;"></i>
+              <span>Deposit Cash / Buy Gold Weight</span>
             </button>
+            <button class="btn-white-outline" onclick="alert('Physical Bullion Withdrawal Request Submitted to Vault Custodian.');" style="justify-content: center; padding: 15px; font-size: 13.5px;">
+              <i class="fa-solid fa-coins" style="color: var(--gold-primary);"></i>
+              <span>Withdraw Physical Sovereign Coins (8g)</span>
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SUPPORTING WEALTH METRIC ROW (3-Column Antigravity Cards) -->
+      <section style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-bottom: 30px;">
+        
+        <!-- Metric 1: Total Deposited Cash -->
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Total Principal Deposited</span>
+            <div class="metric-icon-box"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+          </div>
+          <div class="metric-val-main">Rs. 1,850,000</div>
+          <div class="metric-sub-row">
+            <span style="color: var(--text-muted); font-size: 12px;">Across 9 Monthly Installments</span>
+          </div>
         </div>
 
-        <form class="space-y-6">
-            <!-- Customer Search -->
-            <div>
-                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2 ml-1">Search Customer</label>
-                <div class="relative">
-                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-                    <input type="text" placeholder="Name or Phone number..."
-                           class="w-full bg-slate-900 border border-slate-800 rounded-2xl p-4 pl-12 outline-none focus:border-yellow-600 transition text-sm italic">
-                </div>
-            </div>
+        <!-- Metric 2: Capital Gains -->
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Gold Capital Gain</span>
+            <div class="metric-icon-box"><i class="fa-solid fa-chart-line-up"></i></div>
+          </div>
+          <div class="metric-val-main" style="color: #059669;">+ Rs. 264,531</div>
+          <div class="metric-sub-row">
+            <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +14.30% Net Profit</span>
+          </div>
+        </div>
 
-            <div class="grid grid-cols-2 gap-6">
-                <!-- Duration -->
-                <div>
-                    <label class="text-[10px] font-bold text-slate-500 mb-2 block uppercase tracking-widest ml-1 text-center">Plan Duration</label>
-                    <select class="w-full bg-slate-900 border border-slate-800 rounded-2xl p-4 outline-none focus:border-yellow-600 transition text-sm appearance-none cursor-pointer text-center font-bold">
-                        <option>12 Months</option>
-                        <option>24 Months</option>
-                    </select>
-                </div>
-                <!-- Deposit -->
-                <div>
-                    <label class="text-[10px] font-bold text-slate-500 mb-2 block uppercase tracking-widest ml-1 text-center">Initial Deposit (Rs.)</label>
-                    <input type="number" placeholder="5,000"
-                           class="w-full bg-slate-900 border border-slate-800 rounded-2xl p-4 outline-none focus:border-yellow-600 transition text-sm font-bold text-yellow-500 text-center">
-                </div>
-            </div>
+        <!-- Metric 3: Next Standing Deposit -->
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Scheduled Auto-Debit</span>
+            <div class="metric-icon-box"><i class="fa-regular fa-calendar-check"></i></div>
+          </div>
+          <div class="metric-val-main">Rs. 50,000</div>
+          <div class="metric-sub-row">
+            <span style="color: var(--gold-deep); font-weight: 600;">10 Oct 2026 &bull; ~1.15g Addition</span>
+          </div>
+        </div>
 
-            <!-- Live conversion info -->
-            <div class="bg-yellow-500/5 border border-yellow-500/10 p-5 rounded-2xl">
-                <div class="flex justify-between items-center mb-1">
-                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Reference Gold Rate</span>
-                    <span class="gold-text font-bold text-sm">Rs. 24,700 /g</span>
-                </div>
-                <p class="text-[9px] text-slate-500 italic mt-2 leading-relaxed">
-                    * The deposit amount will be automatically converted to gold weight and credited to the customer wallet.
-                </p>
-            </div>
+      </section>
 
-            <div class="flex gap-4 pt-4">
-                <button type="button" onclick="toggleSchemeModal()" class="flex-1 bg-slate-800 p-4 rounded-2xl font-bold hover:bg-slate-700 transition">Cancel</button>
-                <button type="submit" class="flex-1 gold-bg text-black p-4 rounded-2xl font-bold shadow-lg shadow-yellow-600/20 hover:scale-105 transition">Activate Scheme</button>
-            </div>
-        </form>
-    </div>
+      <!-- DEPOSIT HISTORY WITH GOLD-WEIGHT CONVERSION TABLE -->
+      <section class="antigravity-card">
+        <div class="card-header-clean">
+          <div>
+            <h3 class="card-header-title font-serif">Deposit History & Gold-Weight Conversions</h3>
+            <p class="card-header-desc">Complete audit trail of all financial deposits and the precise gold weight credited at the spot market rate</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn-white-outline" style="font-size: 12px; padding: 8px 16px;">
+              <i class="fa-solid fa-calendar"></i> Date Range
+            </button>
+            <button class="btn-white-outline" style="font-size: 12px; padding: 8px 16px;">
+              <i class="fa-solid fa-file-pdf"></i> Export Statement
+            </button>
+          </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="antigravity-table">
+            <thead>
+              <tr>
+                <th>Deposit Ref</th>
+                <th>Date & Timestamp</th>
+                <th>Deposit Channel</th>
+                <th>Cash Deposited</th>
+                <th>Spot Rate / Gram</th>
+                <th>Gold Weight Credited</th>
+                <th>Purity Grade</th>
+                <th>Vault Certificate</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Deposit 1 -->
+              <tr>
+                <td><strong style="color: var(--gold-deep); font-family: monospace;">#DEP-9104</strong></td>
+                <td>
+                  <div>
+                    <span style="font-weight: 600;">10 Sep 2026</span>
+                    <span style="display: block; font-size: 11px; color: var(--text-subtle);">10:15 AM</span>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-size: 12.5px; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-building-columns" style="color: var(--gold-primary);"></i> Commercial Bank Wire
+                  </span>
+                </td>
+                <td><strong style="font-size: 14.5px;">Rs. 100,000</strong></td>
+                <td><span style="color: var(--text-muted); font-size: 12.5px;">Rs. 43,300 / g</span></td>
+                <td>
+                  <span class="status-pill gold" style="font-size: 12px; font-weight: 700;">
+                    <i class="fa-solid fa-plus"></i> 2.309 Grams
+                  </span>
+                </td>
+                <td><span style="font-size: 12px; font-weight: 600; color: var(--gold-deep);">22K (91.6%)</span></td>
+                <td>
+                  <button class="btn-white-outline" style="font-size: 11.5px; padding: 5px 12px;" title="Download Vault Certificate">
+                    <i class="fa-solid fa-file-shield" style="color: var(--gold-primary);"></i> #CER-9104
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Deposit 2 -->
+              <tr>
+                <td><strong style="color: var(--gold-deep); font-family: monospace;">#DEP-8842</strong></td>
+                <td>
+                  <div>
+                    <span style="font-weight: 600;">15 Aug 2026</span>
+                    <span style="display: block; font-size: 11px; color: var(--text-subtle);">02:40 PM</span>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-size: 12.5px; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-credit-card" style="color: var(--gold-primary);"></i> Sampath Online Gateway
+                  </span>
+                </td>
+                <td><strong style="font-size: 14.5px;">Rs. 50,000</strong></td>
+                <td><span style="color: var(--text-muted); font-size: 12.5px;">Rs. 42,900 / g</span></td>
+                <td>
+                  <span class="status-pill gold" style="font-size: 12px; font-weight: 700;">
+                    <i class="fa-solid fa-plus"></i> 1.165 Grams
+                  </span>
+                </td>
+                <td><span style="font-size: 12px; font-weight: 600; color: var(--gold-deep);">22K (91.6%)</span></td>
+                <td>
+                  <button class="btn-white-outline" style="font-size: 11.5px; padding: 5px 12px;" title="Download Vault Certificate">
+                    <i class="fa-solid fa-file-shield" style="color: var(--gold-primary);"></i> #CER-8842
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Deposit 3 -->
+              <tr>
+                <td><strong style="color: var(--gold-deep); font-family: monospace;">#DEP-7921</strong></td>
+                <td>
+                  <div>
+                    <span style="font-weight: 600;">10 Jul 2026</span>
+                    <span style="display: block; font-size: 11px; color: var(--text-subtle);">11:20 AM</span>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-size: 12.5px; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-money-bill-wave" style="color: var(--gold-primary);"></i> Colombo 03 Flagship Counter
+                  </span>
+                </td>
+                <td><strong style="font-size: 14.5px;">Rs. 150,000</strong></td>
+                <td><span style="color: var(--text-muted); font-size: 12.5px;">Rs. 42,450 / g</span></td>
+                <td>
+                  <span class="status-pill gold" style="font-size: 12px; font-weight: 700;">
+                    <i class="fa-solid fa-plus"></i> 3.533 Grams
+                  </span>
+                </td>
+                <td><span style="font-size: 12px; font-weight: 600; color: var(--gold-deep);">22K (91.6%)</span></td>
+                <td>
+                  <button class="btn-white-outline" style="font-size: 11.5px; padding: 5px 12px;" title="Download Vault Certificate">
+                    <i class="fa-solid fa-file-shield" style="color: var(--gold-primary);"></i> #CER-7921
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Deposit 4 -->
+              <tr>
+                <td><strong style="color: var(--gold-deep); font-family: monospace;">#DEP-7109</strong></td>
+                <td>
+                  <div>
+                    <span style="font-weight: 600;">10 Jun 2026</span>
+                    <span style="display: block; font-size: 11px; color: var(--text-subtle);">09:05 AM</span>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-size: 12.5px; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-building-columns" style="color: var(--gold-primary);"></i> HNB Standing Order
+                  </span>
+                </td>
+                <td><strong style="font-size: 14.5px;">Rs. 75,000</strong></td>
+                <td><span style="color: var(--text-muted); font-size: 12.5px;">Rs. 42,370 / g</span></td>
+                <td>
+                  <span class="status-pill gold" style="font-size: 12px; font-weight: 700;">
+                    <i class="fa-solid fa-plus"></i> 1.770 Grams
+                  </span>
+                </td>
+                <td><span style="font-size: 12px; font-weight: 600; color: var(--gold-deep);">22K (91.6%)</span></td>
+                <td>
+                  <button class="btn-white-outline" style="font-size: 11.5px; padding: 5px 12px;" title="Download Vault Certificate">
+                    <i class="fa-solid fa-file-shield" style="color: var(--gold-primary);"></i> #CER-7109
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Deposit 5 -->
+              <tr>
+                <td><strong style="color: var(--gold-deep); font-family: monospace;">#DEP-6430</strong></td>
+                <td>
+                  <div>
+                    <span style="font-weight: 600;">10 May 2026</span>
+                    <span style="display: block; font-size: 11px; color: var(--text-subtle);">03:15 PM</span>
+                  </div>
+                </td>
+                <td>
+                  <span style="font-size: 12.5px; color: var(--text-main); display: flex; align-items: center; gap: 6px;">
+                    <i class="fa-solid fa-credit-card" style="color: var(--gold-primary);"></i> Nations Trust Card
+                  </span>
+                </td>
+                <td><strong style="font-size: 14.5px;">Rs. 200,000</strong></td>
+                <td><span style="color: var(--text-muted); font-size: 12.5px;">Rs. 42,015 / g</span></td>
+                <td>
+                  <span class="status-pill gold" style="font-size: 12px; font-weight: 700;">
+                    <i class="fa-solid fa-plus"></i> 4.760 Grams
+                  </span>
+                </td>
+                <td><span style="font-size: 12px; font-weight: 600; color: var(--gold-deep);">22K (91.6%)</span></td>
+                <td>
+                  <button class="btn-white-outline" style="font-size: 11.5px; padding: 5px 12px;" title="Download Vault Certificate">
+                    <i class="fa-solid fa-file-shield" style="color: var(--gold-primary);"></i> #CER-6430
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
 </div>
 
-<script>
-    // Modal function
-    function toggleSchemeModal() {
-        document.getElementById('schemeModal').classList.toggle('hidden');
-    }
+<!-- INTERACTIVE DEPOSIT & GOLD CONVERSION MODAL -->
+<div id="depositModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.5); backdrop-filter: blur(16px); z-index: 100; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: rgba(255,255,255,0.96); backdrop-filter: blur(24px); border: 1.5px solid rgba(197,160,89,0.4); border-radius: var(--radius-xl); box-shadow: var(--shadow-floating-hover); width: 100%; max-width: 480px; padding: 36px; position: relative;">
+    <button onclick="closeDepositModal();" style="position: absolute; top: 20px; right: 20px; width: 34px; height: 34px; border-radius: 50%; background: #FFF; border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div style="text-align: center; margin-bottom: 22px;">
+      <i class="fa-solid fa-vault" style="color: var(--gold-primary); font-size: 22px; margin-bottom: 6px;"></i>
+      <h3 class="font-serif" style="font-size: 24px; font-weight: 700;">Deposit to Gold Wallet</h3>
+      <p style="font-size: 12.5px; color: var(--text-muted);">Convert cash into certified 22K gold grams at live spot market rate</p>
+    </div>
+    
+    <form onsubmit="event.preventDefault(); alert('Deposit completed! ' + document.getElementById('calcGoldGrams').textContent + ' added to your Gold Wallet.'); closeDepositModal();">
+      <div style="margin-bottom: 16px;">
+        <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted);">Deposit Amount (LKR)</label>
+        <input type="number" id="depositCashInput" class="global-search-input" style="border-radius: var(--radius-md); padding: 12px 16px; background: #FFF; font-size: 15px; font-weight: 600;" value="50000" min="5000" step="1000" required>
+      </div>
 
-    // Sidebar Load
-    fetch('sidebar.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('sidebar-container').innerHTML = data;
-            const currentPath = window.location.pathname.split("/").pop() || "dashboard.html";
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                if (link.getAttribute('href') === currentPath) {
-                    link.classList.add('sidebar-active');
-                }
-            });
-        });
+      <div style="background: var(--bg-light-gray); border: 1px solid var(--border-gold); border-radius: var(--radius-md); padding: 16px; margin-bottom: 22px;">
+        <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: var(--text-muted); margin-bottom: 6px;">
+          <span>Live 22K Spot Rate:</span>
+          <strong>Rs. 43,375 / gram</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+          <span style="font-size: 13px; font-weight: 600; color: var(--text-main);">Gold Credited:</span>
+          <span id="calcGoldGrams" class="font-serif" style="font-size: 22px; font-weight: 700; color: var(--gold-deep);">+ 1.153 Grams</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-gold-primary" style="width: 100%; justify-content: center; padding: 14px;">
+        <i class="fa-solid fa-lock"></i>
+        <span>Confirm & Vault Gold</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- SIDEBAR LOADING SCRIPT & LIVE CONVERSION -->
+<script>
+  fetch('sidebar.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('sidebar-container').innerHTML = html;
+      const activeLink = document.querySelector('.sidebar-link[data-page="savings.html"]');
+      if (activeLink) activeLink.classList.add('active');
+    })
+    .catch(err => console.log('Sidebar load:', err));
+
+  const cashInput = document.getElementById('depositCashInput');
+  const goldGramsDisplay = document.getElementById('calcGoldGrams');
+  const spotRate = 43375;
+
+  if (cashInput) {
+    cashInput.addEventListener('input', () => {
+      const val = parseFloat(cashInput.value) || 0;
+      const grams = (val / spotRate).toFixed(3);
+      goldGramsDisplay.textContent = `+ ${grams} Grams`;
+    });
+  }
+
+  function openDepositModal() {
+    document.getElementById('depositModal').style.display = 'flex';
+  }
+
+  function closeDepositModal() {
+    document.getElementById('depositModal').style.display = 'none';
+  }
 </script>
+
 </body>
-</html> v
+</html>

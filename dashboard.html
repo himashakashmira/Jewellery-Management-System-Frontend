@@ -1,235 +1,409 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AURUM JEWELS - Management Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #020617;
-            color: #f8fafc;
-            margin: 0;
-        }
-
-        /* Custom Scrollbar for the whole system */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #020617; }
-        ::-webkit-scrollbar-thumb {
-            background: #1e293b;
-            border-radius: 10px;
-            border: 2px solid #020617;
-        }
-        ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
-
-        /* Theme Colors */
-        .gold-text { color: #D4AF37; }
-        .gold-bg { background-color: #D4AF37; }
-        .card-bg { background-color: #0f172a; border: 1px solid #1e293b; }
-
-        /* Sidebar Active State (Load වන විට JS මගින් එකතු වේ) */
-        .sidebar-active {
-            background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0) 100%);
-            color: #fbbf24 !important;
-            border-left: 4px solid #fbbf24;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURUM JEWELS | Executive Management Dashboard</title>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Unified Internal Dashboard Stylesheet -->
+  <link rel="stylesheet" href="css/internal.css">
 </head>
-<body class="flex h-screen overflow-hidden">
+<body>
 
-<!-- 1. SIDEBAR NAVIGATION CONTAINER -->
-<div id="sidebar-container" class="h-full flex-shrink-0">
-    <!-- sidebar.html will be loaded here -->
-</div>
+<div class="app-wrapper">
+  
+  <!-- 1. FLOATING MINIMALIST SIDEBAR -->
+  <div id="sidebar-container">
+    <!-- Loaded dynamically or rendered by sidebar.html -->
+  </div>
 
-<!-- 2. MAIN CONTENT AREA -->
-<main class="flex-1 flex flex-col h-full overflow-hidden bg-[#020617]">
-
+  <!-- 2. MAIN VIEWPORT -->
+  <div class="main-viewport">
+    
     <!-- TOP HEADER BAR -->
-    <header class="h-20 flex justify-between items-center px-8 sticky top-0 bg-[#020617]/90 backdrop-blur-md z-30 border-b border-slate-800/50 flex-shrink-0">
-        <div>
-            <h2 class="text-xl font-bold tracking-widest text-white uppercase leading-none italic">AURUM <span class="gold-text">JEWELS</span></h2>
-            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-1">Management Dashboard v1.0</p>
+    <header class="top-header">
+      <div class="header-left">
+        <div class="page-breadcrumb">
+          <span class="breadcrumb-tag">Executive Portal &bull; Daily Desk</span>
+          <h2 class="breadcrumb-title font-serif">Management Dashboard</h2>
         </div>
 
-        <div class="flex items-center gap-6">
-            <!-- Search Bar -->
-            <div class="relative group hidden xl:block">
-                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs group-focus-within:text-yellow-500 transition"></i>
-                <input type="text" placeholder="Search orders, customers, items..."
-                       class="bg-slate-900 border border-slate-800 rounded-full py-2.5 pl-12 pr-6 text-xs text-white focus:outline-none focus:border-yellow-600 transition w-80 shadow-inner">
-            </div>
-
-            <!-- Notifications -->
-            <button class="relative p-2.5 bg-slate-900 border border-slate-800 rounded-full hover:bg-slate-800 transition group">
-                <i class="fas fa-bell text-slate-400 text-sm group-hover:text-yellow-500"></i>
-                <span class="absolute top-0 right-0 w-3 h-3 bg-yellow-500 border-2 border-[#020617] rounded-full animate-pulse"></span>
-            </button>
-
-            <!-- User Profile Dropdown -->
-            <div class="flex items-center gap-3 bg-slate-900 border border-slate-800 py-1.5 pl-1.5 pr-4 rounded-full cursor-pointer hover:border-yellow-600/50 transition">
-                <div class="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center font-bold text-black text-sm shadow-lg shadow-yellow-600/20">A</div>
-                <div class="hidden sm:block text-left">
-                    <p class="text-[11px] font-bold text-white leading-none uppercase tracking-wider">Admin</p>
-                    <p class="text-[9px] text-slate-500 leading-none mt-1 uppercase font-semibold">Store Manager</p>
-                </div>
-                <i class="fas fa-chevron-down text-[10px] text-slate-500 ml-1"></i>
-            </div>
+        <!-- Global Search Bar -->
+        <div class="global-search-wrap">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" class="global-search-input" placeholder="Search orders, bullion, inventory, clients..." aria-label="Global Search">
+          <span class="search-shortcut-badge">⌘K</span>
         </div>
+      </div>
+
+      <!-- Header Right Actions -->
+      <div class="header-right">
+        <!-- Live Market Rate Ticker -->
+        <div class="header-rate-ticker">
+          <i class="fa-solid fa-coins" style="color: var(--gold-primary);"></i>
+          <span>22K: <span class="gold-val">Rs. 347,000</span></span>
+        </div>
+
+        <!-- Notifications -->
+        <button class="header-action-btn" title="Atelier Notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span class="header-badge-dot"></span>
+        </button>
+
+        <!-- User Profile: Amal Mendis - Admin -->
+        <div class="user-profile-badge" title="Account Settings">
+          <div class="user-avatar-gold">AM</div>
+          <div class="user-info-text">
+            <span class="user-name-title">Amal Mendis</span>
+            <span class="user-role-tag">Admin &bull; Atelier Director</span>
+          </div>
+          <i class="fa-solid fa-chevron-down" style="font-size: 10px; color: var(--text-subtle); margin-left: 4px;"></i>
+        </div>
+      </div>
     </header>
 
-    <!-- DASHBOARD SCROLLABLE BODY -->
-    <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+    <!-- CONTENT BODY (Pure White with Light Gray Nuances) -->
+    <main class="content-body">
+      
+      <!-- TOP METRICS: GOLD PRICE CARDS & PERFORMANCE (Antigravity Floating) -->
+      <section class="metrics-row-4col">
+        <!-- Card 1: 22K Gold Rate -->
+        <div class="metric-card card-gold-accent-top">
+          <div class="metric-top-row">
+            <span class="metric-label">22K Certified Bullion</span>
+            <div class="metric-icon-box"><i class="fa-solid fa-coins"></i></div>
+          </div>
+          <div class="metric-val-main" id="metric22K">Rs. 347,000</div>
+          <div class="metric-sub-row">
+            <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +0.45%</span>
+            <span>&bull; Rs. 43,375 / gram</span>
+          </div>
+        </div>
 
-        <!-- Welcome Section & Date -->
-        <div class="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <!-- Card 2: 24K Pure Gold Rate -->
+        <div class="metric-card card-gold-accent-top">
+          <div class="metric-top-row">
+            <span class="metric-label">24K Fine Suisse Gold</span>
+            <div class="metric-icon-box"><i class="fa-solid fa-cubes"></i></div>
+          </div>
+          <div class="metric-val-main" id="metric24K">Rs. 377,000</div>
+          <div class="metric-sub-row">
+            <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +0.38%</span>
+            <span>&bull; Rs. 47,125 / gram</span>
+          </div>
+        </div>
+
+        <!-- Card 3: Today's Revenue -->
+        <div class="metric-card card-gold-accent-top">
+          <div class="metric-top-row">
+            <span class="metric-label">Today's Total Sales</span>
+            <div class="metric-icon-box"><i class="fa-solid fa-receipt"></i></div>
+          </div>
+          <div class="metric-val-main">Rs. 1,842,500</div>
+          <div class="metric-sub-row">
+            <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +12.4%</span>
+            <span>&bull; 14 Invoiced Orders</span>
+          </div>
+        </div>
+
+        <!-- Card 4: Gold Savings Reserves -->
+        <div class="metric-card card-gold-accent-top">
+          <div class="metric-top-row">
+            <span class="metric-label">Gold Vault Holdings</span>
+            <div class="metric-icon-box"><i class="fa-solid fa-vault"></i></div>
+          </div>
+          <div class="metric-val-main">1,420.50 g</div>
+          <div class="metric-sub-row">
+            <span class="trend-badge-gold">Rs. 61.6M Value</span>
+            <span>&bull; 184 Patrons</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- MIDDLE SECTION: TODAY'S SALES CHART & ATELIER SNAPSHOT -->
+      <section style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 28px;">
+        
+        <!-- TODAY'S SALES CHART CARD -->
+        <div class="antigravity-card" style="display: flex; flex-direction: column;">
+          <div class="card-header-clean">
             <div>
-                <h3 class="text-3xl font-bold text-white tracking-tight">Good morning, Admin</h3>
-                <p class="text-slate-400 mt-1">System status is optimal. Here is your daily overview.</p>
+              <h3 class="card-header-title font-serif">Today's Revenue Trajectory</h3>
+              <p class="card-header-desc">Real-time revenue flow across boutique counters and online checkout</p>
             </div>
-            <div class="bg-slate-900/50 border border-slate-800 px-6 py-3 rounded-2xl text-right">
-                <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Rate Reference Date</p>
-                <p class="text-yellow-500 font-bold text-lg" id="dateDisplay">-- --, ----</p>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-white-outline" style="padding: 6px 14px; font-size: 11.5px;">Today</button>
+              <button class="btn-white-outline" style="padding: 6px 14px; font-size: 11.5px; border-color: transparent; color: var(--text-muted);">7D</button>
+              <button class="btn-white-outline" style="padding: 6px 14px; font-size: 11.5px; border-color: transparent; color: var(--text-muted);">Month</button>
             </div>
+          </div>
+
+          <!-- Editorial Styled Chart Placeholder Graphic -->
+          <div class="card-body-clean" style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="position: relative; width: 100%; height: 210px;">
+              <svg viewBox="0 0 700 210" style="width: 100%; height: 100%; overflow: visible;">
+                <defs>
+                  <linearGradient id="goldChartGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#C5A059" stop-opacity="0.32" />
+                    <stop offset="100%" stop-color="#DFC489" stop-opacity="0.01" />
+                  </linearGradient>
+                </defs>
+
+                <!-- Gridlines -->
+                <line x1="0" y1="40" x2="700" y2="40" stroke="rgba(0,0,0,0.04)" stroke-dasharray="4 4" />
+                <line x1="0" y1="90" x2="700" y2="90" stroke="rgba(0,0,0,0.04)" stroke-dasharray="4 4" />
+                <line x1="0" y1="140" x2="700" y2="140" stroke="rgba(0,0,0,0.04)" stroke-dasharray="4 4" />
+                <line x1="0" y1="190" x2="700" y2="190" stroke="rgba(0,0,0,0.06)" />
+
+                <!-- Area Fill -->
+                <polygon points="0,190 0,165 90,140 180,150 270,95 360,110 450,45 540,65 630,30 700,40 700,190" fill="url(#goldChartGradient)" />
+
+                <!-- Trend Line -->
+                <polyline points="0,165 90,140 180,150 270,95 360,110 450,45 540,65 630,30 700,40" 
+                          fill="none" stroke="#C5A059" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+                <!-- Peak Marker Point -->
+                <circle cx="630" cy="30" r="6" fill="#FFFFFF" stroke="#C5A059" stroke-width="3.5" />
+                
+                <!-- Peak Tooltip Badge -->
+                <g transform="translate(560, -2)">
+                  <rect width="135" height="24" rx="12" fill="#141518" />
+                  <text x="67" y="16" fill="#FFFFFF" font-size="10.5" font-family="Inter" text-anchor="middle" font-weight="600">Peak: Rs. 520K (16:30)</text>
+                </g>
+              </svg>
+            </div>
+
+            <!-- Time Labels -->
+            <div style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text-subtle); padding-top: 10px; border-top: 1px solid var(--border-subtle);">
+              <span>09:00 AM</span>
+              <span>11:00 AM</span>
+              <span>01:00 PM</span>
+              <span>03:00 PM</span>
+              <span>05:00 PM</span>
+              <span>07:00 PM (Closing)</span>
+            </div>
+
+            <!-- Chart Footnote Metrics -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-light);">
+              <div>
+                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Average Order</span>
+                <p style="font-size: 16px; font-weight: 700; color: var(--text-main); margin-top: 2px;">Rs. 131,600</p>
+              </div>
+              <div>
+                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Top Category</span>
+                <p style="font-size: 16px; font-weight: 700; color: var(--gold-deep); margin-top: 2px;">22K Bridal & Cuffs</p>
+              </div>
+              <div>
+                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Conversion Rate</span>
+                <p style="font-size: 16px; font-weight: 700; color: #10B981; margin-top: 2px;">4.85% (+0.6%)</p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- DAILY GOLD PRICES -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-            <!-- 22K Card -->
-            <div class="card-bg p-8 rounded-[2.5rem] relative group hover:border-yellow-600/50 transition duration-500 shadow-2xl overflow-hidden">
-                <div class="flex justify-between items-start">
-                    <div class="flex items-center gap-4">
-                        <div class="w-14 h-14 bg-yellow-500/10 rounded-2xl flex items-center justify-center shadow-inner">
-                            <i class="fas fa-coins gold-text text-2xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-slate-300 font-semibold">Daily 22K Price</p>
-                            <p class="text-slate-500 text-[10px]">Reference: LKR per 1g</p>
-                        </div>
-                    </div>
-                    <span class="bg-yellow-500/20 text-yellow-500 text-[10px] font-bold px-4 py-1.5 rounded-full border border-yellow-500/30 uppercase tracking-widest">22 Karat</span>
-                </div>
-                <div class="mt-8">
-                    <div class="flex items-baseline gap-2">
-                        <span class="text-2xl font-bold text-slate-500 italic">Rs.</span>
-                        <h4 class="text-6xl font-bold text-white tracking-tighter">198,542</h4>
-                    </div>
-                    <p class="text-slate-500 text-[10px] mt-4 uppercase tracking-widest font-bold"><i class="fas fa-clock mr-1"></i> Updated 09:15 AM</p>
-                </div>
-                <button class="absolute bottom-8 right-8 gold-bg text-black px-6 py-3 rounded-2xl font-bold text-sm flex items-center gap-2 hover:scale-105 transition shadow-xl shadow-yellow-600/20">
-                    <i class="fas fa-edit"></i> Update Rate
-                </button>
-            </div>
+        <!-- QUICK ATELIER ACTIONS & DESK SUMMARY -->
+        <div class="antigravity-card" style="display: flex; flex-direction: column;">
+          <div class="card-header-clean">
+            <h3 class="card-header-title font-serif">Atelier Fast Actions</h3>
+            <span class="status-pill gold"><i class="fa-solid fa-bolt"></i> Priority</span>
+          </div>
+          <div class="card-body-clean" style="flex: 1; display: flex; flex-direction: column; gap: 14px;">
+            <a href="inventory.html" class="btn-gold-primary" style="justify-content: center; width: 100%;">
+              <i class="fa-solid fa-plus"></i>
+              <span>Add Jewellery Piece</span>
+            </a>
+            <a href="savings.html" class="btn-white-outline" style="justify-content: center; width: 100%;">
+              <i class="fa-solid fa-scale-balanced" style="color: var(--gold-primary);"></i>
+              <span>Deposit to Gold Wallet</span>
+            </a>
+            <a href="gold-rates.html" class="btn-white-outline" style="justify-content: center; width: 100%;">
+              <i class="fa-solid fa-pen-to-square" style="color: var(--gold-primary);"></i>
+              <span>Adjust Market Rates</span>
+            </a>
 
-            <!-- 24K Card -->
-            <div class="card-bg p-8 rounded-[2.5rem] relative group hover:border-yellow-600/50 transition duration-500 shadow-2xl overflow-hidden">
-                <div class="flex justify-between items-start">
-                    <div class="flex items-center gap-4">
-                        <div class="w-14 h-14 bg-yellow-500/10 rounded-2xl flex items-center justify-center shadow-inner">
-                            <i class="fas fa-coins gold-text text-2xl"></i>
-                        </div>
-                        <div>
-                            <p class="text-slate-300 font-semibold">Daily 24K Price</p>
-                            <p class="text-slate-500 text-[10px]">Reference: LKR per 1g</p>
-                        </div>
-                    </div>
-                    <span class="bg-yellow-500/20 text-yellow-500 text-[10px] font-bold px-4 py-1.5 rounded-full border border-yellow-500/30 uppercase tracking-widest">24 Karat</span>
-                </div>
-                <div class="mt-8">
-                    <div class="flex items-baseline gap-2">
-                        <span class="text-2xl font-bold text-slate-500 italic">Rs.</span>
-                        <h4 class="text-6xl font-bold text-white tracking-tighter">215,376</h4>
-                    </div>
-                    <p class="text-slate-500 text-[10px] mt-4 uppercase tracking-widest font-bold"><i class="fas fa-clock mr-1"></i> Updated 09:15 AM</p>
-                </div>
-                <button class="absolute bottom-8 right-8 gold-bg text-black px-6 py-3 rounded-2xl font-bold text-sm flex items-center gap-2 hover:scale-105 transition shadow-xl shadow-yellow-600/20">
-                    <i class="fas fa-edit"></i> Update Rate
-                </button>
+            <div style="margin-top: auto; padding: 16px; background: var(--bg-light-gray); border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 11.5px; font-weight: 600; color: var(--text-main);">Daily Bullion Fixation</span>
+                <span style="font-size: 10px; color: #10B981; font-weight: 700;">● Active</span>
+              </div>
+              <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5;">
+                Central Bank benchmark recorded at 09:30 AM. Next scheduled market calibration at 14:00.
+              </p>
             </div>
+          </div>
         </div>
 
-        <!-- STATS GRID -->
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
-            <!-- Sales Card -->
-            <div class="card-bg p-6 rounded-3xl relative overflow-hidden group">
-                <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Today's Total Sales</p>
-                <h4 class="text-2xl font-bold text-white mt-2">Rs. 842,500</h4>
-                <p class="text-green-500 text-[10px] font-bold mt-1">32 orders completed</p>
-                <i class="fas fa-receipt absolute right-6 top-6 text-slate-800 text-2xl group-hover:text-yellow-600/20 transition"></i>
-            </div>
+      </section>
 
-            <!-- Repairs Card -->
-            <div class="card-bg p-6 rounded-3xl relative overflow-hidden group">
-                <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Active Repairs</p>
-                <h4 class="text-3xl font-bold text-white mt-2">18</h4>
-                <p class="text-yellow-500 text-[10px] font-bold mt-1">5 items ready for pickup</p>
-                <i class="fas fa-tools absolute right-6 top-6 text-slate-800 text-2xl group-hover:text-yellow-600/20 transition"></i>
-            </div>
-
-            <!-- Stock Card -->
-            <div class="card-bg p-6 rounded-3xl relative overflow-hidden group border-red-900/20">
-                <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Low Stock Alerts</p>
-                <h4 class="text-3xl font-bold text-white mt-2">07</h4>
-                <p class="text-red-500 text-[10px] font-bold mt-1">Requires re-stocking</p>
-                <i class="fas fa-exclamation-triangle absolute right-6 top-6 text-red-900/20 text-2xl group-hover:scale-110 transition"></i>
-            </div>
-
-            <!-- Savings Card -->
-            <div class="card-bg p-6 rounded-3xl relative overflow-hidden group">
-                <p class="text-slate-400 text-xs font-bold uppercase tracking-wider">Savings Members</p>
-                <h4 class="text-3xl font-bold text-white mt-2">1,246</h4>
-                <p class="text-green-500 text-[10px] font-bold mt-1">+24 new this month</p>
-                <i class="fas fa-piggy-bank absolute right-6 top-6 text-slate-800 text-2xl group-hover:text-green-600/20 transition"></i>
-            </div>
+      <!-- RECENT ORDERS TABLE (Antigravity Floating Card) -->
+      <section class="antigravity-card">
+        <div class="card-header-clean">
+          <div>
+            <h3 class="card-header-title font-serif">Recent Orders & Atelier Dispatches</h3>
+            <p class="card-header-desc">Latest transactions processed across boutique registers and luxury online store</p>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn-white-outline" style="font-size: 12px; padding: 7px 16px;">
+              <i class="fa-solid fa-filter"></i> Filter
+            </button>
+            <button class="btn-white-outline" style="font-size: 12px; padding: 7px 16px;">
+              <i class="fa-solid fa-download"></i> Export CSV
+            </button>
+          </div>
         </div>
 
-        <!-- RECENT TRANSACTIONS TABLE Placeholder -->
-        <div class="card-bg rounded-[2.5rem] overflow-hidden border border-slate-800/50 shadow-2xl">
-            <div class="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/30">
-                <h5 class="text-white font-bold text-xs tracking-widest uppercase ml-2">Recent Activity Log</h5>
-                <button class="text-[10px] gold-text font-bold uppercase tracking-widest border border-yellow-600/30 px-5 py-2 rounded-full hover:bg-yellow-600/10 transition">View Full Report</button>
-            </div>
-            <div class="p-16 text-center text-slate-600">
-                <div class="w-16 h-16 bg-slate-900 border border-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-database text-xl opacity-20"></i>
-                </div>
-                <p class="text-sm italic font-medium">Waiting for Spring Boot API connection...</p>
-            </div>
+        <div style="overflow-x: auto;">
+          <table class="antigravity-table">
+            <thead>
+              <tr>
+                <th>Order Ref</th>
+                <th>Client Patron</th>
+                <th>Jewellery Creation</th>
+                <th>Metal Grade</th>
+                <th>Total (LKR)</th>
+                <th>Payment</th>
+                <th>Fulfillment</th>
+                <th style="text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Row 1 -->
+              <tr>
+                <td><strong style="color: var(--gold-deep); font-family: monospace;">#AUR-8921</strong></td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 28px; height: 28px; border-radius: 50%; background: #F3F4F6; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--gold-deep);">VD</div>
+                    <div>
+                      <p style="font-weight: 600; font-size: 13px;">Lady Vivienne De Silva</p>
+                      <span style="font-size: 11px; color: var(--text-subtle);">Colombo 07</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <img src="assets/prod-necklace.jpg" alt="" style="width: 34px; height: 34px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-light);">
+                    <span>Aurelia Double-Layer Pendant</span>
+                  </div>
+                </td>
+                <td><span class="status-pill gold">18K PVD</span></td>
+                <td><strong style="font-family: 'Playfair Display', serif; font-size: 14.5px;">Rs. 14,500</strong></td>
+                <td><span class="status-pill success"><i class="fa-solid fa-check"></i> Paid</span></td>
+                <td><span class="status-pill gold"><i class="fa-solid fa-truck-fast"></i> Dispatched</span></td>
+                <td style="text-align: right;">
+                  <button class="header-action-btn" style="width: 32px; height: 32px; font-size: 12px; margin-left: auto;" title="View Order">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 2 -->
+              <tr>
+                <td><strong style="color: var(--gold-deep); font-family: monospace;">#AUR-8920</strong></td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 28px; height: 28px; border-radius: 50%; background: #F3F4F6; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--gold-deep);">KS</div>
+                    <div>
+                      <p style="font-weight: 600; font-size: 13px;">Kavinda Senanayake</p>
+                      <span style="font-size: 11px; color: var(--text-subtle);">Kandy Flagship</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <img src="assets/prod-cuff.jpg" alt="" style="width: 34px; height: 34px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-light);">
+                    <span>Soleil Hand-Hammered Cuff</span>
+                  </div>
+                </td>
+                <td><span class="status-pill gold">18K PVD</span></td>
+                <td><strong style="font-family: 'Playfair Display', serif; font-size: 14.5px;">Rs. 18,200</strong></td>
+                <td><span class="status-pill success"><i class="fa-solid fa-check"></i> Paid</span></td>
+                <td><span class="status-pill warning"><i class="fa-solid fa-box-open"></i> Ready</span></td>
+                <td style="text-align: right;">
+                  <button class="header-action-btn" style="width: 32px; height: 32px; font-size: 12px; margin-left: auto;" title="View Order">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 3 -->
+              <tr>
+                <td><strong style="color: var(--gold-deep); font-family: monospace;">#AUR-8919</strong></td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 28px; height: 28px; border-radius: 50%; background: #F3F4F6; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--gold-deep);">DA</div>
+                    <div>
+                      <p style="font-weight: 600; font-size: 13px;">Dilrukshi Alwis</p>
+                      <span style="font-size: 11px; color: var(--text-subtle);">Private Wealth Client</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <img src="assets/gold-ingots.jpg" alt="" style="width: 34px; height: 34px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-light);">
+                    <span>24K Sovereign Bullion Bar (8g)</span>
+                  </div>
+                </td>
+                <td><span class="status-pill gold">24K 999.9</span></td>
+                <td><strong style="font-family: 'Playfair Display', serif; font-size: 14.5px;">Rs. 377,000</strong></td>
+                <td><span class="status-pill success"><i class="fa-solid fa-shield-halved"></i> Escrow</span></td>
+                <td><span class="status-pill gold"><i class="fa-solid fa-vault"></i> Vault Secured</span></td>
+                <td style="text-align: right;">
+                  <button class="header-action-btn" style="width: 32px; height: 32px; font-size: 12px; margin-left: auto;" title="View Order">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Row 4 -->
+              <tr>
+                <td><strong style="color: var(--gold-deep); font-family: monospace;">#AUR-8918</strong></td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 28px; height: 28px; border-radius: 50%; background: #F3F4F6; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--gold-deep);">AF</div>
+                    <div>
+                      <p style="font-weight: 600; font-size: 13px;">Ahamed Farook</p>
+                      <span style="font-size: 11px; color: var(--text-subtle);">Galle Fort Suite</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <img src="assets/prod-earrings.jpg" alt="" style="width: 34px; height: 34px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-light);">
+                    <span>Celeste Baroque Pearl Drops</span>
+                  </div>
+                </td>
+                <td><span class="status-pill gold">18K Pearl</span></td>
+                <td><strong style="font-family: 'Playfair Display', serif; font-size: 14.5px;">Rs. 12,800</strong></td>
+                <td><span class="status-pill success"><i class="fa-solid fa-check"></i> Paid</span></td>
+                <td><span class="status-pill gold"><i class="fa-solid fa-truck-fast"></i> Dispatched</span></td>
+                <td style="text-align: right;">
+                  <button class="header-action-btn" style="width: 32px; height: 32px; font-size: 12px; margin-left: auto;" title="View Order">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
+      </section>
 
-    </div>
-</main>
+    </main>
+  </div>
+</div>
 
-<!-- JAVASCRIPT: LOGIC FOR SIDEBAR & DATE -->
+<!-- SIDEBAR LOADING SCRIPT -->
 <script>
-    // 1. Sidebar load logic
-    fetch('sidebar.html')
-        .then(response => {
-            if (!response.ok) throw new Error('Sidebar not found');
-            return response.text();
-        })
-        .then(data => {
-            document.getElementById('sidebar-container').innerHTML = data;
-
-            // Sidebar active state logic
-            const currentPath = window.location.pathname.split("/").pop() || "dashboard.html";
-            const navLinks = document.querySelectorAll('.nav-link');
-
-            navLinks.forEach(link => {
-                if (link.getAttribute('href') === currentPath) {
-                    link.classList.add('sidebar-active');
-                }
-            });
-        })
-        .catch(err => console.error(err));
-
-    // 2. Date Display logic
-    const dateOptions = { month: 'long', day: 'numeric', year: 'numeric' };
-    document.getElementById('dateDisplay').textContent = new Date().toLocaleDateString('en-US', dateOptions);
+  fetch('sidebar.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('sidebar-container').innerHTML = html;
+      const activeLink = document.querySelector('.sidebar-link[data-page="dashboard.html"]');
+      if (activeLink) activeLink.classList.add('active');
+    })
+    .catch(err => console.log('Sidebar load:', err));
 </script>
+
 </body>
 </html>

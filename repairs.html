@@ -1,203 +1,480 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AURUM JEWELS - Repair Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #020617; color: white; margin: 0; }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #020617; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; border: 2px solid #020617; }
-        ::-webkit-scrollbar-thumb:hover { background: #D4AF37; }
-
-        .gold-text { color: #D4AF37; }
-        .gold-bg { background-color: #D4AF37; }
-        .card-bg { background-color: #0f172a; border: 1px solid #1e293b; }
-        .modal { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); }
-
-        /* Timeline / Pipeline Styles */
-        .step-circle {
-            width: 44px; height: 44px; border-radius: 50%; border: 2px solid #1e293b;
-            background: #0f172a; display: flex; align-items: center; justify-content: center;
-            font-size: 16px; position: relative; z-index: 10; transition: 0.4s;
-        }
-        .step-active { background: #D4AF37; color: #000; border-color: #D4AF37; box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
-        .step-line { position: absolute; top: 22px; left: 0; width: 100%; height: 2px; background: #1e293b; z-index: 1; }
-
-        /* Sidebar Active State */
-        .sidebar-active {
-            background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0) 100%);
-            color: #fbbf24 !important;
-            border-left: 4px solid #fbbf24;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURUM JEWELS | Repair Lounge & Master Restoration</title>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Unified Internal Dashboard Stylesheet -->
+  <link rel="stylesheet" href="css/internal.css?v=2">
+  <style>
+    html, body {
+      background-color: #FFFFFF !important;
+      color: #141518 !important;
+    }
+  </style>
 </head>
-<body class="flex h-screen overflow-hidden">
+<body style="background-color: #FFFFFF !important;">
 
-<!-- 1. SIDEBAR CONTAINER -->
-<div id="sidebar-container" class="h-full flex-shrink-0">
-    <!-- sidebar.html will be loaded here via JS -->
-</div>
+<div class="app-wrapper">
+  
+  <!-- 1. FLOATING MINIMALIST SIDEBAR -->
+  <div id="sidebar-container"></div>
 
-<!-- 2. MAIN CONTENT WRAPPER -->
-<div class="flex-1 flex flex-col h-full overflow-hidden">
-
+  <!-- 2. MAIN VIEWPORT -->
+  <div class="main-viewport">
+    
     <!-- TOP HEADER BAR -->
-    <header class="h-20 flex justify-between items-center px-8 sticky top-0 bg-[#020617]/90 backdrop-blur-md z-30 border-b border-slate-800/50 flex-shrink-0">
-        <div>
-            <h2 class="text-xl font-bold tracking-widest text-white uppercase leading-none italic">AURUM <span class="gold-text">JEWELS</span></h2>
-            <p class="text-slate-500 text-[10px] uppercase tracking-[0.2em] mt-1 italic">Repair & Service Management</p>
+    <header class="top-header">
+      <div class="header-left">
+        <div class="page-breadcrumb">
+          <span class="breadcrumb-tag">Master Atelier Bench &bull; Restoration Lounge</span>
+          <h2 class="breadcrumb-title font-serif">Repair Management</h2>
         </div>
 
-        <div class="flex items-center gap-6">
-            <!-- Search Bar -->
-            <div class="relative group hidden xl:block">
-                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs"></i>
-                <input type="text" placeholder="Search Repair ID or Customer..."
-                       class="bg-slate-900 border border-slate-800 rounded-full py-2.5 pl-12 pr-6 text-xs text-white focus:outline-none focus:border-yellow-600 transition w-80 shadow-inner">
-            </div>
-            <!-- Profile Indicator -->
-            <div class="flex items-center gap-3 bg-slate-900 border border-slate-800 py-1.5 pl-1.5 pr-4 rounded-full">
-                <div class="w-8 h-8 bg-yellow-600 rounded-full flex items-center justify-center font-bold text-black text-xs shadow-lg">A</div>
-                <div class="hidden sm:block text-left">
-                    <p class="text-[11px] font-bold text-white uppercase">Admin</p>
-                </div>
-            </div>
+        <!-- Global Search Bar -->
+        <div class="global-search-wrap">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" class="global-search-input" placeholder="Search repair ticket, patron, item, metal..." aria-label="Global Search">
+          <span class="search-shortcut-badge">⌘K</span>
         </div>
+      </div>
+
+      <!-- Header Right Actions -->
+      <div class="header-right">
+        <!-- Live Market Spot Rate Ticker -->
+        <div class="header-rate-ticker">
+          <i class="fa-solid fa-coins" style="color: var(--gold-primary);"></i>
+          <span>22K Spot: <span class="gold-val">Rs. 43,375/g</span></span>
+        </div>
+
+        <!-- Notifications -->
+        <button class="header-action-btn" title="Bench Alerts">
+          <i class="fa-regular fa-bell"></i>
+          <span class="header-badge-dot"></span>
+        </button>
+
+        <!-- User Profile: Amal Mendis - Admin -->
+        <div class="user-profile-badge" title="Account Settings">
+          <div class="user-avatar-gold">AM</div>
+          <div class="user-info-text">
+            <span class="user-name-title">Amal Mendis</span>
+            <span class="user-role-tag">Admin &bull; Atelier Director</span>
+          </div>
+          <i class="fa-solid fa-chevron-down" style="font-size: 10px; color: var(--text-subtle); margin-left: 4px;"></i>
+        </div>
+      </div>
     </header>
 
-    <!-- MAIN SCROLLABLE BODY -->
-    <main class="flex-1 p-10 overflow-y-auto">
-        <div class="max-w-5xl mx-auto">
-            <header class="flex justify-between items-end mb-12">
-                <div>
-                    <h2 class="text-4xl font-bold tracking-tight text-white">Repair Pipeline</h2>
-                    <p class="text-slate-400 mt-2 italic">Track every repair order from reception to delivery.</p>
-                </div>
-                <button onclick="toggleRepairModal()"
-                        class="gold-bg text-black px-8 py-4 rounded-2xl font-bold flex items-center gap-2 hover:scale-105 transition shadow-lg shadow-yellow-600/20 active:scale-95">
-                    <i class="fas fa-plus"></i> Add New Job
-                </button>
-            </header>
-
-            <!-- REPAIR CARDS LIST -->
-            <div class="space-y-8">
-
-                <!-- Example Repair Card -->
-                <div class="card-bg p-10 rounded-[3rem] relative group border border-slate-800/50 shadow-2xl hover:border-yellow-600/30 transition duration-500">
-                    <div class="flex justify-between items-start mb-12">
-                        <div class="flex gap-6">
-                            <div class="w-16 h-16 bg-yellow-500/10 rounded-2xl flex items-center justify-center shadow-inner">
-                                <i class="fas fa-tools gold-text text-2xl"></i>
-                            </div>
-                            <div>
-                                <div class="flex items-center gap-3">
-                                    <h4 class="text-xl font-bold text-white tracking-wide italic uppercase">RPR-2041</h4>
-                                    <span class="text-slate-600">•</span>
-                                    <h4 class="text-xl font-medium text-slate-300">Meena Sharma</h4>
-                                </div>
-                                <p class="gold-text text-sm font-bold mt-1 uppercase tracking-widest italic">22K Gold Bangle Set</p>
-                                <p class="text-xs text-slate-500 mt-2 italic">Issue: Resize larger and re-polishing required.</p>
-                            </div>
-                        </div>
-                        <!-- Staff Update Button -->
-                        <button class="gold-bg text-black px-6 py-3 rounded-2xl font-bold text-sm flex items-center gap-2 hover:scale-105 transition shadow-lg">
-                            Update Status <i class="fas fa-chevron-right text-[10px]"></i>
-                        </button>
-                    </div>
-
-                    <!-- PIPELINE PROGRESS UI -->
-                    <div class="max-w-3xl mx-auto relative px-4 pb-4">
-                        <!-- Background Connect Line -->
-                        <div class="step-line"></div>
-
-                        <div class="flex justify-between items-center relative z-10">
-                            <!-- Step 1: Received (Active) -->
-                            <div class="flex flex-col items-center gap-4">
-                                <div class="step-circle step-active"><i class="fas fa-check"></i></div>
-                                <span class="text-[10px] font-bold uppercase tracking-[0.2em] gold-text">Received</span>
-                            </div>
-                            <!-- Step 2: Melting -->
-                            <div class="flex flex-col items-center gap-4">
-                                <div class="step-circle text-slate-600"><i class="fas fa-fire"></i></div>
-                                <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600">Melting</span>
-                            </div>
-                            <!-- Step 3: Crafting -->
-                            <div class="flex flex-col items-center gap-4">
-                                <div class="step-circle text-slate-600"><i class="fas fa-hammer"></i></div>
-                                <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600">Crafting</span>
-                            </div>
-                            <!-- Step 4: Ready -->
-                            <div class="flex flex-col items-center gap-4">
-                                <div class="step-circle text-slate-600"><i class="fas fa-box-open"></i></div>
-                                <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-600 text-center">Ready for<br>Pickup</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Card list ends -->
-            </div>
+    <!-- CONTENT BODY (Pure White with Light Gray Nuances) -->
+    <main class="content-body">
+      
+      <!-- TOP METRICS SUMMARY ROW (Antigravity Floating Style) -->
+      <section class="metrics-row-4col" style="margin-bottom: 26px;">
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Active Bench Dockets</span>
+            <div class="metric-icon-box"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+          </div>
+          <div class="metric-val-main">24 Orders</div>
+          <div class="metric-sub-row">
+            <span class="trend-badge-up"><i class="fa-solid fa-fire-flame-curved"></i> High Activity</span>
+          </div>
         </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Ready for Pickup</span>
+            <div class="metric-icon-box"><i class="fa-solid fa-circle-check"></i></div>
+          </div>
+          <div class="metric-val-main" style="color: #059669;">7 Masterpieces</div>
+          <div class="metric-sub-row">
+            <span class="status-pill success" style="font-size: 10.5px;">Vault Sealed</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">In Crafting & Melting</span>
+            <div class="metric-icon-box"><i class="fa-solid fa-hammer"></i></div>
+          </div>
+          <div class="metric-val-main">14 on Bench</div>
+          <div class="metric-sub-row">
+            <span class="trend-badge-gold">Benches 1 &bull; 2 &bull; 3</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Estimated Service Revenue</span>
+            <div class="metric-icon-box"><i class="fa-solid fa-receipt"></i></div>
+          </div>
+          <!-- HIGH-CONTRAST BOLD SANS-SERIF -->
+          <div class="metric-val-main">Rs. 428,500</div>
+          <div class="metric-sub-row">
+            <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +15.8%</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- REPAIR LOUNGE CONTROLS & FILTER STRIP -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 14px;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn-white-outline" style="background: var(--gold-gradient); color: #FFF; border-color: transparent; font-size: 12px; padding: 8px 18px;">
+            All Restorations (24)
+          </button>
+          <button class="btn-white-outline" style="font-size: 12px; padding: 8px 16px;">
+            Stage 1: Received (3)
+          </button>
+          <button class="btn-white-outline" style="font-size: 12px; padding: 8px 16px;">
+            Stage 2: Melting (5)
+          </button>
+          <button class="btn-white-outline" style="font-size: 12px; padding: 8px 16px;">
+            Stage 3: Crafting (9)
+          </button>
+          <button class="btn-white-outline" style="font-size: 12px; padding: 8px 16px;">
+            Stage 4: Ready (7)
+          </button>
+        </div>
+
+        <button class="btn-gold-primary" onclick="openNewRepairModal();" style="font-size: 12px; padding: 9px 20px;">
+          <i class="fa-solid fa-plus"></i>
+          <span>Intake New Repair Docket</span>
+        </button>
+      </div>
+
+      <!-- ACTIVE REPAIRS AS HORIZONTAL FLOATING CARDS (Per Requirement) -->
+      <section class="repairs-list-container">
+        
+        <!-- CARD 1: STAGE 4 (READY FOR PICKUP - ACTIVE GLOW) -->
+        <article class="repair-card-horizontal">
+          <div class="repair-item-meta">
+            <div class="repair-thumb-box">
+              <img src="assets/prod-ring.jpg" alt="Antique Diamond Solitaire Ring">
+            </div>
+            <div>
+              <div class="repair-docket-tag">#REP-4091 &bull; 22K HEIRLOOM</div>
+              <h4 class="repair-piece-name font-serif">Antique Diamond Solitaire Ring</h4>
+              <p class="repair-client-sub">
+                <i class="fa-regular fa-user" style="color: var(--gold-primary);"></i> Lady Vivienne De Silva &bull; 5-Star Elite
+              </p>
+              <span style="font-size: 11px; color: #059669; font-weight: 600; margin-top: 4px; display: block;">
+                <i class="fa-solid fa-circle-check"></i> Quality Assay Passed & Ultrasonic Polished
+              </span>
+            </div>
+          </div>
+
+          <!-- 4-STAGE PIPELINE -->
+          <div class="repair-pipeline-wrapper">
+            <div class="pipeline-track">
+              <div class="pipeline-track-fill" style="width: 100%;"></div>
+            </div>
+            <div class="pipeline-steps-row">
+              <!-- Stage 1: Received (Completed) -->
+              <div class="pipeline-step-col">
+                <div class="step-node completed"><i class="fa-solid fa-check"></i></div>
+                <span class="step-label">Received</span>
+                <span class="step-subtext">08 Sep</span>
+              </div>
+              <!-- Stage 2: Melting (Completed) -->
+              <div class="pipeline-step-col">
+                <div class="step-node completed"><i class="fa-solid fa-check"></i></div>
+                <span class="step-label">Melting</span>
+                <span class="step-subtext">09 Sep</span>
+              </div>
+              <!-- Stage 3: Crafting (Completed) -->
+              <div class="pipeline-step-col">
+                <div class="step-node completed"><i class="fa-solid fa-check"></i></div>
+                <span class="step-label">Crafting</span>
+                <span class="step-subtext">10 Sep</span>
+              </div>
+              <!-- Stage 4: Ready for Pickup (ACTIVE GLOWING STAGE) -->
+              <div class="pipeline-step-col">
+                <div class="step-node active-glow"><i class="fa-solid fa-bell-concierge"></i></div>
+                <span class="step-label active">Ready</span>
+                <span class="step-subtext" style="color: var(--gold-deep); font-weight: 700;">In Vault</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions & Cost -->
+          <div class="repair-actions-col">
+            <span style="font-size: 10.5px; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Service Cost</span>
+            <div class="repair-cost-bold">Rs. 28,500</div>
+            <div style="display: flex; gap: 8px; margin-top: 4px;">
+              <button class="btn-gold-primary" style="font-size: 11.5px; padding: 7px 14px;" onclick="alert('Client notified via SMS & Email: Piece Ready for Collection!');">
+                <i class="fa-solid fa-paper-plane"></i> Notify
+              </button>
+              <button class="btn-white-outline" style="font-size: 11.5px; padding: 7px 12px;" title="Print Docket">
+                <i class="fa-solid fa-print"></i>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- CARD 2: STAGE 3 (CRAFTING - ACTIVE GLOW) -->
+        <article class="repair-card-horizontal">
+          <div class="repair-item-meta">
+            <div class="repair-thumb-box">
+              <img src="assets/prod-necklace.jpg" alt="22K Royal Sovereign Choker">
+            </div>
+            <div>
+              <div class="repair-docket-tag">#REP-4092 &bull; 22K HERITAGE GOLD</div>
+              <h4 class="repair-piece-name font-serif">Royal Sovereign Filigree Choker</h4>
+              <p class="repair-client-sub">
+                <i class="fa-regular fa-user" style="color: var(--gold-primary);"></i> Kavinda Senanayake &bull; Kandy Flagship
+              </p>
+              <span style="font-size: 11px; color: var(--text-muted); margin-top: 4px; display: block;">
+                Laser Micro-Welding Link #4 & Resetting Center Ruby
+              </span>
+            </div>
+          </div>
+
+          <!-- 4-STAGE PIPELINE -->
+          <div class="repair-pipeline-wrapper">
+            <div class="pipeline-track">
+              <div class="pipeline-track-fill" style="width: 66%;"></div>
+            </div>
+            <div class="pipeline-steps-row">
+              <!-- Stage 1: Received (Completed) -->
+              <div class="pipeline-step-col">
+                <div class="step-node completed"><i class="fa-solid fa-check"></i></div>
+                <span class="step-label">Received</span>
+                <span class="step-subtext">09 Sep</span>
+              </div>
+              <!-- Stage 2: Melting (Completed) -->
+              <div class="pipeline-step-col">
+                <div class="step-node completed"><i class="fa-solid fa-check"></i></div>
+                <span class="step-label">Melting</span>
+                <span class="step-subtext">10 Sep</span>
+              </div>
+              <!-- Stage 3: Crafting (ACTIVE GLOWING STAGE) -->
+              <div class="pipeline-step-col">
+                <div class="step-node active-glow"><i class="fa-solid fa-gem"></i></div>
+                <span class="step-label active">Crafting</span>
+                <span class="step-subtext" style="color: var(--gold-deep); font-weight: 700;">Bench 2</span>
+              </div>
+              <!-- Stage 4: Ready for Pickup (Pending) -->
+              <div class="pipeline-step-col">
+                <div class="step-node">4</div>
+                <span class="step-label">Ready</span>
+                <span class="step-subtext">Est 12 Sep</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions & Cost -->
+          <div class="repair-actions-col">
+            <span style="font-size: 10.5px; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Service Cost</span>
+            <div class="repair-cost-bold">Rs. 42,000</div>
+            <div style="display: flex; gap: 8px; margin-top: 4px;">
+              <button class="btn-white-outline" style="font-size: 11.5px; padding: 7px 14px;" onclick="alert('Advancing #REP-4092 to Ready for Pickup');">
+                <i class="fa-solid fa-forward"></i> Complete
+              </button>
+              <button class="btn-white-outline" style="font-size: 11.5px; padding: 7px 12px;" title="Print Docket">
+                <i class="fa-solid fa-print"></i>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- CARD 3: STAGE 2 (MELTING - ACTIVE GLOW) -->
+        <article class="repair-card-horizontal">
+          <div class="repair-item-meta">
+            <div class="repair-thumb-box">
+              <img src="assets/prod-cuff.jpg" alt="18K Hammered Sovereign Cuff">
+            </div>
+            <div>
+              <div class="repair-docket-tag">#REP-4093 &bull; 18K HEAVY PVD REPLATE</div>
+              <h4 class="repair-piece-name font-serif">Hammered Signature Sculpted Cuff</h4>
+              <p class="repair-client-sub">
+                <i class="fa-regular fa-user" style="color: var(--gold-primary);"></i> Dilrukshi Alwis &bull; Sovereign Patron
+              </p>
+              <span style="font-size: 11px; color: var(--text-muted); margin-top: 4px; display: block;">
+                Gold Bath Electrolysis & Micro-Crack Re-Fusion
+              </span>
+            </div>
+          </div>
+
+          <!-- 4-STAGE PIPELINE -->
+          <div class="repair-pipeline-wrapper">
+            <div class="pipeline-track">
+              <div class="pipeline-track-fill" style="width: 33%;"></div>
+            </div>
+            <div class="pipeline-steps-row">
+              <!-- Stage 1: Received (Completed) -->
+              <div class="pipeline-step-col">
+                <div class="step-node completed"><i class="fa-solid fa-check"></i></div>
+                <span class="step-label">Received</span>
+                <span class="step-subtext">10 Sep</span>
+              </div>
+              <!-- Stage 2: Melting (ACTIVE GLOWING STAGE) -->
+              <div class="pipeline-step-col">
+                <div class="step-node active-glow"><i class="fa-solid fa-fire-burner"></i></div>
+                <span class="step-label active">Melting</span>
+                <span class="step-subtext" style="color: var(--gold-deep); font-weight: 700;">Foundry</span>
+              </div>
+              <!-- Stage 3: Crafting (Pending) -->
+              <div class="pipeline-step-col">
+                <div class="step-node">3</div>
+                <span class="step-label">Crafting</span>
+                <span class="step-subtext">Pending</span>
+              </div>
+              <!-- Stage 4: Ready for Pickup (Pending) -->
+              <div class="pipeline-step-col">
+                <div class="step-node">4</div>
+                <span class="step-label">Ready</span>
+                <span class="step-subtext">Est 14 Sep</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions & Cost -->
+          <div class="repair-actions-col">
+            <span style="font-size: 10.5px; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Service Cost</span>
+            <div class="repair-cost-bold">Rs. 18,500</div>
+            <div style="display: flex; gap: 8px; margin-top: 4px;">
+              <button class="btn-white-outline" style="font-size: 11.5px; padding: 7px 14px;" onclick="alert('Advancing #REP-4093 to Crafting Bench');">
+                <i class="fa-solid fa-forward"></i> Advance
+              </button>
+              <button class="btn-white-outline" style="font-size: 11.5px; padding: 7px 12px;" title="Print Docket">
+                <i class="fa-solid fa-print"></i>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- CARD 4: STAGE 1 (RECEIVED - ACTIVE GLOW) -->
+        <article class="repair-card-horizontal">
+          <div class="repair-item-meta">
+            <div class="repair-thumb-box">
+              <img src="assets/prod-earrings.jpg" alt="Baroque Pearl & 18K Filigree Drops">
+            </div>
+            <div>
+              <div class="repair-docket-tag">#REP-4094 &bull; INTAKE &bull; X-RAY ASSAY</div>
+              <h4 class="repair-piece-name font-serif">Baroque Pearl Cascade Drops</h4>
+              <p class="repair-client-sub">
+                <i class="fa-regular fa-user" style="color: var(--gold-primary);"></i> Ahamed Farook &bull; Galle Fort Suite
+              </p>
+              <span style="font-size: 11px; color: var(--text-muted); margin-top: 4px; display: block;">
+                Clasp Safety Spring Replacement & Pearl Luster Seal
+              </span>
+            </div>
+          </div>
+
+          <!-- 4-STAGE PIPELINE -->
+          <div class="repair-pipeline-wrapper">
+            <div class="pipeline-track">
+              <div class="pipeline-track-fill" style="width: 0%;"></div>
+            </div>
+            <div class="pipeline-steps-row">
+              <!-- Stage 1: Received (ACTIVE GLOWING STAGE) -->
+              <div class="pipeline-step-col">
+                <div class="step-node active-glow"><i class="fa-solid fa-box-archive"></i></div>
+                <span class="step-label active">Received</span>
+                <span class="step-subtext" style="color: var(--gold-deep); font-weight: 700;">Intake</span>
+              </div>
+              <!-- Stage 2: Melting (Pending) -->
+              <div class="pipeline-step-col">
+                <div class="step-node">2</div>
+                <span class="step-label">Melting</span>
+                <span class="step-subtext">Queue</span>
+              </div>
+              <!-- Stage 3: Crafting (Pending) -->
+              <div class="pipeline-step-col">
+                <div class="step-node">3</div>
+                <span class="step-label">Crafting</span>
+                <span class="step-subtext">Pending</span>
+              </div>
+              <!-- Stage 4: Ready for Pickup (Pending) -->
+              <div class="pipeline-step-col">
+                <div class="step-node">4</div>
+                <span class="step-label">Ready</span>
+                <span class="step-subtext">Est 15 Sep</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions & Cost -->
+          <div class="repair-actions-col">
+            <span style="font-size: 10.5px; text-transform: uppercase; color: var(--text-muted); font-weight: 600;">Service Cost</span>
+            <div class="repair-cost-bold">Rs. 14,000</div>
+            <div style="display: flex; gap: 8px; margin-top: 4px;">
+              <button class="btn-white-outline" style="font-size: 11.5px; padding: 7px 14px;" onclick="alert('Advancing #REP-4094 to Melting Foundry');">
+                <i class="fa-solid fa-forward"></i> Advance
+              </button>
+              <button class="btn-white-outline" style="font-size: 11.5px; padding: 7px 12px;" title="Print Docket">
+                <i class="fa-solid fa-print"></i>
+              </button>
+            </div>
+          </div>
+        </article>
+
+      </section>
+
     </main>
+  </div>
 </div>
 
-<!-- ADD REPAIR MODAL -->
-<div id="repairModal" class="modal fixed inset-0 hidden flex items-center justify-center z-50 p-6">
-    <div class="bg-[#0f172a] w-full max-w-[550px] rounded-[3rem] p-10 border border-slate-700 shadow-2xl">
-        <div class="flex justify-between items-center mb-10">
-            <h3 class="text-2xl font-bold tracking-tight italic">Register <span class="gold-text">New Job</span></h3>
-            <button onclick="toggleRepairModal()" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <form class="space-y-6">
-            <div>
-                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2 ml-1">Customer Search</label>
-                <input type="text" placeholder="Enter name or Phone number..."
-                       class="w-full bg-slate-900 border border-slate-800 rounded-2xl p-4 outline-none focus:border-yellow-600 transition text-sm italic">
-            </div>
-            <div>
-                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2 ml-1">Item Description</label>
-                <input type="text" placeholder="e.g. 22K Gold Chain (12.5g)"
-                       class="w-full bg-slate-900 border border-slate-800 rounded-2xl p-4 outline-none focus:border-yellow-600 transition text-sm italic">
-            </div>
-            <div>
-                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-2 ml-1">Repair Details</label>
-                <textarea placeholder="e.g. Polish and fix broken link..."
-                          class="w-full bg-slate-900 border border-slate-800 rounded-2xl p-4 h-28 outline-none focus:border-yellow-600 transition text-sm italic resize-none"></textarea>
-            </div>
-            <div class="flex gap-4 pt-6">
-                <button type="button" onclick="toggleRepairModal()" class="flex-1 bg-slate-800 p-4 rounded-2xl font-bold hover:bg-slate-700 transition">Cancel</button>
-                <button type="submit" class="flex-1 gold-bg text-black p-4 rounded-2xl font-bold shadow-lg shadow-yellow-600/20 hover:scale-105 transition">Register Job</button>
-            </div>
-        </form>
+<!-- NEW REPAIR DOCKET MODAL -->
+<div id="repairModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.5); backdrop-filter: blur(16px); z-index: 100; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: rgba(255,255,255,0.96); backdrop-filter: blur(28px); border: 1.5px solid rgba(197,160,89,0.4); border-radius: var(--radius-xl); box-shadow: var(--shadow-floating-hover); width: 100%; max-width: 500px; padding: 34px; position: relative;">
+    <button onclick="closeNewRepairModal()" style="position: absolute; top: 18px; right: 18px; width: 32px; height: 32px; border-radius: 50%; background: #FFF; border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center;">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div style="text-align: center; margin-bottom: 20px;">
+      <i class="fa-solid fa-screwdriver-wrench" style="color: var(--gold-primary); font-size: 22px; margin-bottom: 6px;"></i>
+      <h3 class="font-serif" style="font-size: 22px; font-weight: 700;">Intake Repair Docket</h3>
+      <p style="font-size: 12px; color: var(--text-muted);">Log patron heirloom or custom restoration into atelier queue</p>
     </div>
+    <form onsubmit="event.preventDefault(); alert('Repair Docket #REP-4095 Logged!'); closeNewRepairModal();">
+      <div style="margin-bottom: 12px;">
+        <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Patron Name</label>
+        <input type="text" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" placeholder="e.g. Lady Vivienne De Silva" required>
+      </div>
+      <div style="margin-bottom: 12px;">
+        <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Jewellery Item Description</label>
+        <input type="text" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" placeholder="e.g. 22K Solid Gold Bangle" required>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+        <div>
+          <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Service Fee (LKR)</label>
+          <input type="text" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" placeholder="Rs. 25,000" required>
+        </div>
+        <div>
+          <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Target Date</label>
+          <input type="date" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" required>
+        </div>
+      </div>
+      <button type="submit" class="btn-gold-primary" style="width: 100%; justify-content: center; padding: 13px;">
+        <i class="fa-solid fa-check"></i>
+        <span>Issue Ticket & Enqueue</span>
+      </button>
+    </form>
+  </div>
 </div>
 
+<!-- SIDEBAR SCRIPT & MODAL TOGGLES -->
 <script>
-    function toggleRepairModal() {
-        document.getElementById('repairModal').classList.toggle('hidden');
-    }
+  fetch('sidebar.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('sidebar-container').innerHTML = html;
+      const activeLink = document.querySelector('.sidebar-link[data-page="repairs.html"]');
+      if (activeLink) activeLink.classList.add('active');
+    })
+    .catch(err => console.log('Sidebar load:', err));
 
-    // Sidebar load with active state logic
-    fetch('sidebar.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('sidebar-container').innerHTML = data;
-            const currentPath = window.location.pathname.split("/").pop() || "dashboard.html";
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                if (link.getAttribute('href') === currentPath) {
-                    link.classList.add('sidebar-active');
-                }
-            });
-        });
+  function openNewRepairModal() {
+    document.getElementById('repairModal').style.display = 'flex';
+  }
+  function closeNewRepairModal() {
+    document.getElementById('repairModal').style.display = 'none';
+  }
 </script>
+
 </body>
 </html>

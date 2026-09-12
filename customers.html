@@ -1,41 +1,508 @@
-<!-- customers.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #020617; color: white; margin: 0; }
-        .gold-text { color: #D4AF37; }
-        .card-bg { background-color: #0f172a; border: 1px solid #1e293b; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURUM JEWELS | VIP Patrons Registry & Concierge</title>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Unified Internal Dashboard Stylesheet -->
+  <link rel="stylesheet" href="css/internal.css">
 </head>
-<body class="flex h-screen overflow-hidden">
-<div id="sidebar-container" class="h-full"></div>
-<main class="flex-1 p-10 overflow-y-auto">
-    <header class="flex justify-between items-center mb-10">
-        <h2 class="text-3xl font-bold">Customer <span class="gold-text">Registry</span></h2>
-        <div class="relative"><i class="fas fa-search absolute left-4 top-3 text-slate-500"></i><input type="text" placeholder="Search customer..." class="bg-slate-900 border border-slate-800 rounded-full py-2 pl-12 pr-6 text-sm"></div>
+<body>
+
+<div class="app-wrapper">
+  
+  <!-- 1. FLOATING MINIMALIST SIDEBAR -->
+  <div id="sidebar-container"></div>
+
+  <!-- 2. MAIN VIEWPORT -->
+  <div class="main-viewport">
+    
+    <!-- TOP HEADER BAR -->
+    <header class="top-header">
+      <div class="header-left">
+        <div class="page-breadcrumb">
+          <span class="breadcrumb-tag">Clientele Concierge &bull; Private Registry</span>
+          <h2 class="breadcrumb-title font-serif">VIP Patrons</h2>
+        </div>
+
+        <!-- Global Search Bar -->
+        <div class="global-search-wrap">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" class="global-search-input" placeholder="Search patron name, ID, phone, city..." aria-label="Global Search">
+          <span class="search-shortcut-badge">⌘K</span>
+        </div>
+      </div>
+
+      <!-- Header Right Actions -->
+      <div class="header-right">
+        <!-- Live Rate Ticker -->
+        <div class="header-rate-ticker">
+          <i class="fa-solid fa-coins" style="color: var(--gold-primary);"></i>
+          <span>22K: <span class="gold-val">Rs. 347,000</span></span>
+        </div>
+
+        <!-- Notifications -->
+        <button class="header-action-btn" title="Concierge Alerts">
+          <i class="fa-regular fa-bell"></i>
+          <span class="header-badge-dot"></span>
+        </button>
+
+        <!-- User Profile: Amal Mendis - Admin -->
+        <div class="user-profile-badge" title="Account Settings">
+          <div class="user-avatar-gold">AM</div>
+          <div class="user-info-text">
+            <span class="user-name-title">Amal Mendis</span>
+            <span class="user-role-tag">Admin &bull; Atelier Director</span>
+          </div>
+          <i class="fa-solid fa-chevron-down" style="font-size: 10px; color: var(--text-subtle); margin-left: 4px;"></i>
+        </div>
+      </div>
     </header>
 
-    <div class="card-bg rounded-[2.5rem] overflow-hidden">
-        <table class="w-full text-left">
-            <thead class="bg-slate-900/50 text-slate-500 text-[10px] uppercase font-bold tracking-widest">
-            <tr><th class="p-6">Name</th><th class="p-6">Contact</th><th class="p-6">Loyalty Points</th><th class="p-6">Total Spent</th><th class="p-6">Actions</th></tr>
+    <!-- CONTENT BODY (Pure White with Light Gray Nuances) -->
+    <main class="content-body">
+      
+      <!-- TOP METRICS ROW (Antigravity Floating Style) -->
+      <section class="metrics-row-4col" style="margin-bottom: 26px;">
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Registered VIP Patrons</span>
+            <div class="metric-icon-box"><i class="fa-solid fa-users-viewfinder"></i></div>
+          </div>
+          <div class="metric-val-main">1,280 Patrons</div>
+          <div class="metric-sub-row">
+            <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +28 this month</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Cumulative Patron Spend</span>
+            <div class="metric-icon-box"><i class="fa-solid fa-vault"></i></div>
+          </div>
+          <div class="metric-val-main">Rs. 142,850,000</div>
+          <div class="metric-sub-row">
+            <span class="trend-badge-gold">High Net Worth Registry</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Sovereign Elite Tier</span>
+            <div class="metric-icon-box"><i class="fa-solid fa-crown"></i></div>
+          </div>
+          <div class="metric-val-main">142 Clients</div>
+          <div class="metric-sub-row">
+            <span class="trend-badge-up"><i class="fa-solid fa-star"></i> 5-Star Highest Tier</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-top-row">
+            <span class="metric-label">Average Annual Volume</span>
+            <div class="metric-icon-box"><i class="fa-solid fa-receipt"></i></div>
+          </div>
+          <div class="metric-val-main">Rs. 892,500</div>
+          <div class="metric-sub-row">
+            <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +11.2% LTV</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- REGISTRY TABLE ACTIONS STRIP -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn-white-outline" style="background: var(--gold-gradient); color: #FFF; border-color: transparent; font-size: 12px; padding: 8px 18px;">
+            All Patrons (1,280)
+          </button>
+          <button class="btn-white-outline" style="font-size: 12px; padding: 8px 18px;">
+            Sovereign Elite (★★★★★)
+          </button>
+          <button class="btn-white-outline" style="font-size: 12px; padding: 8px 18px;">
+            Gold Sovereign (★★★★)
+          </button>
+          <button class="btn-white-outline" style="font-size: 12px; padding: 8px 18px;">
+            Heritage Members
+          </button>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-white-outline" style="font-size: 12px; padding: 8px 16px;">
+            <i class="fa-solid fa-filter"></i> Filters
+          </button>
+          <button class="btn-gold-primary" onclick="openPatronModal();" style="font-size: 12px; padding: 9px 20px;">
+            <i class="fa-solid fa-user-plus"></i>
+            <span>Register New Patron</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- VIP PATRONS TABLE (Minimalist White with 1px Gold Borders) -->
+      <section class="patron-card-table">
+        <div style="overflow-x: auto;">
+          <table class="antigravity-table">
+            <thead>
+              <tr>
+                <th style="width: 140px;">Patron ID</th>
+                <th>Client Name</th>
+                <th>Contact Coordinates</th>
+                <th>Total Spend (LKR)</th>
+                <th>Loyalty Status</th>
+                <th style="text-align: right;">Concierge Action</th>
+              </tr>
             </thead>
-            <tbody class="divide-y divide-slate-800/50">
-            <tr>
-                <td class="p-6 font-bold">Kamantha Perera</td>
-                <td class="p-6 text-slate-400">077 123 4567</td>
-                <td class="p-6 gold-text font-bold"><i class="fas fa-star mr-2"></i> 1,450 pts</td>
-                <td class="p-6">Rs. 845,000</td>
-                <td class="p-6"><button class="text-slate-500 hover:text-white"><i class="fas fa-eye"></i> View</button></td>
-            </tr>
+            <tbody>
+              <!-- Patron 1 -->
+              <tr>
+                <td><strong style="color: var(--gold-deep); font-family: monospace; font-size: 13.5px;">#AUR-VIP-001</strong></td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #FAF5EC 0%, #F5EBD7 100%); border: 1px solid var(--border-gold); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--gold-deep);">
+                      VD
+                    </div>
+                    <div>
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <h4 style="font-size: 14px; font-weight: 700; color: var(--text-main);">Lady Vivienne De Silva</h4>
+                        <span class="patron-tier-badge tier-sovereign">Sovereign Elite</span>
+                      </div>
+                      <span style="font-size: 11.5px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                        <i class="fa-solid fa-location-dot" style="color: var(--gold-primary); font-size: 10px;"></i> Cinnamon Gardens, Colombo 07
+                      </span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <span style="font-size: 12.5px; font-weight: 600; color: var(--text-main);">+94 77 123 4567</span>
+                    <span style="display: block; font-size: 11px; color: var(--text-muted);">vivienne.desilva@luxury.lk</span>
+                  </div>
+                </td>
+                <td>
+                  <!-- HIGH READABILITY BOLD SANS-SERIF PRICE -->
+                  <div class="patron-spend-bold">Rs. 4,850,000</div>
+                  <span style="font-size: 10.5px; color: var(--text-muted);">18 Masterpieces Acquired</span>
+                </td>
+                <td>
+                  <!-- ELEGANT GOLD STARS -->
+                  <div class="patron-stars">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                  </div>
+                  <span style="display: block; font-size: 10.5px; color: var(--gold-deep); font-weight: 600; margin-top: 2px;">
+                    5-Star Royal Sovereign
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <div style="display: inline-flex; gap: 6px;">
+                    <a href="pos.html" class="header-action-btn" style="width: 32px; height: 32px;" title="Initiate POS Sale">
+                      <i class="fa-solid fa-cash-register" style="font-size: 11px;"></i>
+                    </a>
+                    <button class="header-action-btn" style="width: 32px; height: 32px;" title="View Dossier">
+                      <i class="fa-solid fa-address-card" style="font-size: 11px;"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Patron 2 -->
+              <tr>
+                <td><strong style="color: var(--gold-deep); font-family: monospace; font-size: 13.5px;">#AUR-VIP-002</strong></td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #FAF5EC 0%, #F5EBD7 100%); border: 1px solid var(--border-gold); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--gold-deep);">
+                      KS
+                    </div>
+                    <div>
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <h4 style="font-size: 14px; font-weight: 700; color: var(--text-main);">Kavinda Senanayake</h4>
+                        <span class="patron-tier-badge tier-sovereign">Sovereign Elite</span>
+                      </div>
+                      <span style="font-size: 11.5px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                        <i class="fa-solid fa-location-dot" style="color: var(--gold-primary); font-size: 10px;"></i> Kandy City Centre Enclave
+                      </span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <span style="font-size: 12.5px; font-weight: 600; color: var(--text-main);">+94 71 884 9201</span>
+                    <span style="display: block; font-size: 11px; color: var(--text-muted);">kavinda.s@plantationholdings.lk</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="patron-spend-bold">Rs. 3,420,000</div>
+                  <span style="font-size: 10.5px; color: var(--text-muted);">11 Bullion Ingot Lots</span>
+                </td>
+                <td>
+                  <div class="patron-stars">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                  </div>
+                  <span style="display: block; font-size: 10.5px; color: var(--gold-deep); font-weight: 600; margin-top: 2px;">
+                    5-Star Sovereign Patron
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <div style="display: inline-flex; gap: 6px;">
+                    <a href="pos.html" class="header-action-btn" style="width: 32px; height: 32px;" title="Initiate POS Sale">
+                      <i class="fa-solid fa-cash-register" style="font-size: 11px;"></i>
+                    </a>
+                    <button class="header-action-btn" style="width: 32px; height: 32px;" title="View Dossier">
+                      <i class="fa-solid fa-address-card" style="font-size: 11px;"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Patron 3 -->
+              <tr>
+                <td><strong style="color: var(--gold-deep); font-family: monospace; font-size: 13.5px;">#AUR-VIP-003</strong></td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 50%; background: #F4F5F7; border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--text-muted);">
+                      DA
+                    </div>
+                    <div>
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <h4 style="font-size: 14px; font-weight: 700; color: var(--text-main);">Dilrukshi Alwis</h4>
+                        <span class="patron-tier-badge tier-heritage">Gold Sovereign</span>
+                      </div>
+                      <span style="font-size: 11.5px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                        <i class="fa-solid fa-location-dot" style="color: var(--gold-primary); font-size: 10px;"></i> Mount Lavinia Beachfront
+                      </span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <span style="font-size: 12.5px; font-weight: 600; color: var(--text-main);">+94 76 991 3344</span>
+                    <span style="display: block; font-size: 11px; color: var(--text-muted);">dilrukshi.alwis@gmail.com</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="patron-spend-bold">Rs. 2,140,000</div>
+                  <span style="font-size: 10.5px; color: var(--text-muted);">7 Bespoke Pieces</span>
+                </td>
+                <td>
+                  <div class="patron-stars">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star patron-stars-empty"></i>
+                  </div>
+                  <span style="display: block; font-size: 10.5px; color: var(--text-muted); font-weight: 600; margin-top: 2px;">
+                    4-Star Gold Sovereign
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <div style="display: inline-flex; gap: 6px;">
+                    <a href="pos.html" class="header-action-btn" style="width: 32px; height: 32px;" title="Initiate POS Sale">
+                      <i class="fa-solid fa-cash-register" style="font-size: 11px;"></i>
+                    </a>
+                    <button class="header-action-btn" style="width: 32px; height: 32px;" title="View Dossier">
+                      <i class="fa-solid fa-address-card" style="font-size: 11px;"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Patron 4 -->
+              <tr>
+                <td><strong style="color: var(--gold-deep); font-family: monospace; font-size: 13.5px;">#AUR-VIP-004</strong></td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 50%; background: #F4F5F7; border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--text-muted);">
+                      AF
+                    </div>
+                    <div>
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <h4 style="font-size: 14px; font-weight: 700; color: var(--text-main);">Ahamed Farook</h4>
+                        <span class="patron-tier-badge tier-heritage">Gold Sovereign</span>
+                      </div>
+                      <span style="font-size: 11.5px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                        <i class="fa-solid fa-location-dot" style="color: var(--gold-primary); font-size: 10px;"></i> Galle Fort Heritage Suite
+                      </span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <span style="font-size: 12.5px; font-weight: 600; color: var(--text-main);">+94 77 441 5566</span>
+                    <span style="display: block; font-size: 11px; color: var(--text-muted);">farook.ahamed@gemcorp.lk</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="patron-spend-bold">Rs. 1,980,000</div>
+                  <span style="font-size: 10.5px; color: var(--text-muted);">5 Certified Gem Rings</span>
+                </td>
+                <td>
+                  <div class="patron-stars">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star patron-stars-empty"></i>
+                  </div>
+                  <span style="display: block; font-size: 10.5px; color: var(--text-muted); font-weight: 600; margin-top: 2px;">
+                    4-Star Gold Sovereign
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <div style="display: inline-flex; gap: 6px;">
+                    <a href="pos.html" class="header-action-btn" style="width: 32px; height: 32px;" title="Initiate POS Sale">
+                      <i class="fa-solid fa-cash-register" style="font-size: 11px;"></i>
+                    </a>
+                    <button class="header-action-btn" style="width: 32px; height: 32px;" title="View Dossier">
+                      <i class="fa-solid fa-address-card" style="font-size: 11px;"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Patron 5 -->
+              <tr>
+                <td><strong style="color: var(--gold-deep); font-family: monospace; font-size: 13.5px;">#AUR-VIP-005</strong></td>
+                <td>
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 38px; height: 38px; border-radius: 50%; background: #F4F5F7; border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--text-muted);">
+                      NP
+                    </div>
+                    <div>
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <h4 style="font-size: 14px; font-weight: 700; color: var(--text-main);">Nadeeka Perera</h4>
+                        <span class="patron-tier-badge tier-heritage">Heritage Patron</span>
+                      </div>
+                      <span style="font-size: 11.5px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                        <i class="fa-solid fa-location-dot" style="color: var(--gold-primary); font-size: 10px;"></i> Colombo 03 Flagship Walk-in
+                      </span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div>
+                    <span style="font-size: 12.5px; font-weight: 600; color: var(--text-main);">+94 77 332 8899</span>
+                    <span style="display: block; font-size: 11px; color: var(--text-muted);">nadeeka.perera@live.com</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="patron-spend-bold">Rs. 940,000</div>
+                  <span style="font-size: 10.5px; color: var(--text-muted);">4 18K Lifestyle Cuffs</span>
+                </td>
+                <td>
+                  <div class="patron-stars">
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star"></i>
+                    <i class="fa-solid fa-star patron-stars-empty"></i>
+                    <i class="fa-solid fa-star patron-stars-empty"></i>
+                  </div>
+                  <span style="display: block; font-size: 10.5px; color: var(--text-muted); font-weight: 600; margin-top: 2px;">
+                    3-Star Heritage Member
+                  </span>
+                </td>
+                <td style="text-align: right;">
+                  <div style="display: inline-flex; gap: 6px;">
+                    <a href="pos.html" class="header-action-btn" style="width: 32px; height: 32px;" title="Initiate POS Sale">
+                      <i class="fa-solid fa-cash-register" style="font-size: 11px;"></i>
+                    </a>
+                    <button class="header-action-btn" style="width: 32px; height: 32px;" title="View Dossier">
+                      <i class="fa-solid fa-address-card" style="font-size: 11px;"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
             </tbody>
-        </table>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- FLOATING 'REGISTER NEW PATRON' MODAL -->
+<div id="patronModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.5); backdrop-filter: blur(16px); z-index: 100; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: rgba(255,255,255,0.96); backdrop-filter: blur(28px); border: 1.5px solid rgba(197,160,89,0.45); border-radius: var(--radius-xl); box-shadow: var(--shadow-floating-hover); width: 100%; max-width: 520px; padding: 36px; position: relative;">
+    <button onclick="closePatronModal();" style="position: absolute; top: 20px; right: 20px; width: 34px; height: 34px; border-radius: 50%; background: #FFF; border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    
+    <div style="text-align: center; margin-bottom: 22px;">
+      <i class="fa-solid fa-crown" style="color: var(--gold-primary); font-size: 22px; margin-bottom: 6px;"></i>
+      <h3 class="font-serif" style="font-size: 24px; font-weight: 700;">Enroll VIP Patron</h3>
+      <p style="font-size: 12.5px; color: var(--text-muted);">Register private jewellery collector into the sovereign loyalty registry</p>
     </div>
-</main>
-<script>fetch('sidebar.html').then(r => r.text()).then(d => { document.getElementById('sidebar-container').innerHTML = d; });</script>
+
+    <form onsubmit="event.preventDefault(); alert('Patron Dossier Enrolled to Sovereign Registry!'); closePatronModal();">
+      <div style="margin-bottom: 14px;">
+        <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted);">Full Patron Name & Honorific</label>
+        <input type="text" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="e.g. Dr. Kamantha Senanayake" required>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+        <div>
+          <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted);">Mobile Number</label>
+          <input type="tel" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="+94 77 000 0000" required>
+        </div>
+        <div>
+          <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted);">Email Address</label>
+          <input type="email" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="patron@domain.lk" required>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px;">
+        <div>
+          <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted);">Initial VIP Tier</label>
+          <select class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;">
+            <option>Sovereign Elite (5-Star)</option>
+            <option>Gold Sovereign (4-Star)</option>
+            <option selected>Heritage Member (3-Star)</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted);">Residence / District</label>
+          <input type="text" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="Colombo 07" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-gold-primary" style="width: 100%; justify-content: center; padding: 14px;">
+        <i class="fa-solid fa-award"></i>
+        <span>Enroll VIP Patron</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- SIDEBAR SCRIPT & MODAL TOGGLE -->
+<script>
+  fetch('sidebar.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('sidebar-container').innerHTML = html;
+      const activeLink = document.querySelector('.sidebar-link[data-page="customers.html"]');
+      if (activeLink) activeLink.classList.add('active');
+    })
+    .catch(err => console.log('Sidebar load:', err));
+
+  function openPatronModal() {
+    document.getElementById('patronModal').style.display = 'flex';
+  }
+
+  function closePatronModal() {
+    document.getElementById('patronModal').style.display = 'none';
+  }
+</script>
+
 </body>
 </html>

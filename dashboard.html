@@ -44,7 +44,7 @@
         <!-- Live Market Rate Ticker -->
         <div class="header-rate-ticker">
           <i class="fa-solid fa-coins" style="color: var(--gold-primary);"></i>
-          <span>22K: <span class="gold-val">Rs. 347,000</span></span>
+          <span>22K: <span class="gold-val" id="ticker-rate-22k"><!-- AJAX target -->Rs. 347,000</span></span>
         </div>
 
         <!-- Notifications -->
@@ -76,10 +76,10 @@
             <span class="metric-label">22K Certified Bullion</span>
             <div class="metric-icon-box"><i class="fa-solid fa-coins"></i></div>
           </div>
-          <div class="metric-val-main" id="metric22K">Rs. 347,000</div>
+          <div class="metric-val-main" id="rate-22k"><!-- AJAX target -->Rs. 347,000</div>
           <div class="metric-sub-row">
             <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +0.45%</span>
-            <span>&bull; Rs. 43,375 / gram</span>
+            <span>&bull; <span id="rate-22k-gram"><!-- AJAX target -->Rs. 43,375 / gram</span></span>
           </div>
         </div>
 
@@ -89,10 +89,10 @@
             <span class="metric-label">24K Fine Suisse Gold</span>
             <div class="metric-icon-box"><i class="fa-solid fa-cubes"></i></div>
           </div>
-          <div class="metric-val-main" id="metric24K">Rs. 377,000</div>
+          <div class="metric-val-main" id="rate-24k"><!-- AJAX target -->Rs. 377,000</div>
           <div class="metric-sub-row">
             <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +0.38%</span>
-            <span>&bull; Rs. 47,125 / gram</span>
+            <span>&bull; <span id="rate-24k-gram"><!-- AJAX target -->Rs. 47,125 / gram</span></span>
           </div>
         </div>
 
@@ -102,10 +102,10 @@
             <span class="metric-label">Today's Total Sales</span>
             <div class="metric-icon-box"><i class="fa-solid fa-receipt"></i></div>
           </div>
-          <div class="metric-val-main">Rs. 1,842,500</div>
+          <div class="metric-val-main" id="stat-sales"><!-- AJAX target -->Rs. 1,842,500</div>
           <div class="metric-sub-row">
             <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +12.4%</span>
-            <span>&bull; 14 Invoiced Orders</span>
+            <span>&bull; <span id="stat-orders-count"><!-- AJAX target -->14 Invoiced Orders</span></span>
           </div>
         </div>
 
@@ -115,10 +115,10 @@
             <span class="metric-label">Gold Vault Holdings</span>
             <div class="metric-icon-box"><i class="fa-solid fa-vault"></i></div>
           </div>
-          <div class="metric-val-main">1,420.50 g</div>
+          <div class="metric-val-main" id="stat-vault"><!-- AJAX target -->1,420.50 g</div>
           <div class="metric-sub-row">
-            <span class="trend-badge-gold">Rs. 61.6M Value</span>
-            <span>&bull; 184 Patrons</span>
+            <span class="trend-badge-gold" id="stat-vault-val"><!-- AJAX target -->Rs. 61.6M Value</span>
+            <span>&bull; <span id="stat-patrons-count"><!-- AJAX target -->184 Patrons</span></span>
           </div>
         </div>
       </section>
@@ -210,15 +210,15 @@
             <span class="status-pill gold"><i class="fa-solid fa-bolt"></i> Priority</span>
           </div>
           <div class="card-body-clean" style="flex: 1; display: flex; flex-direction: column; gap: 14px;">
-            <a href="inventory.html" class="btn-gold-primary" style="justify-content: center; width: 100%;">
+            <a href="inventory.html" id="btn-add-piece" class="btn-gold-primary" style="justify-content: center; width: 100%;"><!-- AJAX target -->
               <i class="fa-solid fa-plus"></i>
               <span>Add Jewellery Piece</span>
             </a>
-            <a href="savings.html" class="btn-white-outline" style="justify-content: center; width: 100%;">
+            <a href="savings.html" id="btn-deposit-wallet" class="btn-white-outline" style="justify-content: center; width: 100%;"><!-- AJAX target -->
               <i class="fa-solid fa-scale-balanced" style="color: var(--gold-primary);"></i>
               <span>Deposit to Gold Wallet</span>
             </a>
-            <a href="gold-rates.html" class="btn-white-outline" style="justify-content: center; width: 100%;">
+            <a href="gold-rates.html" id="btn-adjust-rates" class="btn-white-outline" style="justify-content: center; width: 100%;"><!-- AJAX target -->
               <i class="fa-solid fa-pen-to-square" style="color: var(--gold-primary);"></i>
               <span>Adjust Market Rates</span>
             </a>
@@ -268,7 +268,7 @@
                 <th style="text-align: right;">Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="dashboard-orders-table-body"><!-- AJAX target -->
               <!-- Row 1 -->
               <tr>
                 <td><strong style="color: var(--gold-deep); font-family: monospace;">#AUR-8921</strong></td>

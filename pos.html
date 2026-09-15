@@ -86,13 +86,13 @@
           <!-- Search Catalog Input -->
           <div class="global-search-wrap" style="width: 100%;">
             <i class="fa-solid fa-barcode search-icon"></i>
-            <input type="text" id="posSearchInput" class="global-search-input" placeholder="Scan barcode or type jewellery name, SKU, karat..." oninput="filterPosItems()">
+            <input type="text" id="pos-search-input" class="global-search-input" placeholder="Scan barcode or type jewellery name, SKU, karat..." oninput="filterPosItems()"><!-- AJAX target -->
             <span class="search-shortcut-badge">Scan / Type</span>
           </div>
         </div>
 
         <!-- Product Grid Items -->
-        <div class="pos-grid-items" id="posGridContainer">
+        <div class="pos-grid-items" id="pos-item-grid"><!-- AJAX target -->
           <!-- Injected via JavaScript below -->
         </div>
       </section>
@@ -116,7 +116,7 @@
               <i class="fa-solid fa-user-tag" style="color: var(--gold-primary); font-size: 13px;"></i>
               <span style="font-size: 11.5px; text-transform: uppercase; font-weight: 700; color: var(--text-muted);">Patron:</span>
             </div>
-            <select id="receiptPatronSelect" class="receipt-client-select" onchange="applyPatronDiscount()">
+            <select id="customer-select" class="receipt-client-select" onchange="applyPatronDiscount()"><!-- AJAX target -->
               <option value="lady_vivienne">Lady Vivienne De Silva (5-Star Elite &bull; 5% Privilege)</option>
               <option value="kavinda">Kavinda Senanayake (5-Star Elite)</option>
               <option value="dilrukshi">Dilrukshi Alwis (4-Star Sovereign)</option>
@@ -125,7 +125,7 @@
           </div>
 
           <!-- Scrollable Receipt Cart Items List -->
-          <div class="receipt-items-scroll" id="receiptItemsContainer">
+          <div class="receipt-items-scroll" id="pos-cart-items"><!-- AJAX target -->
             <!-- Dynamically populated lines -->
           </div>
 
@@ -133,15 +133,15 @@
           <div class="receipt-breakdown-box">
             <div class="breakdown-row">
               <span>Subtotal Gross:</span>
-              <span id="billSubtotal" class="breakdown-val-sans">Rs. 0</span>
+              <span id="bill-subtotal" class="breakdown-val-sans"><!-- AJAX target -->Rs. 0</span>
             </div>
             <div class="breakdown-row">
               <span title="Gold wastage & master-jeweler setting fee">Wastage & Making Charges (8%):</span>
-              <span id="billMakingCharges" class="breakdown-val-sans">Rs. 0</span>
+              <span id="bill-making-charges" class="breakdown-val-sans"><!-- AJAX target -->Rs. 0</span>
             </div>
             <div class="breakdown-row" style="color: #059669;">
               <span>VIP Privilege Discount (5%):</span>
-              <span id="billDiscount" class="breakdown-val-sans">- Rs. 0</span>
+              <span id="bill-discount" class="breakdown-val-sans"><!-- AJAX target -->- Rs. 0</span>
             </div>
 
             <!-- PROMINENT SANS-SERIF HIGH-CONTRAST GRAND TOTAL (Per Requirement) -->
@@ -150,7 +150,7 @@
                 <span class="grand-total-label">Grand Total:</span>
                 <span style="display: block; font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-top: 2px;">Net Payable in LKR</span>
               </div>
-              <div id="billGrandTotal" class="grand-total-amount-sans">Rs. 0</div>
+              <div id="grand-total" class="grand-total-amount-sans"><!-- AJAX target -->Rs. 0</div>
             </div>
           </div>
 
@@ -168,7 +168,7 @@
               </button>
             </div>
 
-            <button class="btn-gold-primary" onclick="processSaleInvoice()" style="justify-content: center; width: 100%; padding: 15px; font-size: 14px; font-weight: 700;">
+            <button id="btn-complete-sale" class="btn-gold-primary" onclick="processSaleInvoice()" style="justify-content: center; width: 100%; padding: 15px; font-size: 14px; font-weight: 700;"><!-- AJAX target -->
               <i class="fa-solid fa-file-invoice-dollar"></i>
               <span>Generate Invoice & Complete Sale</span>
             </button>
@@ -343,8 +343,8 @@
   ];
 
   function renderPosGrid() {
-    const container = document.getElementById('posGridContainer');
-    const query = (document.getElementById('posSearchInput').value || '').toLowerCase();
+    const container = document.getElementById('pos-item-grid') || document.getElementById('posGridContainer');
+    const query = ((document.getElementById('pos-search-input') || document.getElementById('posSearchInput')).value || '').toLowerCase();
     container.innerHTML = '';
 
     const filtered = POS_ITEMS.filter(item => {
@@ -422,15 +422,16 @@
     renderReceipt();
   }
 
-  function renderReceipt() {
-    const container = document.getElementById('receiptItemsContainer');
-    container.innerHTML = '';
+   function renderReceipt() {
+    const listContainer = document.getElementById('pos-cart-items') || document.getElementById('receiptItemsContainer');
+    listContainer.innerHTML = '';
 
     if (cartItems.length === 0) {
-      container.innerHTML = `
+      listContainer.innerHTML = `
         <div style="text-align: center; padding: 40px 10px; color: var(--text-muted);">
-          <i class="fa-solid fa-receipt" style="font-size: 32px; color: var(--gold-light); margin-bottom: 8px;"></i>
-          <p style="font-size: 13px;">Docket is empty. Select items from the catalog.</p>
+          <i class="fa-solid fa-cart-arrow-down" style="font-size: 26px; color: var(--border-gold); margin-bottom: 10px;"></i>
+          <p style="font-size: 13px;">Boutique bag is empty.</p>
+          <span style="font-size: 11px;">Click pieces on the left to add.</span>
         </div>
       `;
       updateTotals(0);
@@ -438,36 +439,35 @@
     }
 
     let grossSubtotal = 0;
-
     cartItems.forEach((item, index) => {
       const lineTotal = item.price * item.qty;
       grossSubtotal += lineTotal;
-
       const row = document.createElement('div');
-      row.className = 'receipt-item-line';
+      row.className = 'receipt-item-row';
       row.innerHTML = `
-        <div>
-          <div class="receipt-item-title">${item.name}</div>
-          <div class="receipt-item-sub">${item.spec}</div>
+        <div class="receipt-item-info">
+          <span class="receipt-item-title">${item.name}</span>
+          <span class="receipt-item-sub">${item.karat} &bull; Rs. ${item.price.toLocaleString('en-US')}</span>
         </div>
-        <div class="receipt-item-qty-ctrl">
-          <span class="receipt-qty-btn" onclick="updateQty(${index}, -1)">-</span>
-          <span style="font-size: 12px; font-weight: 700; min-width: 14px; text-align: center;">${item.qty}</span>
-          <span class="receipt-qty-btn" onclick="updateQty(${index}, 1)">+</span>
+        <div class="receipt-qty-ctrl">
+          <button class="receipt-qty-btn" onclick="updateQty(${index}, -1)" title="Decrease">&minus;</button>
+          <span class="receipt-qty-count">${item.qty}</span>
+          <button class="receipt-qty-btn" onclick="updateQty(${index}, 1)" title="Increase">&plus;</button>
         </div>
-        <!-- BOLD SANS SERIF LINE TOTAL -->
-        <div class="receipt-item-price-sans">
-          Rs. ${lineTotal.toLocaleString('en-US')}
-        </div>
+        <span class="receipt-line-total">Rs. ${lineTotal.toLocaleString('en-US')}</span>
+        <button class="receipt-remove-btn" onclick="removeItem(${index})" title="Remove">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
       `;
-      container.appendChild(row);
+      listContainer.appendChild(row);
     });
 
     updateTotals(grossSubtotal);
   }
 
   function updateTotals(subtotal) {
-    const patron = document.getElementById('receiptPatronSelect').value;
+    const patronElem = document.getElementById('customer-select') || document.getElementById('receiptPatronSelect');
+    const patron = patronElem ? patronElem.value : '';
     const hasDiscount = patron.includes('vivienne');
     
     // Making charges 8%
@@ -476,12 +476,18 @@
     const discount = hasDiscount ? Math.round(subtotal * 0.05) : 0;
     const grandTotal = subtotal + makingCharges - discount;
 
-    document.getElementById('billSubtotal').textContent = 'Rs. ' + subtotal.toLocaleString('en-US');
-    document.getElementById('billMakingCharges').textContent = 'Rs. ' + makingCharges.toLocaleString('en-US');
-    document.getElementById('billDiscount').textContent = (discount > 0 ? '- Rs. ' : 'Rs. ') + discount.toLocaleString('en-US');
+    const subtotalElem = document.getElementById('bill-subtotal') || document.getElementById('billSubtotal');
+    if (subtotalElem) subtotalElem.textContent = 'Rs. ' + subtotal.toLocaleString('en-US');
+
+    const makingElem = document.getElementById('bill-making-charges') || document.getElementById('billMakingCharges');
+    if (makingElem) makingElem.textContent = 'Rs. ' + makingCharges.toLocaleString('en-US');
+
+    const discountElem = document.getElementById('bill-discount') || document.getElementById('billDiscount');
+    if (discountElem) discountElem.textContent = (discount > 0 ? '- Rs. ' : 'Rs. ') + discount.toLocaleString('en-US');
     
     // EXTREMELY PROMINENT BOLD SANS-SERIF GRAND TOTAL
-    document.getElementById('billGrandTotal').textContent = 'Rs. ' + grandTotal.toLocaleString('en-US');
+    const grandTotalElem = document.getElementById('grand-total') || document.getElementById('billGrandTotal');
+    if (grandTotalElem) grandTotalElem.textContent = 'Rs. ' + grandTotal.toLocaleString('en-US');
   }
 
   function applyPatronDiscount() {
@@ -493,8 +499,10 @@
       alert('Cannot invoice an empty cart. Please add items.');
       return;
     }
-    const grandTotal = document.getElementById('billGrandTotal').textContent;
-    const patronName = document.getElementById('receiptPatronSelect').options[document.getElementById('receiptPatronSelect').selectedIndex].text;
+    const grandTotalElem = document.getElementById('grand-total') || document.getElementById('billGrandTotal');
+    const grandTotal = grandTotalElem ? grandTotalElem.textContent : 'Rs. 0';
+    const patronElem = document.getElementById('customer-select') || document.getElementById('receiptPatronSelect');
+    const patronName = patronElem ? patronElem.options[patronElem.selectedIndex].text : 'Valued Patron';
     
     document.getElementById('receiptModalContent').innerHTML = `
       <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">

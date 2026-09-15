@@ -73,7 +73,7 @@
             <span class="metric-label">Registered VIP Patrons</span>
             <div class="metric-icon-box"><i class="fa-solid fa-users-viewfinder"></i></div>
           </div>
-          <div class="metric-val-main">1,280 Patrons</div>
+          <div class="metric-val-main" id="stat-patrons-count"><!-- AJAX target -->1,280 Patrons</div>
           <div class="metric-sub-row">
             <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +28 this month</span>
           </div>
@@ -84,7 +84,7 @@
             <span class="metric-label">Cumulative Patron Spend</span>
             <div class="metric-icon-box"><i class="fa-solid fa-vault"></i></div>
           </div>
-          <div class="metric-val-main">Rs. 142,850,000</div>
+          <div class="metric-val-main" id="stat-patrons-spend"><!-- AJAX target -->Rs. 142,850,000</div>
           <div class="metric-sub-row">
             <span class="trend-badge-gold">High Net Worth Registry</span>
           </div>
@@ -95,7 +95,7 @@
             <span class="metric-label">Sovereign Elite Tier</span>
             <div class="metric-icon-box"><i class="fa-solid fa-crown"></i></div>
           </div>
-          <div class="metric-val-main">142 Clients</div>
+          <div class="metric-val-main" id="stat-patrons-elite"><!-- AJAX target -->142 Clients</div>
           <div class="metric-sub-row">
             <span class="trend-badge-up"><i class="fa-solid fa-star"></i> 5-Star Highest Tier</span>
           </div>
@@ -106,7 +106,7 @@
             <span class="metric-label">Average Annual Volume</span>
             <div class="metric-icon-box"><i class="fa-solid fa-receipt"></i></div>
           </div>
-          <div class="metric-val-main">Rs. 892,500</div>
+          <div class="metric-val-main" id="stat-patrons-volume"><!-- AJAX target -->Rs. 892,500</div>
           <div class="metric-sub-row">
             <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +11.2% LTV</span>
           </div>
@@ -134,7 +134,7 @@
           <button class="btn-white-outline" style="font-size: 12px; padding: 8px 16px;">
             <i class="fa-solid fa-filter"></i> Filters
           </button>
-          <button class="btn-gold-primary" onclick="openPatronModal();" style="font-size: 12px; padding: 9px 20px;">
+          <button class="btn-gold-primary" id="btn-open-patron-modal" onclick="openPatronModal();" style="font-size: 12px; padding: 9px 20px;"><!-- AJAX target -->
             <i class="fa-solid fa-user-plus"></i>
             <span>Register New Patron</span>
           </button>
@@ -155,7 +155,7 @@
                 <th style="text-align: right;">Concierge Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="customer-table-body"><!-- AJAX target -->
               <!-- Patron 1 -->
               <tr>
                 <td><strong style="color: var(--gold-deep); font-family: monospace; font-size: 13.5px;">#AUR-VIP-001</strong></td>
@@ -444,39 +444,39 @@
       <p style="font-size: 12.5px; color: var(--text-muted);">Register private jewellery collector into the sovereign loyalty registry</p>
     </div>
 
-    <form onsubmit="event.preventDefault(); alert('Patron Dossier Enrolled to Sovereign Registry!'); closePatronModal();">
+    <form id="form-register-customer" onsubmit="event.preventDefault(); alert('Patron Dossier Enrolled to Sovereign Registry!'); closePatronModal();"><!-- AJAX target -->
       <div style="margin-bottom: 14px;">
         <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted);">Full Patron Name & Honorific</label>
-        <input type="text" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="e.g. Dr. Kamantha Senanayake" required>
+        <input type="text" id="customer-name" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="e.g. Dr. Kamantha Senanayake" required><!-- AJAX target -->
       </div>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
         <div>
           <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted);">Mobile Number</label>
-          <input type="tel" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="+94 77 000 0000" required>
+          <input type="tel" id="customer-phone" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="+94 77 000 0000" required><!-- AJAX target -->
         </div>
         <div>
           <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted);">Email Address</label>
-          <input type="email" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="patron@domain.lk" required>
+          <input type="email" id="customer-email" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="patron@domain.lk" required><!-- AJAX target -->
         </div>
       </div>
 
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px;">
         <div>
           <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted);">Initial VIP Tier</label>
-          <select class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;">
-            <option>Sovereign Elite (5-Star)</option>
-            <option>Gold Sovereign (4-Star)</option>
-            <option selected>Heritage Member (3-Star)</option>
+          <select id="customer-tier" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;"><!-- AJAX target -->
+            <option value="Sovereign Elite">Sovereign Elite (5-Star)</option>
+            <option value="Gold Sovereign">Gold Sovereign (4-Star)</option>
+            <option value="Heritage Member" selected>Heritage Member (3-Star)</option>
           </select>
         </div>
         <div>
           <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted);">Residence / District</label>
-          <input type="text" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="Colombo 07" required>
+          <input type="text" id="customer-address" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="Colombo 07" required><!-- AJAX target -->
         </div>
       </div>
 
-      <button type="submit" class="btn-gold-primary" style="width: 100%; justify-content: center; padding: 14px;">
+      <button type="submit" id="btn-save-customer" class="btn-gold-primary" style="width: 100%; justify-content: center; padding: 14px;"><!-- AJAX target -->
         <i class="fa-solid fa-award"></i>
         <span>Enroll VIP Patron</span>
       </button>

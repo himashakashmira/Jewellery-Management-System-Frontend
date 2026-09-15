@@ -79,7 +79,7 @@
             <span class="metric-label">Active Bench Dockets</span>
             <div class="metric-icon-box"><i class="fa-solid fa-screwdriver-wrench"></i></div>
           </div>
-          <div class="metric-val-main">24 Orders</div>
+          <div class="metric-val-main" id="stat-repairs"><!-- AJAX target -->24 Orders</div>
           <div class="metric-sub-row">
             <span class="trend-badge-up"><i class="fa-solid fa-fire-flame-curved"></i> High Activity</span>
           </div>
@@ -90,7 +90,7 @@
             <span class="metric-label">Ready for Pickup</span>
             <div class="metric-icon-box"><i class="fa-solid fa-circle-check"></i></div>
           </div>
-          <div class="metric-val-main" style="color: #059669;">7 Masterpieces</div>
+          <div class="metric-val-main" id="stat-repairs-ready" style="color: #059669;"><!-- AJAX target -->7 Masterpieces</div>
           <div class="metric-sub-row">
             <span class="status-pill success" style="font-size: 10.5px;">Vault Sealed</span>
           </div>
@@ -101,7 +101,7 @@
             <span class="metric-label">In Crafting & Melting</span>
             <div class="metric-icon-box"><i class="fa-solid fa-hammer"></i></div>
           </div>
-          <div class="metric-val-main">14 on Bench</div>
+          <div class="metric-val-main" id="stat-repairs-crafting"><!-- AJAX target -->14 on Bench</div>
           <div class="metric-sub-row">
             <span class="trend-badge-gold">Benches 1 &bull; 2 &bull; 3</span>
           </div>
@@ -113,7 +113,7 @@
             <div class="metric-icon-box"><i class="fa-solid fa-receipt"></i></div>
           </div>
           <!-- HIGH-CONTRAST BOLD SANS-SERIF -->
-          <div class="metric-val-main">Rs. 428,500</div>
+          <div class="metric-val-main" id="stat-repairs-revenue"><!-- AJAX target -->Rs. 428,500</div>
           <div class="metric-sub-row">
             <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +15.8%</span>
           </div>
@@ -140,14 +140,16 @@
           </button>
         </div>
 
-        <button class="btn-gold-primary" onclick="openNewRepairModal();" style="font-size: 12px; padding: 9px 20px;">
+        <button class="btn-gold-primary" id="btn-intake-repair" onclick="openNewRepairModal();" style="font-size: 12px; padding: 9px 20px;"><!-- AJAX target -->
           <i class="fa-solid fa-plus"></i>
           <span>Intake New Repair Docket</span>
         </button>
       </div>
 
       <!-- ACTIVE REPAIRS AS HORIZONTAL FLOATING CARDS (Per Requirement) -->
-      <section class="repairs-list-container">
+      <section class="repairs-list-container" id="repairs-list-container"><!-- AJAX target -->
+        <!-- Hidden table body for standard jQuery AJAX table integrations -->
+        <table style="display: none;"><tbody id="repairs-table-body"><!-- AJAX target --></tbody></table>
         
         <!-- CARD 1: STAGE 4 (READY FOR PICKUP - ACTIVE GLOW) -->
         <article class="repair-card-horizontal">
@@ -430,26 +432,26 @@
       <h3 class="font-serif" style="font-size: 22px; font-weight: 700;">Intake Repair Docket</h3>
       <p style="font-size: 12px; color: var(--text-muted);">Log patron heirloom or custom restoration into atelier queue</p>
     </div>
-    <form onsubmit="event.preventDefault(); alert('Repair Docket #REP-4095 Logged!'); closeNewRepairModal();">
+    <form id="form-repair-docket" onsubmit="event.preventDefault(); alert('Repair Docket #REP-4095 Logged!'); closeNewRepairModal();"><!-- AJAX target -->
       <div style="margin-bottom: 12px;">
         <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Patron Name</label>
-        <input type="text" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" placeholder="e.g. Lady Vivienne De Silva" required>
+        <input type="text" id="customer-name" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" placeholder="e.g. Lady Vivienne De Silva" required><!-- AJAX target -->
       </div>
       <div style="margin-bottom: 12px;">
         <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Jewellery Item Description</label>
-        <input type="text" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" placeholder="e.g. 22K Solid Gold Bangle" required>
+        <input type="text" id="item-name" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" placeholder="e.g. 22K Solid Gold Bangle" required><!-- AJAX target -->
       </div>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
         <div>
           <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Service Fee (LKR)</label>
-          <input type="text" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" placeholder="Rs. 25,000" required>
+          <input type="text" id="service-fee" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" placeholder="Rs. 25,000" required><!-- AJAX target -->
         </div>
         <div>
           <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Target Date</label>
-          <input type="date" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" required>
+          <input type="date" id="target-date" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" required><!-- AJAX target -->
         </div>
       </div>
-      <button type="submit" class="btn-gold-primary" style="width: 100%; justify-content: center; padding: 13px;">
+      <button type="submit" id="btn-register-repair" class="btn-gold-primary" style="width: 100%; justify-content: center; padding: 13px;"><!-- AJAX target -->
         <i class="fa-solid fa-check"></i>
         <span>Issue Ticket & Enqueue</span>
       </button>

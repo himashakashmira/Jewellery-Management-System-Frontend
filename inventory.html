@@ -336,7 +336,9 @@
       </div>
 
       <!-- EDITORIAL STYLE PRODUCT GRID -->
-      <section class="inventory-grid">
+      <section class="inventory-grid" id="inventory-grid"><!-- AJAX target -->
+        <!-- Hidden table body placeholder for table-oriented jQuery AJAX scripts -->
+        <table style="display: none;"><tbody id="inventory-table-body"><!-- AJAX target --></tbody></table>
         
         <!-- Piece 1: Aurelia Solitaire Pendant -->
         <article class="inventory-card">
@@ -539,7 +541,7 @@
       </section>
 
       <!-- FLOATING 'ADD PIECE' BUTTON (Per Requirement) -->
-      <button class="btn-add-piece-floating" onclick="openAddPieceModal();" aria-label="Add Jewellery Piece">
+      <button class="btn-add-piece-floating" id="btn-add-item" onclick="openAddPieceModal();" aria-label="Add Jewellery Piece"><!-- AJAX target -->
         <i class="fa-solid fa-plus" style="font-size: 16px;"></i>
         <span>Add Piece</span>
       </button>
@@ -559,36 +561,36 @@
       <h3 class="font-serif" style="font-size: 24px; font-weight: 700;">Catalog New Jewellery Piece</h3>
       <p style="font-size: 12.5px; color: var(--text-muted);">Register an artisan creation or certified bullion batch into inventory</p>
     </div>
-    <form onsubmit="event.preventDefault(); alert('Masterpiece Registered to Atelier Vault!'); closeAddPieceModal();">
+    <form id="form-add-item" onsubmit="event.preventDefault(); alert('Masterpiece Registered to Atelier Vault!'); closeAddPieceModal();"><!-- AJAX target -->
       <div style="margin-bottom: 14px;">
         <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Piece Title</label>
-        <input type="text" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="e.g. Lumina Sunburst Choker" required>
+        <input type="text" id="item-name" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="e.g. Lumina Sunburst Choker" required><!-- AJAX target -->
       </div>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
         <div>
           <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Karat Grade</label>
-          <select class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;">
-            <option>18K Gold Plated / PVD</option>
-            <option>22K Sovereign Gold</option>
-            <option>24K Pure Minted Gold</option>
+          <select id="item-karat" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;"><!-- AJAX target -->
+            <option value="18K">18K Gold Plated / PVD</option>
+            <option value="22K">22K Sovereign Gold</option>
+            <option value="24K">24K Pure Minted Gold</option>
           </select>
         </div>
         <div>
           <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Net Weight (Grams)</label>
-          <input type="number" step="0.01" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="14.50" required>
+          <input type="number" step="0.01" id="item-weight" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="14.50" required><!-- AJAX target -->
         </div>
       </div>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 22px;">
         <div>
           <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Selling Price (LKR)</label>
-          <input type="text" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="Rs. 18,500" required>
+          <input type="text" id="item-price" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="Rs. 18,500" required><!-- AJAX target -->
         </div>
         <div>
           <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Initial Stock Qty</label>
-          <input type="number" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" value="10" required>
+          <input type="number" id="item-quantity" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" value="10" required><!-- AJAX target -->
         </div>
       </div>
-      <button type="submit" class="btn-gold-primary" style="width: 100%; justify-content: center; padding: 14px;">
+      <button type="submit" id="btn-save-item" class="btn-gold-primary" style="width: 100%; justify-content: center; padding: 14px;"><!-- AJAX target -->
         <i class="fa-solid fa-sparkles"></i>
         <span>Register Masterpiece</span>
       </button>

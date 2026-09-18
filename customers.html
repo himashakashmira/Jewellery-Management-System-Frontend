@@ -10,6 +10,9 @@
   
   <!-- Unified Internal Dashboard Stylesheet -->
   <link rel="stylesheet" href="css/internal.css">
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
 
@@ -444,7 +447,7 @@
       <p style="font-size: 12.5px; color: var(--text-muted);">Register private jewellery collector into the sovereign loyalty registry</p>
     </div>
 
-    <form id="form-register-customer" onsubmit="event.preventDefault(); alert('Patron Dossier Enrolled to Sovereign Registry!'); closePatronModal();"><!-- AJAX target -->
+    <form id="form-register-customer" onsubmit="event.preventDefault(); saveCustomer();"><!-- AJAX target -->
       <div style="margin-bottom: 14px;">
         <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted);">Full Patron Name & Honorific</label>
         <input type="text" id="customer-name" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="e.g. Dr. Kamantha Senanayake" required><!-- AJAX target -->
@@ -486,15 +489,6 @@
 
 <!-- SIDEBAR SCRIPT & MODAL TOGGLE -->
 <script>
-  fetch('sidebar.html')
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById('sidebar-container').innerHTML = html;
-      const activeLink = document.querySelector('.sidebar-link[data-page="customers.html"]');
-      if (activeLink) activeLink.classList.add('active');
-    })
-    .catch(err => console.log('Sidebar load:', err));
-
   function openPatronModal() {
     document.getElementById('patronModal').style.display = 'flex';
   }
@@ -503,6 +497,47 @@
     document.getElementById('patronModal').style.display = 'none';
   }
 </script>
+
+<!-- EDIT PATRON MODAL -->
+<div id="editPatronModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,0.55);backdrop-filter:blur(18px);z-index:100;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:rgba(255,255,255,0.96);backdrop-filter:blur(24px);border:1.5px solid rgba(197,160,89,0.35);border-radius:var(--radius-xl);box-shadow:var(--shadow-floating-hover);width:100%;max-width:500px;padding:36px;position:relative;">
+    <button onclick="document.getElementById('editPatronModal').style.display='none'" style="position:absolute;top:20px;right:20px;width:34px;height:34px;border-radius:50%;background:#FFF;border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div style="text-align:center;margin-bottom:22px;">
+      <i class="fa-solid fa-user-pen" style="color:var(--gold-primary);font-size:20px;margin-bottom:6px;"></i>
+      <h3 class="font-serif" style="font-size:24px;font-weight:700;">Edit Patron Record</h3>
+    </div>
+    <form id="form-edit-patron" onsubmit="event.preventDefault(); updateCustomer();">
+      <div style="margin-bottom:14px;">
+        <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px;color:var(--text-muted);">Full Name</label>
+        <input type="text" id="edit-customer-name" class="global-search-input" style="border-radius:var(--radius-md);padding:11px 16px;background:#FFF;" required>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div>
+          <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px;color:var(--text-muted);">Phone</label>
+          <input type="text" id="edit-customer-phone" class="global-search-input" style="border-radius:var(--radius-md);padding:11px 16px;background:#FFF;">
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px;color:var(--text-muted);">Email</label>
+          <input type="email" id="edit-customer-email" class="global-search-input" style="border-radius:var(--radius-md);padding:11px 16px;background:#FFF;">
+        </div>
+      </div>
+      <div style="margin-bottom:22px;">
+        <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px;color:var(--text-muted);">Address</label>
+        <input type="text" id="edit-customer-address" class="global-search-input" style="border-radius:var(--radius-md);padding:11px 16px;background:#FFF;">
+      </div>
+      <button type="submit" class="btn-gold-primary" style="width:100%;justify-content:center;padding:14px;">
+        <i class="fa-solid fa-check"></i>
+        <span>Save Changes</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- AURUM Shared Utilities + Customers Logic -->
+<script src="js/common.js"></script>
+<script src="js/customers.js"></script>
 
 </body>
 </html>

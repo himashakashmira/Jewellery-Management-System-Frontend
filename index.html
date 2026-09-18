@@ -700,7 +700,7 @@
             <label class="form-label" for="loginUsername">Email or Username</label>
             <div class="form-input-wrap">
               <i class="fa-regular fa-user"></i>
-              <input type="text" id="loginUsername" class="form-input" placeholder="vip.member@aurumjewels.lk or Username" required value="patron@aurumjewels.lk">
+              <input type="text" id="login-username" class="form-input" placeholder="vip.member@aurumjewels.lk or Username" required>
             </div>
           </div>
 
@@ -708,7 +708,7 @@
             <label class="form-label" for="loginPassword">Vault Key / Password</label>
             <div class="form-input-wrap">
               <i class="fa-solid fa-lock"></i>
-              <input type="password" id="loginPassword" class="form-input" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required value="aurumpassword">
+              <input type="password" id="login-password" class="form-input" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required>
             </div>
           </div>
 
@@ -720,7 +720,7 @@
             <a href="#" class="forgot-link" onclick="event.preventDefault(); showToast('Password reset link sent to your registered email');">Forgot Key?</a>
           </div>
 
-          <button type="submit" class="btn-modal-submit">
+          <button type="button" id="btn-login-submit" class="btn-modal-submit" onclick="handleLogin()">
             <i class="fa-solid fa-shield-halved"></i>
             <span>Access Private Vault</span>
           </button>
@@ -836,6 +836,10 @@
     </div>
   </aside>
 
+  <!-- jQuery (required by auth.js) -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <!-- AURUM Auth Logic -->
+  <script src="js/auth.js"></script>
   <!-- Interactive JavaScript File -->
   <script src="js/landing.js"></script>
 </body>

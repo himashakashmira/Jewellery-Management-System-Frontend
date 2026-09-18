@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -16,6 +16,9 @@
       color: #141518 !important;
     }
   </style>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body style="background-color: #FFFFFF !important;">
 
@@ -565,137 +568,10 @@
   </div>
 </div>
 
-<!-- SIDEBAR LOADER & INTERACTIVE LOGIC SCRIPT -->
-<script>
-  // Dynamically load unified sidebar and activate gold-rates tab
-  fetch('sidebar.html')
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById('sidebar-container').innerHTML = html;
-      const activeLink = document.querySelector('.sidebar-link[data-page="gold-rates.html"]');
-      if (activeLink) activeLink.classList.add('active');
-    })
-    .catch(err => console.log('Sidebar load:', err));
 
-  // Modal handlers
-  function openFixationModal() {
-    document.getElementById('fixationModal').style.display = 'flex';
-  }
-
-  function closeFixationModal() {
-    document.getElementById('fixationModal').style.display = 'none';
-  }
-
-  // Live auto-calculation of 8g Sovereign Rates in modal
-  function calculateSovereignRates() {
-    const el22 = document.getElementById('rate-22k-input') || document.getElementById('input22KGram');
-    const el24 = document.getElementById('rate-24k-input') || document.getElementById('input24KGram');
-    const gram22 = parseFloat(el22 ? el22.value : 0) || 0;
-    const gram24 = parseFloat(el24 ? el24.value : 0) || 0;
-    
-    const sov22 = gram22 * 8;
-    const sov24 = gram24 * 8;
-
-    const calc22 = document.getElementById('calc22KSovereign');
-    const calc24 = document.getElementById('calc24KSovereign');
-    if (calc22) calc22.innerText = 'Rs. ' + sov22.toLocaleString('en-US');
-    if (calc24) calc24.innerText = 'Rs. ' + sov24.toLocaleString('en-US');
-  }
-
-  // Handle publishing new fixation
-  function handleFixationSubmit(e) {
-    e.preventDefault();
-    
-    const el22 = document.getElementById('rate-22k-input') || document.getElementById('input22KGram');
-    const el24 = document.getElementById('rate-24k-input') || document.getElementById('input24KGram');
-    const elDate = document.getElementById('fixation-date') || document.getElementById('inputFixationDate');
-    const elSession = document.getElementById('fixation-session') || document.getElementById('inputSession');
-
-    const gram22 = parseFloat(el22 ? el22.value : 0) || 0;
-    const gram24 = parseFloat(el24 ? el24.value : 0) || 0;
-    const sov22 = gram22 * 8;
-    const sov24 = gram24 * 8;
-    const dateVal = elDate ? elDate.value : '';
-    const sessionVal = elSession ? elSession.value : '';
-
-    // 1. Update Hero Cards on page with prominent bold Sans-serif numbers
-    const disp22 = document.getElementById('rate-22k') || document.getElementById('disp22KSovereign');
-    const disp22g = document.getElementById('rate-22k-gram') || document.getElementById('disp22KGram');
-    const disp24 = document.getElementById('rate-24k') || document.getElementById('disp24KSovereign');
-    const disp24g = document.getElementById('rate-24k-gram') || document.getElementById('disp24KGram');
-    const headerTicker = document.getElementById('headerTicker22K');
-
-    if (disp22) disp22.innerText = 'Rs. ' + sov22.toLocaleString('en-US');
-    if (disp22g) disp22g.innerText = 'Rs. ' + gram22.toLocaleString('en-US') + '.00';
-    if (disp24) disp24.innerText = 'Rs. ' + sov24.toLocaleString('en-US');
-    if (disp24g) disp24g.innerText = 'Rs. ' + gram24.toLocaleString('en-US') + '.00';
-    if (headerTicker) headerTicker.innerText = 'Rs. ' + gram22.toLocaleString('en-US') + '/g';
-
-    // 2. Format date for log table
-    const dateObj = new Date(dateVal + 'T00:00:00');
-    const options = { day: '2-digit', month: 'short', year: 'numeric' };
-    const formattedDate = dateObj.toLocaleDateString('en-GB', options);
-
-    // 3. Mark previous current row as previous
-    const tableBody = document.getElementById('gold-rates-table-body') || document.getElementById('pricingLogTableBody');
-    const existingCurrent = tableBody.querySelector('.status-pill.gold');
-    if (existingCurrent) {
-      existingCurrent.className = 'status-pill';
-      existingCurrent.style.background = '#F3F4F6';
-      existingCurrent.style.color = 'var(--text-muted)';
-      existingCurrent.innerHTML = 'Previous';
-    }
-
-    // 4. Prepend newly published fixation into table
-    const newRow = document.createElement('tr');
-    newRow.style.borderBottom = '1px solid var(--border-subtle)';
-    newRow.style.transition = 'background 0.2s';
-    newRow.onmouseover = function() { this.style.background = '#FDFBF7'; };
-    newRow.onmouseout = function() { this.style.background = '#FFFFFF'; };
-    newRow.innerHTML = `
-      <td style="padding: 18px 20px;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--gold-subtle-bg); border: 1px solid var(--border-gold); display: flex; align-items: center; justify-content: center; color: var(--gold-primary); font-size: 12px;">
-            <i class="fa-solid fa-certificate"></i>
-          </div>
-          <div>
-            <span style="font-weight: 700; color: var(--text-main); font-size: 13.5px; display: block;">${formattedDate}</span>
-            <span style="font-size: 11px; color: var(--gold-deep); font-weight: 600;">${sessionVal.split(' ')[0]} Fix</span>
-          </div>
-        </div>
-      </td>
-      <td style="padding: 18px 20px;">
-        <span class="bullion-table-num-bold" style="color: var(--gold-deep);">Rs. ${gram22.toLocaleString('en-US')}</span>
-        <span style="display: block; font-size: 10.5px; color: #059669; font-weight: 600;">Published</span>
-      </td>
-      <td style="padding: 18px 20px;">
-        <span class="bullion-table-num-bold">Rs. ${sov22.toLocaleString('en-US')}</span>
-      </td>
-      <td style="padding: 18px 20px;">
-        <span class="bullion-table-num-bold" style="color: var(--gold-deep);">Rs. ${gram24.toLocaleString('en-US')}</span>
-        <span style="display: block; font-size: 10.5px; color: #059669; font-weight: 600;">Published</span>
-      </td>
-      <td style="padding: 18px 20px;">
-        <span class="bullion-table-num-bold">Rs. ${sov24.toLocaleString('en-US')}</span>
-      </td>
-      <td style="padding: 18px 20px; text-align: center;">
-        <span class="status-pill gold" style="font-size: 11px; padding: 4px 12px; font-weight: 700;">
-          <i class="fa-solid fa-bolt"></i> Current
-        </span>
-      </td>
-      <td style="padding: 18px 20px; text-align: right;">
-        <button class="header-action-btn" style="width: 32px; height: 32px;" title="View NGJA Certification" onclick="alert('Viewing CBSL/NGJA Assay Certificate for ${formattedDate}');">
-          <i class="fa-solid fa-file-invoice" style="font-size: 12px; color: var(--gold-deep);"></i>
-        </button>
-      </td>
-    `;
-    tableBody.insertBefore(newRow, tableBody.firstChild);
-
-    // Close modal and alert confirmation
-    closeFixationModal();
-    alert('Official Bullion Fixation for ' + formattedDate + ' published successfully!');
-  }
-</script>
+<!-- AURUM Shared Utilities + Gold Rates Logic -->
+<script src="js/common.js"></script>
+<script src="js/gold-rates.js"></script>
 
 </body>
 </html>

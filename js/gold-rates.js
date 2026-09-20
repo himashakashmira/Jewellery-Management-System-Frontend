@@ -28,6 +28,9 @@ function loadLatestRates() {
             $("#rate-24k").text("Rs. " + sov24.toLocaleString("en-LK"));
             $("#rate-24k-gram").text("Rs. " + gram24.toLocaleString("en-LK") + " / gram");
 
+            // update header ticker with live per-gram rate
+            $("#headerTicker22K").text("Rs. " + gram22.toLocaleString("en-LK") + "/g");
+
             // also pre-fill the fixation modal input boxes with current values
             $("#rate-22k-input").val(gram22);
             $("#rate-24k-input").val(gram24);
@@ -97,6 +100,9 @@ function handleFixationSubmit(e) {
             $("#rate-22k-gram").text("Rs. " + gram22.toLocaleString("en-LK") + " / gram");
             $("#rate-24k").text("Rs. " + sov24.toLocaleString("en-LK"));
             $("#rate-24k-gram").text("Rs. " + gram24.toLocaleString("en-LK") + " / gram");
+
+            // update header ticker instantly after publish
+            $("#headerTicker22K").text("Rs. " + gram22.toLocaleString("en-LK") + "/g");
 
             // add new row to the fixation log table
             addRateToLogTable(gram22, gram24);

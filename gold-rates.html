@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -51,7 +51,7 @@
         <!-- Live Rate Ticker -->
         <div class="header-rate-ticker">
           <i class="fa-solid fa-coins" style="color: var(--gold-primary);"></i>
-          <span>22K Spot: <span class="gold-val" id="headerTicker22K">Rs. 43,375/g</span></span>
+          <span>22K Spot: <span class="gold-val" id="headerTicker22K">Loading...</span></span>
         </div>
 
         <!-- Fixation Time Badge -->
@@ -132,8 +132,8 @@
           </div>
 
           <!-- PROMINENT BOLD SANS-SERIF SOVEREIGN RATE -->
-          <div class="bullion-price-sovereign-bold" id="rate-22k"><!-- AJAX target -->
-            Rs. 347,000
+          <div class="bullion-price-sovereign-bold" id="rate-22k">
+            —
           </div>
           <div class="bullion-price-unit-label">
             Sri Lankan Rupees per 8 Grams (1 Sovereign)
@@ -143,7 +143,7 @@
           <div class="bullion-sub-metrics-box">
             <div class="bullion-sub-metric-item">
               <span class="bullion-sub-metric-label">Rate Per Gram (1g)</span>
-              <span class="bullion-sub-metric-val" id="rate-22k-gram"><!-- AJAX target -->Rs. 43,375.00</span>
+              <span class="bullion-sub-metric-val" id="rate-22k-gram">Loading...</span>
             </div>
             <div class="bullion-sub-metric-item">
               <span class="bullion-sub-metric-label">Troy Ounce Parity (31.1g)</span>
@@ -180,8 +180,8 @@
           </div>
 
           <!-- PROMINENT BOLD SANS-SERIF SOVEREIGN RATE -->
-          <div class="bullion-price-sovereign-bold" id="rate-24k"><!-- AJAX target -->
-            Rs. 377,000
+          <div class="bullion-price-sovereign-bold" id="rate-24k">
+            —
           </div>
           <div class="bullion-price-unit-label">
             Sri Lankan Rupees per 8 Grams (1 Sovereign Bullion)
@@ -191,7 +191,7 @@
           <div class="bullion-sub-metrics-box">
             <div class="bullion-sub-metric-item">
               <span class="bullion-sub-metric-label">Rate Per Gram (1g)</span>
-              <span class="bullion-sub-metric-val" id="rate-24k-gram"><!-- AJAX target -->Rs. 47,125.00</span>
+              <span class="bullion-sub-metric-val" id="rate-24k-gram">Loading...</span>
             </div>
             <div class="bullion-sub-metric-item">
               <span class="bullion-sub-metric-label">Troy Ounce Parity (31.1g)</span>
@@ -514,7 +514,9 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: center;">
           <div>
             <label style="font-size: 10.5px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px;">Gram Rate (LKR)</label>
-            <input type="number" step="0.5" id="rate-22k-input" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF; width: 100%; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 15px;" value="43375" oninput="calculateSovereignRates();" required><!-- AJAX target -->
+            <input type="number" step="0.5" id="rate-22k-input" class="global-search-input"
+              style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF; width: 100%; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 15px;"
+              value="0" oninput="calculateSovereignRates();" required>
           </div>
           <div>
             <label style="font-size: 10.5px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px;">8g Sovereign (Auto-Calc)</label>
@@ -536,7 +538,9 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: center;">
           <div>
             <label style="font-size: 10.5px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px;">Gram Rate (LKR)</label>
-            <input type="number" step="0.5" id="rate-24k-input" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF; width: 100%; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 15px;" value="47125" oninput="calculateSovereignRates();" required><!-- AJAX target -->
+            <input type="number" step="0.5" id="rate-24k-input" class="global-search-input"
+              style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF; width: 100%; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 15px;"
+              value="0" oninput="calculateSovereignRates();" required>
           </div>
           <div>
             <label style="font-size: 10.5px; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 4px;">8g Sovereign (Auto-Calc)</label>

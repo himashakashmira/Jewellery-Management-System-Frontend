@@ -56,4 +56,25 @@ function highlightActiveLink() {
             $(this).addClass('active');
         }
     });
-}
+}
+
+
+
+$(document).ready(function () {
+    // load the all pages check there
+    checkPermissions();
+});
+
+function checkPermissions() {
+    const role = localStorage.getItem("role");
+
+    if (role === "ROLE_STAFF") {
+        $('#nav-gold-rates').hide();
+
+        $('#nav-reports').hide();
+
+        $('#btn-adjust-rates').hide();
+
+        console.log("Access restricted for STAFF member.");
+    }
+}

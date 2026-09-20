@@ -1,11 +1,9 @@
-// js/auth.js — AURUM Login Authentication Handler
-
 function handleLogin() {
-    // ─── 1. Clear any stale session data ───────────────────────────────────────
+    // Clear any stale session data
     localStorage.clear();
     console.log("[AURUM Auth] Cleared localStorage. Starting fresh login.");
 
-    // ─── 2. Read credentials from form ─────────────────────────────────────────
+    // Read credentials from form
     const username = document.getElementById('login-username').value.trim();
     const password = document.getElementById('login-password').value.trim();
 
@@ -14,7 +12,7 @@ function handleLogin() {
         return;
     }
 
-    // ─── 3. Disable button to prevent double-submit ─────────────────────────────
+    // Disable button to prevent double-submit
     const btn = document.getElementById('btn-login-submit');
     if (btn) {
         btn.disabled = true;
@@ -23,7 +21,7 @@ function handleLogin() {
 
     console.log("[AURUM Auth] Sending credentials for username:", username);
 
-    // ─── 4. POST to backend /authenticate ──────────────────────────────────────
+    // POST to backend /authenticate
     $.ajax({
         url: "http://localhost:8080/api/v1/auth/authenticate",
         method: "POST",
@@ -33,7 +31,7 @@ function handleLogin() {
             password: password
         }),
 
-        // ─── SUCCESS: Token received ───────────────────────────────────────────
+        // SUCCESS Token received
         success: function (response) {
             if (response && response.token) {
                 console.log("[AURUM Auth] ✅ Token received successfully.");
@@ -42,11 +40,16 @@ function handleLogin() {
                 // Save token and username
                 localStorage.setItem("token", response.token);
                 localStorage.setItem("username", username);
+                localStorage.setItem("customerId", response.customerId);
 
                 console.log("[AURUM Auth] Token saved to localStorage. Redirecting to dashboard...");
 
                 // Redirect only AFTER token is saved
-                window.location.href = "dashboard.html";
+                if (response.role === "ROLE_ADMIN" || response.role === "ROLE_STAFF") {
+                    window.location.href = "dashboard.html";
+                } else {
+                    window.location.href = "customer-portal.html";
+                }
 
             } else {
                 // Response came back but token was missing — should not happen
@@ -56,7 +59,7 @@ function handleLogin() {
             }
         },
 
-        // ─── ERROR: Wrong credentials or server error ──────────────────────────
+        // ERROR Wrong credentials or server error
         error: function (xhr, status, errorThrown) {
             console.error("[AURUM Auth] ❌ Login failed.");
             console.error("[AURUM Auth] Status:", xhr.status, "—", xhr.statusText);
@@ -77,10 +80,32 @@ function handleLogin() {
     });
 }
 
-// ─── Helper: Restore Login Button ─────────────────────────────────────────────
+// Helper Restore Login Button
 function _resetLoginButton(btn) {
     if (btn) {
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-shield-halved"></i> <span>Access Private Vault</span>';
     }
+}
+
+// Register the Customer,Staff
+function handleRegister() {
+    const registerData = {
+        fullName: $('#regFullName').val(),
+        username: $('#regEmail').val(),
+        contact: $('#regPhone').val(),
+        password: $('#regPassword').val(),
+        role: ($('#regAccountType').val() === 'staff') ? "STAFF" : "CUSTOMER"
+    };
+
+    $.ajax({
+        url: "http://localhost:8080/api/v1/auth/register",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(registerData),
+        success: function (res) {
+            alert("Luxury Account Activated!");
+            location.reload();
+        }
+    });
 }

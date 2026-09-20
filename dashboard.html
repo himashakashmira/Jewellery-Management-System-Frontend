@@ -13,6 +13,17 @@
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <style>
+    /* Fade-in animation used by dashboard.js when real data loads */
+    @keyframes aurumFadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .stat-loaded {
+      animation: aurumFadeIn 0.35s ease forwards;
+    }
+  </style>
 </head>
 <body>
 
@@ -74,15 +85,16 @@
       <!-- TOP METRICS: GOLD PRICE CARDS & PERFORMANCE (Antigravity Floating) -->
       <section class="metrics-row-4col">
         <!-- Card 1: 22K Gold Rate -->
+
         <div class="metric-card card-gold-accent-top">
           <div class="metric-top-row">
             <span class="metric-label">22K Certified Bullion</span>
             <div class="metric-icon-box"><i class="fa-solid fa-coins"></i></div>
           </div>
-          <div class="metric-val-main" id="rate-22k"><!-- AJAX target -->Rs. 347,000</div>
+          <div class="metric-val-main" id="rate-22k">—</div>
           <div class="metric-sub-row">
-            <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +0.45%</span>
-            <span>&bull; <span id="rate-22k-gram"><!-- AJAX target -->Rs. 43,375 / gram</span></span>
+            <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> Live</span>
+            <span>&bull; <span id="rate-22k-gram">Loading...</span></span>
           </div>
         </div>
 
@@ -92,10 +104,10 @@
             <span class="metric-label">24K Fine Suisse Gold</span>
             <div class="metric-icon-box"><i class="fa-solid fa-cubes"></i></div>
           </div>
-          <div class="metric-val-main" id="rate-24k"><!-- AJAX target -->Rs. 377,000</div>
+          <div class="metric-val-main" id="rate-24k">—</div>
           <div class="metric-sub-row">
-            <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +0.38%</span>
-            <span>&bull; <span id="rate-24k-gram"><!-- AJAX target -->Rs. 47,125 / gram</span></span>
+            <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> Live</span>
+            <span>&bull; <span id="rate-24k-gram">Loading...</span></span>
           </div>
         </div>
 
@@ -105,23 +117,23 @@
             <span class="metric-label">Today's Total Sales</span>
             <div class="metric-icon-box"><i class="fa-solid fa-receipt"></i></div>
           </div>
-          <div class="metric-val-main" id="stat-sales"><!-- AJAX target -->Rs. 1,842,500</div>
+          <div class="metric-val-main" id="stat-sales">Rs. 0.00</div>
           <div class="metric-sub-row">
-            <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> +12.4%</span>
-            <span>&bull; <span id="stat-orders-count"><!-- AJAX target -->14 Invoiced Orders</span></span>
+            <span class="trend-badge-up"><i class="fa-solid fa-arrow-trend-up"></i> Live</span>
+            <span>&bull; <span id="stat-orders-count">— Orders</span></span>
           </div>
         </div>
 
-        <!-- Card 4: Gold Savings Reserves -->
+        <!-- Card 4: Vault In-Stock Pieces (real inventory count) -->
         <div class="metric-card card-gold-accent-top">
           <div class="metric-top-row">
-            <span class="metric-label">Gold Vault Holdings</span>
+            <span class="metric-label">Vault In-Stock Pieces</span>
             <div class="metric-icon-box"><i class="fa-solid fa-vault"></i></div>
           </div>
-          <div class="metric-val-main" id="stat-vault"><!-- AJAX target -->1,420.50 g</div>
+          <div class="metric-val-main" id="stat-vault">—</div>
           <div class="metric-sub-row">
-            <span class="trend-badge-gold" id="stat-vault-val"><!-- AJAX target -->Rs. 61.6M Value</span>
-            <span>&bull; <span id="stat-patrons-count"><!-- AJAX target -->184 Patrons</span></span>
+            <span class="trend-badge-gold" id="stat-vault-val">Loading...</span>
+            <span>&bull; <span id="stat-patrons-count">— Patrons</span></span>
           </div>
         </div>
       </section>

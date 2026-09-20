@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AURUM | Member Vault</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .num-bold {
+            font-family: 'Inter', sans-serif !important;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body class="bg-white text-gray-900">
+
+    <!-- Simple Customer Header -->
+    <nav class="flex justify-between items-center px-10 py-6 border-b border-gray-100">
+        <h1 class="text-2xl font-bold tracking-[0.3em] uppercase font-serif">AURUM</h1>
+        <div class="flex items-center gap-6">
+            <span class="gold-badge">Member Vault</span>
+            <button onclick="logout()" class="text-xs uppercase font-bold tracking-widest text-red-500">Logout</button>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto p-12">
+        <header class="mb-16">
+            <p class="text-[10px] uppercase tracking-[0.3em] text-gray-400">Welcome Back</p>
+            <h2 class="text-5xl font-serif italic mt-2" id="customer-name-display">Premium Patron</h2>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+
+            <!-- 1. THE GOLD WALLET (Antigravity Card) -->
+            <div class="floating-card p-12 border-l-4 border-l-[#C5A059] bg-[#FBFBFB]">
+                <div class="flex justify-between items-start mb-8">
+                    <span class="gold-accent">Digital Gold Holdings</span>
+                    <i class="fa-solid fa-vault text-gray-200 text-3xl"></i>
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <h4 id="wallet-balance" class="text-7xl num-bold tracking-tighter">0.000</h4>
+                    <span class="text-xl font-serif italic text-gray-400">Grams</span>
+                </div>
+                <p class="text-xs text-gray-400 mt-6 italic">* Value based on 22K market fixation.</p>
+            </div>
+
+            <!-- 2. REPAIR TRACKER (Timeline style) -->
+            <div class="floating-card p-10 border border-gray-100">
+                <h3 class="text-xl font-serif italic mb-8 border-b pb-4">Live Restoration Status</h3>
+                <div id="repair-tracker-content">
+                    <p class="text-sm italic text-gray-400">No active repair orders found.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 3. RECENT COLLECTIONS (Past Purchases) -->
+        <section class="mt-20">
+            <h3 class="text-2xl font-serif italic mb-10">My Purchase History</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="purchase-history">
+                <!-- Data from AJAX -->
+            </div>
+        </section>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="js/common.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // set the customer name from storage
+            $('#customer-name-display').text(localStorage.getItem('username'));
+
+            // load the gold wallet balance
+            loadWalletBalance();
+        });
+
+        function loadWalletBalance() {
+            // we need the customer ID saved during login
+            const customerId = localStorage.getItem('customerId');
+            const token = localStorage.getItem('token');
+
+            if (!customerId) {
+                console.log("No customer ID found in storage");
+                return;
+            }
+
+            $.ajax({
+                url: "http://localhost:8080/api/v1/savings/balance/" + customerId,
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token
+                },
+                success: function (balance) {
+                    // update the balance with 3 decimal places (grams)
+                    // using the 'num-bold' style for readability
+                    $('#wallet-balance').text(parseFloat(balance).toFixed(3));
+                    console.log("Wallet balance updated from DB");
+                },
+                error: function (err) {
+                    console.error("Failed to fetch wallet balance", err);
+                    $('#wallet-balance').text("0.000");
+                }
+            });
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+
+</html>

@@ -122,6 +122,9 @@ function saveCustomer() {
         return;
     }
 
+    // disable button to prevent double submit
+    $("#btn-save-customer").prop("disabled", true).text("Enrolling...");
+
     // calling the save customer api
     $.ajax({
         url: BASE_URL + "/customers/save",
@@ -135,11 +138,16 @@ function saveCustomer() {
             $("#form-register-customer")[0].reset();
             loadCustomers();
             fetchPatronCount();
-            showToast("Patron enrolled successfully!");
+            showToast("✓ Patron enrolled successfully!");
+            console.log("[Customers] Saved new patron:", data.name);
         },
         error: function (err) {
             console.error("Failed to save customer:", err.status, err.responseText);
             alert("Failed to register patron. Check console for details.");
+        },
+        complete: function () {
+            // re-enable button after api call finishes
+            $("#btn-save-customer").prop("disabled", false).html('<i class="fa-solid fa-award"></i> <span>Enroll VIP Patron</span>');
         }
     });
 }

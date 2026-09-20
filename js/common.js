@@ -38,15 +38,17 @@ function guardAuth() {
     }
 }
 
-// ─── Sidebar & Nav ────────────────────────────────────────────────────────────
+// Sidebar & Nav
 
 $(document).ready(function () {
     // Load Sidebar across all pages
     if ($('#sidebar-container').length) {
         $('#sidebar-container').load('sidebar.html', function () {
             highlightActiveLink();
+            applyRoleSecurity();
         });
     }
+    applyRoleSecurity();
 });
 
 function highlightActiveLink() {
@@ -58,23 +60,13 @@ function highlightActiveLink() {
     });
 }
 
-
-
-$(document).ready(function () {
-    // load the all pages check there
-    checkPermissions();
-});
-
-function checkPermissions() {
+function applyRoleSecurity() {
     const role = localStorage.getItem("role");
 
     if (role === "ROLE_STAFF") {
+        // hide admin features for staff
         $('#nav-gold-rates').hide();
-
         $('#nav-reports').hide();
-
-        $('#btn-adjust-rates').hide();
-
-        console.log("Access restricted for STAFF member.");
+        $('.btn-admin-only').hide();
     }
 }

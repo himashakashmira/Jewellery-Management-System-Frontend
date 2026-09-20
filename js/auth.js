@@ -39,6 +39,7 @@ function handleLogin() {
 
                 // Save token and username
                 localStorage.setItem("token", response.token);
+                localStorage.setItem("role", response.role);
                 localStorage.setItem("username", username);
                 localStorage.setItem("customerId", response.customerId);
 

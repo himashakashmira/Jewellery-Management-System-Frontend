@@ -318,6 +318,20 @@
         </div>
       </section>
 
+      <!-- INVENTORY DIVISION TABS: GOLD VS IMITATION -->
+      <div class="inventory-division-tabs-bar">
+        <button class="inventory-tab-btn active" id="tabGoldInventory" onclick="switchInventoryTab('gold')">
+          <i class="fa-solid fa-coins text-gold"></i>
+          <span>Heritage Gold Heirlooms (22K / 24K)</span>
+          <span class="inv-tab-badge" id="goldCountBadge">0 Pieces</span>
+        </button>
+        <button class="inventory-tab-btn" id="tabImitationInventory" onclick="switchInventoryTab('imitation')">
+          <i class="fa-solid fa-gem text-gold"></i>
+          <span>Lifestyle Imitation (18K PVD Public Store)</span>
+          <span class="inv-tab-badge" id="imitationCountBadge">0 Pieces</span>
+        </button>
+      </div>
+
       <!-- FILTER & ACTIONS STRIP -->
       <div class="inventory-filter-strip">
         <div class="category-pills-bar">
@@ -554,42 +568,110 @@
 </div>
 
 <!-- ADD PIECE GLASSMORPHISM MODAL -->
-<div id="addPieceModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.5); backdrop-filter: blur(16px); z-index: 100; align-items: center; justify-content: center; padding: 20px;">
-  <div style="background: rgba(255,255,255,0.96); backdrop-filter: blur(24px); border: 1.5px solid rgba(197,160,89,0.4); border-radius: var(--radius-xl); box-shadow: var(--shadow-floating-hover); width: 100%; max-width: 520px; padding: 36px; position: relative;">
-    <button onclick="closeAddPieceModal();" style="position: absolute; top: 20px; right: 20px; width: 34px; height: 34px; border-radius: 50%; background: #FFF; border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; color: var(--text-muted);">
+<div id="addPieceModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.65); backdrop-filter: blur(16px); z-index: 100; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: rgba(255,255,255,0.98); backdrop-filter: blur(24px); border: 1.5px solid rgba(197,160,89,0.4); border-radius: var(--radius-xl); box-shadow: var(--shadow-floating-hover); width: 100%; max-width: 540px; max-height: 92vh; overflow-y: auto; padding: 32px; position: relative;">
+    <button onclick="closeAddPieceModal();" style="position: absolute; top: 20px; right: 20px; width: 34px; height: 34px; border-radius: 50%; background: #FFF; border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer;">
       <i class="fa-solid fa-xmark"></i>
     </button>
-    <div style="text-align: center; margin-bottom: 22px;">
+    <div style="text-align: center; margin-bottom: 20px;">
       <i class="fa-solid fa-crown" style="color: var(--gold-primary); font-size: 20px; margin-bottom: 6px;"></i>
       <h3 class="font-serif" style="font-size: 24px; font-weight: 700;">Catalog New Jewellery Piece</h3>
       <p style="font-size: 12.5px; color: var(--text-muted);">Register an artisan creation or certified bullion batch into inventory</p>
     </div>
     <form id="form-add-item" onsubmit="event.preventDefault(); saveItem();">
+      <!-- Item Classification: Gold vs Imitation -->
       <div style="margin-bottom: 14px;">
-        <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Piece Title</label>
-        <input type="text" id="item-name" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="e.g. Lumina Sunburst Choker" required>
+        <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Inventory Division</label>
+        <select id="item-type" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF; width: 100%; cursor: pointer;" onchange="onItemTypeChange('add')">
+          <option value="GOLD" selected>Heritage Gold (22K / 24K Bullion)</option>
+          <option value="IMITATION">Lifestyle Imitation (18K PVD Public Store Item)</option>
+        </select>
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
-        <div>
-          <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Category ID</label>
-          <input type="number" id="item-category" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="e.g. 1" value="1">
+
+      <!-- Piece Title -->
+      <div style="margin-bottom: 14px;">
+        <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Piece Title *</label>
+        <input type="text" id="item-name" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF; width: 100%;" placeholder="e.g. Aurelia Double-Layer Solitaire Pendant" required>
+      </div>
+
+      <!-- Category selection -->
+      <div style="margin-bottom: 14px;">
+        <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Jewellery Category</label>
+        <select id="item-category-select" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF; width: 100%;">
+          <option value="necklaces">Necklaces &amp; Pendants</option>
+          <option value="bracelets">Bracelets &amp; Cuffs</option>
+          <option value="earrings">Earrings</option>
+          <option value="rings">Statement Rings</option>
+        </select>
+        <input type="hidden" id="item-category" value="1">
+      </div>
+
+      <!-- Image Upload Component -->
+      <div style="margin-bottom: 16px;">
+        <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Masterpiece Photograph</label>
+        <input type="file" id="item-image-file" accept="image/*" style="display:none;" onchange="handleImageFileSelect(event, 'add')">
+        <input type="hidden" id="item-image-data-add" value="">
+        
+        <div class="image-upload-dropzone" id="item-dropzone-add" onclick="document.getElementById('item-image-file').click();">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <span><strong>Click to Upload Image</strong> from device</span>
+          <small style="font-size: 11px; color: var(--text-subtle);">Supports PNG, JPG, WebP</small>
         </div>
-        <div>
-          <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Net Weight (Grams)</label>
-          <input type="number" step="0.01" id="item-weight" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="14.50" required>
+
+        <div id="item-preview-wrap-add" style="display:none;" class="image-preview-container">
+          <img id="item-preview-img-add" src="" alt="Piece Preview">
+          <button type="button" class="btn-remove-preview" onclick="clearUploadedImage('add')" title="Remove Image"><i class="fa-solid fa-trash"></i></button>
+        </div>
+
+        <div class="preset-images-strip">
+          <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Presets:</span>
+          <button type="button" class="preset-pill-btn" onclick="usePresetImage('assets/prod-necklace.jpg', 'add')">Necklace</button>
+          <button type="button" class="preset-pill-btn" onclick="usePresetImage('assets/prod-cuff.jpg', 'add')">Cuff</button>
+          <button type="button" class="preset-pill-btn" onclick="usePresetImage('assets/prod-earrings.jpg', 'add')">Earrings</button>
+          <button type="button" class="preset-pill-btn" onclick="usePresetImage('assets/prod-ring.jpg', 'add')">Ring</button>
         </div>
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 22px;">
-        <div>
-          <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Wastage %</label>
-          <input type="number" step="0.01" id="item-wastage" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="e.g. 3.5" value="3">
+
+      <!-- Imitation Specific Fields -->
+      <div id="imitation-fields-add" style="display: none; background: #FAF9F6; border: 1px solid rgba(197,160,89,0.3); border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px;">
+        <div style="font-size: 11.5px; font-weight: 700; color: var(--gold-deep); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-sparkles"></i> <span>Lifestyle Store Configuration</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
+          <div>
+            <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Retail Price (LKR) *</label>
+            <input type="number" id="item-price" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF; width: 100%;" placeholder="e.g. 14500">
+          </div>
+          <div>
+            <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Stock Units</label>
+            <input type="number" id="item-stock-qty" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF; width: 100%;" placeholder="e.g. 12" value="10">
+          </div>
         </div>
         <div>
+          <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Material &amp; Finish</label>
+          <input type="text" id="item-material" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF; width: 100%;" placeholder="e.g. 18K PVD Gold &bull; Anti-Tarnish" value="18K PVD Champagne Gold">
+        </div>
+      </div>
+
+      <!-- Gold Specific Fields -->
+      <div id="gold-fields-add">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px;">
+          <div>
+            <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Net Weight (Grams) *</label>
+            <input type="number" step="0.01" id="item-weight" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF; width: 100%;" placeholder="14.50" value="12.00">
+          </div>
+          <div>
+            <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Wastage %</label>
+            <input type="number" step="0.01" id="item-wastage" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF; width: 100%;" placeholder="e.g. 3.5" value="3.0">
+          </div>
+        </div>
+        <div style="margin-bottom: 20px;">
           <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Labour Cost (LKR)</label>
-          <input type="number" step="0.01" id="item-labour" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF;" placeholder="e.g. 5000" required>
+          <input type="number" step="0.01" id="item-labour" class="global-search-input" style="border-radius: var(--radius-md); padding: 11px 16px; background: #FFF; width: 100%;" placeholder="e.g. 5000" value="4500">
         </div>
       </div>
-      <button type="submit" id="btn-save-item" class="btn-gold-primary" style="width: 100%; justify-content: center; padding: 14px;"><!-- AJAX target -->
+
+      <button type="submit" id="btn-save-item" class="btn-gold-primary" style="width: 100%; justify-content: center; padding: 14px;">
         <i class="fa-solid fa-sparkles"></i>
         <span>Register Masterpiece</span>
       </button>
@@ -601,51 +683,101 @@
 <script>
   function openAddPieceModal() {
     const modal = document.getElementById('addPieceModal');
-    modal.style.display = 'flex';
+    if (modal) {
+      modal.style.display = 'flex';
+      // Pre-select inventory division matching active tab
+      if (typeof currentInventoryTab !== 'undefined') {
+        const itemTypeSelect = document.getElementById('item-type');
+        if (itemTypeSelect) {
+          itemTypeSelect.value = (currentInventoryTab === 'imitation') ? 'IMITATION' : 'GOLD';
+          if (typeof onItemTypeChange === 'function') {
+            onItemTypeChange('add');
+          }
+        }
+      }
+    }
   }
 
   function closeAddPieceModal() {
     const modal = document.getElementById('addPieceModal');
-    modal.style.display = 'none';
+    if (modal) modal.style.display = 'none';
   }
 </script>
 
 <!-- EDIT PIECE MODAL -->
-<div id="editPieceModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(255,255,255,0.5);backdrop-filter:blur(16px);z-index:100;align-items:center;justify-content:center;padding:20px;">
-  <div style="background:rgba(255,255,255,0.96);backdrop-filter:blur(24px);border:1.5px solid rgba(197,160,89,0.4);border-radius:var(--radius-xl);box-shadow:var(--shadow-floating-hover);width:100%;max-width:520px;padding:36px;position:relative;">
-    <button onclick="document.getElementById('editPieceModal').style.display='none'" style="position:absolute;top:20px;right:20px;width:34px;height:34px;border-radius:50%;background:#FFF;border:1px solid var(--border-light);display:flex;align-items:center;justify-content:center;">
+<div id="editPieceModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(255,255,255,0.65); backdrop-filter:blur(16px); z-index:100; align-items:center; justify-content:center; padding:20px;">
+  <div style="background:rgba(255,255,255,0.98); backdrop-filter:blur(24px); border:1.5px solid rgba(197,160,89,0.4); border-radius:var(--radius-xl); box-shadow:var(--shadow-floating-hover); width:100%; max-width:540px; max-height:92vh; overflow-y:auto; padding:32px; position:relative;">
+    <button onclick="document.getElementById('editPieceModal').style.display='none'" style="position:absolute; top:20px; right:20px; width:34px; height:34px; border-radius:50%; background:#FFF; border:1px solid var(--border-light); display:flex; align-items:center; justify-content:center; cursor:pointer;">
       <i class="fa-solid fa-xmark"></i>
     </button>
-    <div style="text-align:center;margin-bottom:22px;">
-      <i class="fa-solid fa-pen-to-square" style="color:var(--gold-primary);font-size:20px;margin-bottom:6px;"></i>
-      <h3 class="font-serif" style="font-size:24px;font-weight:700;">Edit Jewellery Piece</h3>
+    <div style="text-align:center; margin-bottom:20px;">
+      <i class="fa-solid fa-pen-to-square" style="color:var(--gold-primary); font-size:20px; margin-bottom:6px;"></i>
+      <h3 class="font-serif" style="font-size:24px; font-weight:700;">Edit Jewellery Piece</h3>
     </div>
     <form id="form-edit-item" onsubmit="event.preventDefault(); updateItem();">
       <div style="margin-bottom:14px;">
-        <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px;color:var(--text-muted);">Piece Title</label>
-        <input type="text" id="edit-item-name" class="global-search-input" style="border-radius:var(--radius-md);padding:11px 16px;background:#FFF;" required>
+        <label style="display:block; font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:5px; color:var(--text-muted);">Inventory Division</label>
+        <select id="edit-item-type" class="global-search-input" style="border-radius:var(--radius-md); padding:11px 16px; background:#FFF; width:100%; cursor:pointer;" onchange="onItemTypeChange('edit')">
+          <option value="GOLD">Heritage Gold (22K / 24K Bullion)</option>
+          <option value="IMITATION">Lifestyle Imitation (18K PVD Public Store Item)</option>
+        </select>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
-        <div>
-          <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px;color:var(--text-muted);">Category ID</label>
-          <input type="number" id="edit-item-category" class="global-search-input" style="border-radius:var(--radius-md);padding:11px 16px;background:#FFF;">
+
+      <div style="margin-bottom:14px;">
+        <label style="display:block; font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:5px; color:var(--text-muted);">Piece Title *</label>
+        <input type="text" id="edit-item-name" class="global-search-input" style="border-radius:var(--radius-md); padding:11px 16px; background:#FFF; width:100%;" required>
+      </div>
+
+      <!-- Image Upload in Edit Modal -->
+      <div style="margin-bottom: 16px;">
+        <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Update Photograph</label>
+        <input type="file" id="edit-item-image-file" accept="image/*" style="display:none;" onchange="handleImageFileSelect(event, 'edit')">
+        <input type="hidden" id="item-image-data-edit" value="">
+        
+        <div class="image-upload-dropzone" id="item-dropzone-edit" onclick="document.getElementById('edit-item-image-file').click();">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <span>Click to Change Image</span>
         </div>
-        <div>
-          <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px;color:var(--text-muted);">Net Weight (g)</label>
-          <input type="number" step="0.01" id="edit-item-weight" class="global-search-input" style="border-radius:var(--radius-md);padding:11px 16px;background:#FFF;">
+
+        <div id="item-preview-wrap-edit" style="display:none;" class="image-preview-container">
+          <img id="item-preview-img-edit" src="" alt="Piece Preview">
+          <button type="button" class="btn-remove-preview" onclick="clearUploadedImage('edit')"><i class="fa-solid fa-trash"></i></button>
         </div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px;">
-        <div>
-          <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px;color:var(--text-muted);">Wastage %</label>
-          <input type="number" step="0.01" id="edit-item-wastage" class="global-search-input" style="border-radius:var(--radius-md);padding:11px 16px;background:#FFF;">
-        </div>
-        <div>
-          <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px;color:var(--text-muted);">Labour Cost (LKR)</label>
-          <input type="number" step="0.01" id="edit-item-labour" class="global-search-input" style="border-radius:var(--radius-md);padding:11px 16px;background:#FFF;">
+
+      <!-- Edit Imitation Fields -->
+      <div id="imitation-fields-edit" style="display: none; background: #FAF9F6; border: 1px solid rgba(197,160,89,0.3); border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
+          <div>
+            <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Retail Price (LKR)</label>
+            <input type="number" id="edit-item-price" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF; width: 100%;">
+          </div>
+          <div>
+            <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Material</label>
+            <input type="text" id="edit-item-material" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF; width: 100%;">
+          </div>
         </div>
       </div>
-      <button type="submit" class="btn-gold-primary" style="width:100%;justify-content:center;padding:14px;">
+
+      <!-- Edit Gold Fields -->
+      <div id="gold-fields-edit">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+          <div>
+            <label style="display:block; font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:5px; color:var(--text-muted);">Net Weight (g)</label>
+            <input type="number" step="0.01" id="edit-item-weight" class="global-search-input" style="border-radius:var(--radius-md); padding:11px 16px; background:#FFF; width: 100%;">
+          </div>
+          <div>
+            <label style="display:block; font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:5px; color:var(--text-muted);">Wastage %</label>
+            <input type="number" step="0.01" id="edit-item-wastage" class="global-search-input" style="border-radius:var(--radius-md); padding:11px 16px; background:#FFF; width: 100%;">
+          </div>
+        </div>
+        <div style="margin-bottom:20px;">
+          <label style="display:block; font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:5px; color:var(--text-muted);">Labour Cost (LKR)</label>
+          <input type="number" step="0.01" id="edit-item-labour" class="global-search-input" style="border-radius:var(--radius-md); padding:11px 16px; background:#FFF; width: 100%;">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-gold-primary" style="width:100%; justify-content:center; padding:14px;">
         <i class="fa-solid fa-check"></i>
         <span>Save Changes</span>
       </button>

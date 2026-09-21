@@ -266,8 +266,8 @@
         <button class="filter-btn" data-filter="rings">Statement Rings</button>
       </div>
 
-      <!-- 4-Column Product Grid -->
-      <div class="products-grid-4col">
+      <!-- 4-Column Product Grid (Dynamic Imitation Inventory) -->
+      <div class="products-grid-4col" id="lifestyleProductsGrid">
 
         <!-- Product 1: Necklace -->
         <article class="product-card" data-category="necklaces" data-title="Aurelia Double-Layer Solitaire Pendant"
@@ -853,12 +853,581 @@
         <span>Order Subtotal:</span>
         <span id="cartSubtotalVal" class="cart-subtotal-val">Rs. 32,700</span>
       </div>
-      <button class="btn-checkout-gold" onclick="showToast('Redirecting to Secure Luxury Checkout...');">
+      <button class="btn-checkout-gold" id="btnProceedToCheckout" onclick="openCheckoutModal();">
         <span>Proceed to Secure Checkout</span>
         <i class="fa-solid fa-arrow-right"></i>
       </button>
     </div>
   </aside>
+
+  <!-- 10. LUXURY MULTI-STEP CHECKOUT MODAL -->
+  <div id="checkoutModalOverlay" class="checkout-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="checkoutModalTitle">
+    <div class="checkout-modal-container">
+      <!-- Modal Close Button -->
+      <button id="checkoutModalCloseBtn" class="checkout-modal-close" onclick="closeCheckoutModal()" aria-label="Close Checkout">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Modal Header with Stepper -->
+      <div class="checkout-modal-header">
+        <div class="checkout-brand-title">
+          <i class="fa-solid fa-crown"></i>
+          <span id="checkoutModalTitle">AURUM LUXURY CHECKOUT</span>
+        </div>
+
+        <div class="checkout-stepper">
+          <div class="checkout-stepper-progress" id="checkoutStepperProgress"></div>
+          
+          <div class="checkout-step-node active" id="stepNode1">
+            <div class="step-circle" id="stepCircle1">1</div>
+            <span class="step-label">Account</span>
+          </div>
+
+          <div class="checkout-step-node" id="stepNode2">
+            <div class="step-circle" id="stepCircle2">2</div>
+            <span class="step-label">Delivery</span>
+          </div>
+
+          <div class="checkout-step-node" id="stepNode3">
+            <div class="step-circle" id="stepCircle3">3</div>
+            <span class="step-label">Payment</span>
+          </div>
+
+          <div class="checkout-step-node" id="stepNode4">
+            <div class="step-circle" id="stepCircle4">4</div>
+            <span class="step-label">Review</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Body (Steps 1 - 5) -->
+      <div class="checkout-modal-body">
+        
+        <!-- STEP 1: MANDATORY PATRON ACCOUNT -->
+        <div class="checkout-step-pane active" id="checkoutPane1">
+          <div class="step-pane-header">
+            <h3>VIP Patron Authentication</h3>
+            <p>To reserve bullion heirlooms and ensure white-glove insured transit, an authenticated AURUM account is mandatory.</p>
+          </div>
+
+          <!-- Authenticated View (if already signed in) -->
+          <div id="checkoutAuthActive" style="display: none;">
+            <div class="patron-auth-badge-card">
+              <div class="patron-auth-details">
+                <div class="patron-avatar-circle">
+                  <i class="fa-solid fa-crown"></i>
+                </div>
+                <div class="patron-auth-info">
+                  <h4 id="checkoutAuthPatronName">Lady Vivienne De Silva</h4>
+                  <p>
+                    <span id="checkoutAuthPatronEmail">vip.member@aurumjewels.lk</span>
+                    <span class="badge-vip-tag">Verified Member</span>
+                  </p>
+                </div>
+              </div>
+              <button type="button" class="btn-switch-account" onclick="switchCheckoutAccount()">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Switch Account
+              </button>
+            </div>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
+              <i class="fa-solid fa-shield-halved text-gold"></i> Your order and insured tracking will be securely linked to your personal vault account.
+            </p>
+          </div>
+
+          <!-- Unauthenticated View: Tabbed Sign In / Sign Up -->
+          <div id="checkoutAuthRequired">
+            <div class="auth-mandatory-notice">
+              <i class="fa-solid fa-lock"></i>
+              <span><strong>Sign In or Register Required:</strong> Please authenticate your patron account before providing delivery details and finalizing your order.</span>
+            </div>
+
+            <!-- Segmented Tabs for Checkout Auth -->
+            <div class="modal-tabs-bar" style="margin-bottom: 20px;">
+              <button type="button" class="modal-tab-btn active" id="checkoutTabLoginBtn" onclick="setCheckoutAuthTab('login')">
+                <i class="fa-solid fa-key"></i>
+                <span>Sign In</span>
+              </button>
+              <button type="button" class="modal-tab-btn" id="checkoutTabRegisterBtn" onclick="setCheckoutAuthTab('register')">
+                <i class="fa-solid fa-user-plus"></i>
+                <span>Create VIP Account</span>
+              </button>
+            </div>
+
+            <!-- Inline Login Form -->
+            <div id="checkoutLoginTabPane">
+              <form id="checkoutLoginForm" onsubmit="event.preventDefault(); submitCheckoutLogin();">
+                <div class="form-group">
+                  <label class="form-label" for="checkoutLoginUser">Email or Username</label>
+                  <div class="form-input-wrap">
+                    <i class="fa-regular fa-user"></i>
+                    <input type="text" id="checkoutLoginUser" class="form-input" placeholder="vip.member@aurumjewels.lk or username" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="checkoutLoginPass">Vault Password</label>
+                  <div class="form-input-wrap">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="checkoutLoginPass" class="form-input" placeholder="••••••••" required>
+                  </div>
+                </div>
+
+                <div class="form-options-row">
+                  <label class="checkbox-label">
+                    <input type="checkbox" checked id="checkoutRemember">
+                    <span>Keep signed in for this session</span>
+                  </label>
+                  <a href="#" class="forgot-link" onclick="event.preventDefault(); showToast('Password reset link sent to registered email');">Forgot Password?</a>
+                </div>
+
+                <button type="submit" id="btnCheckoutLoginSubmit" class="btn-modal-submit" style="margin-bottom: 8px;">
+                  <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                  <span>Sign In & Continue</span>
+                </button>
+              </form>
+            </div>
+
+            <!-- Inline Register Form -->
+            <div id="checkoutRegisterTabPane" style="display: none;">
+              <form id="checkoutRegisterForm" onsubmit="event.preventDefault(); submitCheckoutRegister();">
+                <div class="form-group">
+                  <label class="form-label" for="checkoutRegName">Full Name</label>
+                  <div class="form-input-wrap">
+                    <i class="fa-regular fa-id-card"></i>
+                    <input type="text" id="checkoutRegName" class="form-input" placeholder="e.g. Lady Vivienne De Silva" required>
+                  </div>
+                </div>
+
+                <div class="form-group-row">
+                  <div class="form-group">
+                    <label class="form-label" for="checkoutRegEmail">Email Address</label>
+                    <div class="form-input-wrap">
+                      <i class="fa-regular fa-envelope"></i>
+                      <input type="email" id="checkoutRegEmail" class="form-input" placeholder="vivienne@luxury.com" required>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="checkoutRegPhone">Phone Number</label>
+                    <div class="form-input-wrap">
+                      <i class="fa-solid fa-phone"></i>
+                      <input type="tel" id="checkoutRegPhone" class="form-input" placeholder="+94 77 123 4567" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="checkoutRegPass">Create Password</label>
+                  <div class="form-input-wrap">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="checkoutRegPass" class="form-input" placeholder="At least 6 characters" required>
+                  </div>
+                </div>
+
+                <button type="submit" id="btnCheckoutRegSubmit" class="btn-modal-submit" style="margin-bottom: 8px;">
+                  <i class="fa-solid fa-sparkles"></i>
+                  <span>Create Account & Continue</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: DELIVERY ADDRESS -->
+        <div class="checkout-step-pane" id="checkoutPane2">
+          <div class="step-pane-header">
+            <h3>Insured Delivery Address</h3>
+            <p>Provide your Ceylon destination for armored and insured white-glove parcel transit.</p>
+          </div>
+
+          <form id="checkoutAddressForm" onsubmit="event.preventDefault(); goToCheckoutStep(3);">
+            <div class="form-group-row">
+              <div class="form-group">
+                <label class="form-label" for="addrFullName">Recipient Full Name *</label>
+                <div class="form-input-wrap">
+                  <i class="fa-regular fa-user"></i>
+                  <input type="text" id="addrFullName" class="form-input" placeholder="Full Name" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="addrPhone">Contact Mobile Number *</label>
+                <div class="form-input-wrap">
+                  <i class="fa-solid fa-phone"></i>
+                  <input type="tel" id="addrPhone" class="form-input" placeholder="+94 7X XXX XXXX" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="addrStreet">Street Address & Residence / Suite *</label>
+              <div class="form-input-wrap">
+                <i class="fa-solid fa-location-dot"></i>
+                <input type="text" id="addrStreet" class="form-input" placeholder="No. 42, Queen's Road, Apartment 4B" required>
+              </div>
+            </div>
+
+            <div class="form-group-row">
+              <div class="form-group">
+                <label class="form-label" for="addrCity">City / District *</label>
+                <div class="form-input-wrap">
+                  <i class="fa-solid fa-city"></i>
+                  <select id="addrCity" class="form-input form-select" required>
+                    <option value="" disabled selected>Select District / City</option>
+                    <option value="Colombo">Colombo</option>
+                    <option value="Beliatta">Beliatta</option>
+                    <option value="Kandy">Kandy</option>
+                    <option value="Galle">Galle</option>
+                    <option value="Matara">Matara</option>
+                    <option value="Gampaha">Gampaha</option>
+                    <option value="Kurunegala">Kurunegala</option>
+                    <option value="Negombo">Negombo</option>
+                    <option value="Jaffna">Jaffna</option>
+                    <option value="Kalutara">Kalutara</option>
+                    <option value="Other">Other Island Location</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="addrPostalCode">Postal Code</label>
+                <div class="form-input-wrap">
+                  <i class="fa-solid fa-envelopes-bulk"></i>
+                  <input type="text" id="addrPostalCode" class="form-input" placeholder="e.g. 00700">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="addrNotes">Delivery Instructions / Concierge Note (Optional)</label>
+              <div class="form-input-wrap">
+                <i class="fa-regular fa-comment-dots"></i>
+                <input type="text" id="addrNotes" class="form-input" placeholder="e.g. Seal with red wax seal / Leave with concierge">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- STEP 3: PAYMENT METHOD -->
+        <div class="checkout-step-pane" id="checkoutPane3">
+          <div class="step-pane-header">
+            <h3>Select Payment Method</h3>
+            <p>Choose your preferred payment method. Transactions are sealed with 256-bit atelier security.</p>
+          </div>
+
+          <!-- Radio Selector Options -->
+          <div class="payment-methods-grid">
+            <div class="payment-card-option selected" id="payOptionCod" onclick="selectPaymentMethod('cod')">
+              <div class="payment-card-top">
+                <div class="payment-card-icon">
+                  <i class="fa-solid fa-hand-holding-dollar"></i>
+                </div>
+                <div class="payment-radio-indicator"></div>
+              </div>
+              <h4>Cash on Delivery (COD)</h4>
+              <p>Pay cash or swipe card via courier mobile POS terminal upon doorstep delivery.</p>
+            </div>
+
+            <div class="payment-card-option" id="payOptionCard" onclick="selectPaymentMethod('card')">
+              <div class="payment-card-top">
+                <div class="payment-card-icon">
+                  <i class="fa-solid fa-credit-card"></i>
+                </div>
+                <div class="payment-radio-indicator"></div>
+              </div>
+              <h4>Credit / Debit Card</h4>
+              <p>Instant secure payment with Visa, MasterCard, or American Express.</p>
+            </div>
+          </div>
+
+          <!-- COD Information Box -->
+          <div id="codDetailsBox" class="cod-notice-box">
+            <i class="fa-solid fa-shield-heart"></i>
+            <div>
+              <h5>White-Glove Doorstep Settlement</h5>
+              <p>No upfront charge needed. Our insured courier will bring your luxury package in a sealed presentation box. Please inspect seal before payment.</p>
+            </div>
+          </div>
+
+          <!-- Card Details Input Box -->
+          <div id="cardDetailsBox" class="card-details-box" style="display: none;">
+            <div class="card-details-header">
+              <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--gold-deep); letter-spacing: 0.05em;">
+                <i class="fa-solid fa-lock"></i> 256-Bit Encrypted Card Vault
+              </span>
+              <div class="card-brands-row">
+                <i class="fa-brands fa-cc-visa"></i>
+                <i class="fa-brands fa-cc-mastercard"></i>
+                <i class="fa-brands fa-cc-amex"></i>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cardHolderName">Cardholder Name *</label>
+              <div class="form-input-wrap">
+                <i class="fa-regular fa-user"></i>
+                <input type="text" id="cardHolderName" class="form-input" placeholder="Name as printed on card">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cardNumber">Card Number *</label>
+              <div class="form-input-wrap">
+                <i class="fa-solid fa-credit-card"></i>
+                <input type="text" id="cardNumber" class="form-input" placeholder="4000 1234 5678 9010" maxlength="19">
+              </div>
+            </div>
+
+            <div class="form-group-row">
+              <div class="form-group">
+                <label class="form-label" for="cardExpiry">Expiration Date *</label>
+                <div class="form-input-wrap">
+                  <i class="fa-regular fa-calendar"></i>
+                  <input type="text" id="cardExpiry" class="form-input" placeholder="MM / YY" maxlength="5">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="cardCvv">CVV / CVC *</label>
+                <div class="form-input-wrap">
+                  <i class="fa-solid fa-lock"></i>
+                  <input type="password" id="cardCvv" class="form-input" placeholder="3 digits" maxlength="4">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4: REVIEW & CONFIRM -->
+        <div class="checkout-step-pane" id="checkoutPane4">
+          <div class="step-pane-header">
+            <h3>Review Your Luxury Order</h3>
+            <p>Please inspect your pieces, delivery coordinates, and payment summary before placing order.</p>
+          </div>
+
+          <div class="checkout-review-grid">
+            <!-- Left: Items in Bag -->
+            <div class="review-items-card">
+              <h4>Pieces in Bag (<span id="reviewItemsCount">0</span>)</h4>
+              <div class="review-items-list" id="reviewItemsList">
+                <!-- Injected by renderCheckoutReview() -->
+              </div>
+            </div>
+
+            <!-- Right: Details & Totals -->
+            <div class="review-details-col">
+              <!-- Destination -->
+              <div class="review-info-card">
+                <div class="review-card-header">
+                  <h5><i class="fa-solid fa-truck-fast text-gold"></i> Delivery Coordinates</h5>
+                  <button type="button" class="review-edit-btn" onclick="goToCheckoutStep(2)">Edit</button>
+                </div>
+                <div class="review-card-content" id="reviewAddressContent">
+                  Lady Vivienne De Silva<br>
+                  No 42, Queen's Road, Colombo<br>
+                  +94 77 123 4567
+                </div>
+              </div>
+
+              <!-- Payment -->
+              <div class="review-info-card">
+                <div class="review-card-header">
+                  <h5><i class="fa-solid fa-wallet text-gold"></i> Payment Method</h5>
+                  <button type="button" class="review-edit-btn" onclick="goToCheckoutStep(3)">Edit</button>
+                </div>
+                <div class="review-card-content" id="reviewPaymentContent">
+                  Cash on Delivery (COD)
+                </div>
+              </div>
+
+              <!-- Cost Breakdown -->
+              <div class="order-cost-breakdown">
+                <div class="cost-row">
+                  <span>Bag Subtotal:</span>
+                  <span id="reviewSubtotal">Rs. 0</span>
+                </div>
+                <div class="cost-row">
+                  <span>Artisan Gift Box & Velvet Pouch:</span>
+                  <span style="color: #10B981; font-weight: 600;">Complimentary</span>
+                </div>
+                <div class="cost-row">
+                  <span>Insured Express Courier:</span>
+                  <span style="color: #10B981; font-weight: 600;">FREE</span>
+                </div>
+                <div class="cost-row grand-total">
+                  <span>Total Amount Due:</span>
+                  <span class="grand-total-amount" id="reviewGrandTotal">Rs. 0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 5: ORDER CONFIRMATION / RECEIPT -->
+        <div class="checkout-step-pane" id="checkoutPane5">
+          <div class="order-success-stage">
+            <div class="success-crest-icon">
+              <i class="fa-solid fa-crown"></i>
+            </div>
+            <h3>Your Luxury Order is Confirmed!</h3>
+            <p class="success-sub">Thank you for patronizing AURUM. Your heirloom piece has been reserved and sent to our atelier for insured dispatch.</p>
+
+            <div class="luxury-receipt-container" id="printableReceiptArea">
+              <div style="text-align: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(197, 160, 89, 0.3);">
+                <div style="font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; letter-spacing: 0.15em;">AURUM JEWELS</div>
+                <div style="font-size: 11px; color: var(--gold-deep); letter-spacing: 0.1em; text-transform: uppercase;">Official Atelier Order Memorandum</div>
+              </div>
+
+              <div class="receipt-meta-grid">
+                <div class="receipt-meta-item">
+                  <label>Order Reference</label>
+                  <span class="highlight-ref" id="receiptOrderRef">AUR-2026-9281</span>
+                </div>
+                <div class="receipt-meta-item">
+                  <label>Order Date & Time</label>
+                  <span id="receiptOrderDate">September 21, 2026</span>
+                </div>
+                <div class="receipt-meta-item">
+                  <label>Patron Account</label>
+                  <span id="receiptPatron">Lady Vivienne</span>
+                </div>
+                <div class="receipt-meta-item">
+                  <label>Payment Method</label>
+                  <span id="receiptPayment">Cash on Delivery</span>
+                </div>
+                <div class="receipt-meta-item" style="grid-column: 1 / -1;">
+                  <label>Insured Destination</label>
+                  <span id="receiptAddress">No. 42, Queen's Road, Colombo</span>
+                </div>
+              </div>
+
+              <table class="receipt-items-table" id="receiptItemsTable">
+                <thead>
+                  <tr>
+                    <th>Artisan Piece</th>
+                    <th>Qty</th>
+                    <th class="text-right">Price</th>
+                  </tr>
+                </thead>
+                <tbody id="receiptItemsTableBody">
+                  <!-- Injected by submitAurumOrder -->
+                </tbody>
+              </table>
+
+              <div class="receipt-total-bar">
+                <span>Grand Total Settled / Due:</span>
+                <span class="grand-total-amount" id="receiptGrandTotal">Rs. 0</span>
+              </div>
+            </div>
+
+            <div class="success-actions-row">
+              <button type="button" class="btn-checkout-back" onclick="printReceiptArea()">
+                <i class="fa-solid fa-print"></i> Print Official Receipt
+              </button>
+              <button type="button" class="btn-secondary-outline" onclick="window.location.href='customer-portal.html'">
+                <i class="fa-solid fa-vault text-gold"></i> View in Member Vault
+              </button>
+              <button type="button" class="btn-checkout-next" onclick="finishAndCloseCheckout()">
+                <span>Continue Shopping</span>
+                <i class="fa-solid fa-bag-shopping"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer Navigation Buttons (for Steps 1 - 4) -->
+      <div class="checkout-modal-footer" id="checkoutModalFooter">
+        <button type="button" class="btn-checkout-back" id="btnCheckoutBack" onclick="handleCheckoutBack()">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span id="btnCheckoutBackText">Return to Bag</span>
+        </button>
+
+        <button type="button" class="btn-checkout-next" id="btnCheckoutNext" onclick="handleCheckoutNext()">
+          <span id="btnCheckoutNextText">Proceed to Delivery</span>
+          <i class="fa-solid fa-arrow-right" id="btnCheckoutNextIcon"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       AURUM LUXURY PRODUCT DETAIL MODAL
+       ========================================== -->
+  <div class="product-detail-modal-overlay" id="productDetailModalOverlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="product-detail-modal">
+      <button type="button" class="detail-modal-close-btn" id="closeDetailModalBtn" aria-label="Close Product View">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="detail-modal-layout">
+        <!-- Left: High-Res Image Showcase Stage -->
+        <div class="detail-image-stage">
+          <div class="detail-badge-pill" id="modalDetailBadge">Atelier Original</div>
+          <div class="detail-img-frame">
+            <img id="modalDetailImg" src="assets/prod-necklace.jpg" alt="Artisan Piece View">
+          </div>
+          <div class="detail-guarantee-row">
+            <span><i class="fa-solid fa-shield-halved text-gold"></i> 100% Anti-Tarnish</span>
+            <span><i class="fa-solid fa-droplet text-gold"></i> Waterproof PVD</span>
+            <span><i class="fa-solid fa-gem text-gold"></i> Hypoallergenic</span>
+          </div>
+        </div>
+
+        <!-- Right: Specifications & Add to Cart -->
+        <div class="detail-info-pane">
+          <span class="detail-category-tag" id="modalDetailCategory">Necklaces & Pendants</span>
+          <h2 class="detail-product-title font-serif" id="modalDetailTitle">Aurelia Double-Layer Solitaire Pendant</h2>
+
+          <div class="detail-rating-row">
+            <div class="stars-gold" id="modalDetailStars">
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+            </div>
+            <span id="modalDetailRatingText">(4.9 &bull; 84 certified patron reviews)</span>
+          </div>
+
+          <div class="detail-price-box">
+            <span class="detail-price-label">Fixed Atelier Price</span>
+            <div class="detail-price-val" id="modalDetailPrice">Rs. 14,500</div>
+            <span class="detail-stock-status" id="modalDetailStock"><i class="fa-solid fa-circle-check"></i> In Stock &amp; Ready to Dispatch</span>
+          </div>
+
+          <div class="detail-specs-block">
+            <h4>Craftsmanship &amp; Specifications</h4>
+            <ul class="detail-specs-list">
+              <li><strong>Material:</strong> <span id="modalDetailMaterial">18K PVD Gold Multi-Layered Over Stainless Steel</span></li>
+              <li><strong>Finish:</strong> <span>Brushed &amp; Mirror Polished Champagne Luster</span></li>
+              <li><strong>Packaging:</strong> <span>Velvet AURUM Presentation Box with Certificate</span></li>
+              <li><strong>Warranty:</strong> <span>Lifetime Color Guarantee &amp; 1-Year Craftsmanship Warranty</span></li>
+            </ul>
+          </div>
+
+          <!-- Quantity Stepper & Add to Bag -->
+          <div class="detail-actions-stage">
+            <div class="quantity-stepper-wrap">
+              <span class="qty-label">Quantity:</span>
+              <div class="quantity-stepper">
+                <button type="button" class="btn-qty" id="modalQtyMinus" aria-label="Decrease quantity"><i class="fa-solid fa-minus"></i></button>
+                <input type="number" id="modalQtyInput" class="qty-input" value="1" min="1" max="99" readonly>
+                <button type="button" class="btn-qty" id="modalQtyPlus" aria-label="Increase quantity"><i class="fa-solid fa-plus"></i></button>
+              </div>
+            </div>
+
+            <button type="button" class="btn-modal-add-to-cart" id="modalBtnAddToCart">
+              <i class="fa-solid fa-bag-shopping"></i>
+              <span id="modalBtnAddToCartText">Add to Shopping Bag</span>
+            </button>
+          </div>
+
+          <div class="detail-dispatch-note">
+            <i class="fa-solid fa-truck-fast text-gold"></i>
+            <span>Islandwide insured secure courier delivery within 24–48 hours. Cash on Delivery and Online Card payment supported.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- jQuery (required by auth.js) -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

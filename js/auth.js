@@ -1,7 +1,11 @@
 function handleLogin() {
-    // Clear any stale session data
-    localStorage.clear();
-    console.log("[AURUM Auth] Cleared localStorage. Starting fresh login.");
+    // Clear only stale auth session data while preserving shopping bag
+    const preservedCart = localStorage.getItem("aurum_cart");
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("username");
+    localStorage.removeItem("customerId");
+    console.log("[AURUM Auth] Reset session keys. Starting fresh login.");
 
     // Read credentials from form
     const username = document.getElementById('login-username').value.trim();

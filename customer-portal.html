@@ -59,49 +59,238 @@
 
         <!-- 3. RECENT COLLECTIONS (Past Purchases) -->
         <section class="mt-20">
-            <h3 class="text-2xl font-serif italic mb-10">My Purchase History</h3>
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h3 class="text-2xl font-serif italic">My Purchase History</h3>
+                    <p class="text-xs text-gray-400 mt-1">Verified imitation & fine jewellery orders</p>
+                </div>
+                <span class="text-xs font-bold uppercase tracking-widest text-[#C5A059] bg-[#FAF9F6] px-4 py-2 border border-[#C5A059]/30 rounded-full" id="orders-count-badge">0 Pieces Vaulted</span>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="purchase-history">
-                <!-- Data from AJAX -->
+                <!-- Data from AJAX / Storage -->
             </div>
         </section>
     </main>
+
+    <!-- PORTAL REVIEW MODAL -->
+    <div id="portalReviewModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(10px); z-index:100; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:#FFF; border:1.5px solid #C5A059; border-radius:16px; width:100%; max-width:480px; padding:28px; position:relative; box-shadow:0 24px 48px rgba(0,0,0,0.2);">
+            <button onclick="closePortalReviewModal()" style="position:absolute; top:18px; right:18px; width:30px; height:30px; border-radius:50%; background:#F3F4F6; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div style="text-align:center; margin-bottom:16px;">
+                <i class="fa-solid fa-crown" style="color:#C5A059; font-size:24px; margin-bottom:6px;"></i>
+                <h3 class="font-serif" style="font-size:20px; font-weight:700;">Verified Patron Review</h3>
+                <p id="portalReviewItemTitle" style="font-size:13px; color:#6B7280; margin-top:2px;">Piece Name</p>
+            </div>
+            <div style="margin-bottom:14px; text-align:center;">
+                <label style="display:block; font-size:11px; font-weight:700; text-transform:uppercase; color:#6B7280; margin-bottom:6px;">Your Rating</label>
+                <div id="portalStarPicker" style="display:inline-flex; gap:8px; font-size:24px; color:#D4AF37; cursor:pointer;">
+                    <i class="fa-solid fa-star pstar" data-val="1"></i>
+                    <i class="fa-solid fa-star pstar" data-val="2"></i>
+                    <i class="fa-solid fa-star pstar" data-val="3"></i>
+                    <i class="fa-solid fa-star pstar" data-val="4"></i>
+                    <i class="fa-solid fa-star pstar" data-val="5"></i>
+                </div>
+            </div>
+            <div style="margin-bottom:16px;">
+                <label style="display:block; font-size:11px; font-weight:700; text-transform:uppercase; color:#6B7280; margin-bottom:6px;">Your Review / Experience</label>
+                <textarea id="portalReviewComment" rows="3" style="width:100%; border:1px solid #D1D5DB; border-radius:8px; padding:10px 14px; font-size:13px; resize:vertical;" placeholder="Describe the finish, shine, and fit of this piece..."></textarea>
+            </div>
+            <button onclick="submitPortalReview()" style="width:100%; background:linear-gradient(135deg, #B8860B 0%, #D4AF37 50%, #AA771C 100%); color:#FFF; border:none; border-radius:8px; padding:12px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; cursor:pointer;">
+                <i class="fa-solid fa-check"></i> Submit Review
+            </button>
+        </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="js/common.js"></script>
 
     <script>
-        $(document).ready(function () {
-            // set the customer name from storage
-            $('#customer-name-display').text(localStorage.getItem('username'));
+        var _selectedPortalItemId = null;
+        var _selectedPortalRating = 5;
 
-            // load the gold wallet balance
+        $(document).ready(function () {
+            // set customer name
+            var patronName = localStorage.getItem('username') || 'Valued Patron';
+            $('#customer-name-display').text(patronName);
+
+            // load balances and purchase history
             loadWalletBalance();
+            loadPurchaseHistory();
+
+            // Star picker events
+            $('.pstar').on('click', function () {
+                _selectedPortalRating = parseInt($(this).data('val')) || 5;
+                updatePortalStars(_selectedPortalRating);
+            });
         });
 
-        function loadWalletBalance() {
-            // we need the customer ID saved during login
-            const customerId = localStorage.getItem('customerId');
-            const token = localStorage.getItem('token');
+        function updatePortalStars(rating) {
+            $('.pstar').each(function () {
+                var val = parseInt($(this).data('val'));
+                if (val <= rating) {
+                    $(this).removeClass('fa-regular').addClass('fa-solid');
+                } else {
+                    $(this).removeClass('fa-solid').addClass('fa-regular');
+                }
+            });
+        }
 
-            if (!customerId) {
-                console.log("No customer ID found in storage");
+        function loadPurchaseHistory() {
+            var container = $('#purchase-history');
+            container.empty();
+
+            var currentPatron = localStorage.getItem('username') || '';
+            var customerId = localStorage.getItem('customerId');
+
+            var orders = [];
+            try {
+                var raw = localStorage.getItem('aurum_orders');
+                if (raw) orders = JSON.parse(raw);
+            } catch (e) {}
+
+            // Filter orders for current patron
+            var myOrders = orders.filter(function (o) {
+                if (customerId && String(o.customerId) === String(customerId)) return true;
+                if (currentPatron && o.patron && o.patron.toLowerCase() === currentPatron.toLowerCase()) return true;
+                return true; // If single user demo session, show orders
+            });
+
+            var allItems = [];
+            myOrders.forEach(function (ord) {
+                if (ord.items && Array.isArray(ord.items)) {
+                    ord.items.forEach(function (it) {
+                        allItems.push({
+                            orderRef: ord.orderRef || 'AUR-2026',
+                            orderDate: ord.orderDate || 'Recent',
+                            id: it.id || it.productId || 101,
+                            name: it.title || it.name || 'Imitation Lifestyle Piece',
+                            price: it.price || 14500,
+                            material: it.material || '18K PVD Anti-Tarnish',
+                            image: it.img || it.image || 'assets/prod-necklace.jpg',
+                            qty: it.qty || 1
+                        });
+                    });
+                }
+            });
+
+            $('#orders-count-badge').text(allItems.length + ' Piece' + (allItems.length === 1 ? '' : 's') + ' Vaulted');
+
+            if (allItems.length === 0) {
+                container.html(`
+                    <div class="col-span-full text-center py-16 text-gray-400">
+                        <i class="fa-solid fa-gem text-4xl text-[#C5A059]/40 mb-3 block"></i>
+                        <p class="font-serif italic text-lg text-gray-700">No imitation purchases on record yet.</p>
+                        <p class="text-xs text-gray-400 mt-1">Acquire an everyday luxury heirloom from our 18K lifestyle public boutique.</p>
+                        <a href="index.html#lifestyleStore" class="inline-block mt-4 text-xs font-bold uppercase tracking-widest text-[#C5A059] border-b border-[#C5A059] pb-1 hover:text-[#996515]">Explore Catalog &rarr;</a>
+                    </div>
+                `);
                 return;
             }
+
+            allItems.forEach(function (item) {
+                var card = `
+                    <div class="floating-card p-6 border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <div class="h-48 w-full overflow-hidden rounded-lg mb-4 bg-[#FAF9F6] border border-gray-100">
+                                <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] uppercase font-bold tracking-widest text-[#C5A059]">${item.orderRef}</span>
+                                <span class="text-[10px] text-green-700 bg-green-50 px-2 py-0.5 rounded font-bold"><i class="fa-solid fa-shield-check"></i> Verified Purchase</span>
+                            </div>
+                            <h4 class="font-serif text-lg font-bold text-gray-900">${item.name}</h4>
+                            <p class="text-xs text-gray-400 mt-1">${item.material} &bull; Qty: ${item.qty}</p>
+                            <div class="mt-4 font-bold text-[#C5A059] text-base">Rs. ${Number(item.price * item.qty).toLocaleString('en-US')}</div>
+                        </div>
+                        <button onclick="openPortalReviewModal('${item.id}', '${item.name.replace(/'/g, "\\'")}')" class="mt-6 w-full py-2.5 bg-[#C5A059] text-white text-xs font-bold uppercase tracking-wider rounded-lg hover:bg-[#a6823c] transition flex items-center justify-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-feather-pointed"></i> Leave Review
+                        </button>
+                    </div>
+                `;
+                container.append(card);
+            });
+        }
+
+        function openPortalReviewModal(itemId, itemName) {
+            _selectedPortalItemId = itemId;
+            _selectedPortalRating = 5;
+            updatePortalStars(5);
+            $('#portalReviewItemTitle').text(itemName);
+            $('#portalReviewComment').val('');
+            $('#portalReviewModal').css('display', 'flex');
+        }
+
+        function closePortalReviewModal() {
+            $('#portalReviewModal').hide();
+            _selectedPortalItemId = null;
+        }
+
+        function submitPortalReview() {
+            if (!_selectedPortalItemId) return;
+
+            var comment = $('#portalReviewComment').val().trim();
+            if (!comment) {
+                alert("Please enter your thoughts on this piece.");
+                return;
+            }
+
+            var patronName = localStorage.getItem('username') || 'Valued Patron';
+            var customerId = localStorage.getItem('customerId') || 1;
+            var token = localStorage.getItem('token') || '';
+
+            var newReview = {
+                id: Date.now(),
+                customerName: patronName,
+                rating: _selectedPortalRating,
+                comment: comment,
+                createdAt: "Just now",
+                verifiedPurchase: true
+            };
+
+            // Save to localStorage reviews
+            try {
+                var existing = JSON.parse(localStorage.getItem('aurum_reviews_' + _selectedPortalItemId) || '[]');
+                existing.unshift(newReview);
+                localStorage.setItem('aurum_reviews_' + _selectedPortalItemId, JSON.stringify(existing));
+            } catch (e) {}
+
+            // Send to backend
+            $.ajax({
+                url: "http://localhost:8080/api/v1/reviews/submit",
+                method: "POST",
+                contentType: "application/json",
+                headers: token ? { "Authorization": "Bearer " + token } : {},
+                data: JSON.stringify({
+                    productId: _selectedPortalItemId,
+                    customerId: parseInt(customerId) || 1,
+                    customerName: patronName,
+                    rating: _selectedPortalRating,
+                    comment: comment,
+                    verifiedPurchase: true
+                }),
+                complete: function () {
+                    closePortalReviewModal();
+                    alert("✓ Verified Patron Review published successfully!");
+                }
+            });
+        }
+
+        function loadWalletBalance() {
+            var customerId = localStorage.getItem('customerId');
+            var token = localStorage.getItem('token');
+
+            if (!customerId) return;
 
             $.ajax({
                 url: "http://localhost:8080/api/v1/savings/balance/" + customerId,
                 method: "GET",
-                headers: {
-                    "Authorization": "Bearer " + token
-                },
+                headers: token ? { "Authorization": "Bearer " + token } : {},
                 success: function (balance) {
-                    // update the balance with 3 decimal places (grams)
-                    // using the 'num-bold' style for readability
                     $('#wallet-balance').text(parseFloat(balance).toFixed(3));
-                    console.log("Wallet balance updated from DB");
                 },
-                error: function (err) {
-                    console.error("Failed to fetch wallet balance", err);
+                error: function () {
                     $('#wallet-balance').text("0.000");
                 }
             });

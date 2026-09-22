@@ -549,6 +549,52 @@ function processSaleInvoice() {
 
             document.getElementById("receiptModal").style.display = "flex";
 
+            // Archive sold gold items in local storage so they disappear from UI immediately
+            try {
+                var rawGold = localStorage.getItem("aurum_inventory_gold");
+                if (rawGold) {
+                    var goldList = JSON.parse(rawGold);
+                    var soldIds = cartItems.map(function (ci) { return String(ci.productId); });
+                    goldList.forEach(function (g) {
+                        if (soldIds.indexOf(String(g.id)) !== -1) {
+                            g.status = "SOLD";
+                        }
+                    });
+                    localStorage.setItem("aurum_inventory_gold", JSON.stringify(goldList));
+                }
+
+                // Add to aurum_orders audit ledger
+                var existingOrders = JSON.parse(localStorage.getItem('aurum_orders') || '[]');
+                existingOrders.unshift({
+                    id: Date.now(),
+                    orderRef: docketCode,
+                    orderDate: new Date().toISOString(),
+                    customerName: patronName.split("·")[0].trim(),
+                    orderType: "POS",
+                    status: "APPROVED",
+                    paymentMethod: selectedPaymentMethod,
+                    grandTotal: parseFloat(grandTotalText.replace(/[^0-9.]/g, '')) || 0,
+                    totalItems: totalPieces,
+                    items: cartItems.map(function(c) {
+                        return {
+                            productId: c.productId,
+                            productName: c.name,
+                            itemType: c.itemType || "GOLD",
+                            weight: c.weight,
+                            wastage: c.wastage,
+                            labourCost: c.labourCost,
+                            qty: c.qty,
+                            unitPrice: c.price,
+                            lineTotal: c.price * c.qty
+                        };
+                    })
+                });
+                localStorage.setItem('aurum_orders', JSON.stringify(existingOrders));
+            } catch (e) {}
+
+            // Reload POS products from DB/cache so sold gold pieces vanish from UI
+            loadProductsToPOS();
+
             // Prepare next transaction docket
             currentDocketNumber = generateDocketNumber();
             updateDocketDisplay();

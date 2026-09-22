@@ -457,6 +457,48 @@
             </tbody>
           </table>
         </div>
+      </section>
+
+      <!-- SOLD GOLD PIECES & VAULT DISPOSALS (HEIRLOOM SALES REPORT) -->
+      <section class="antigravity-card" style="padding: 28px 32px; margin-bottom: 28px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <span class="status-pill gold"><i class="fa-solid fa-crown"></i> Vault Archive</span>
+              <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Sold Heritage Gold Registry</span>
+            </div>
+            <h3 class="card-header-title font-serif" style="font-size: 22px;">Sold Gold Pieces &amp; Vault Ledger</h3>
+            <p class="card-header-desc">Complete audit of individual 22K/24K gold items sold, removed from active showroom inventory, and archived in the database</p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span id="sold-gold-count" class="status-pill gold" style="font-weight: 700; font-size: 12px;">0 Pieces Sold</span>
+            <button class="btn-white-outline" style="font-size: 12px; padding: 8px 16px;" onclick="loadSoldGoldItems();">
+              <i class="fa-solid fa-rotate"></i> Refresh Sold Vault
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="luxury-data-table" id="sold-gold-table">
+            <thead>
+              <tr>
+                <th>Vault Tag</th>
+                <th>Gold Piece &amp; Specifications</th>
+                <th>Karat / Alloy</th>
+                <th>Weight (g)</th>
+                <th>Wastage %</th>
+                <th>Labour Cost</th>
+                <th>Status</th>
+                <th style="text-align: right;">Valuation (LKR)</th>
+              </tr>
+            </thead>
+            <tbody id="sold-gold-tbody">
+              <!-- Dynamically populated via reports.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <!-- AUDITED SALES LEDGER & TRANSACTION ARCHIVE -->
       <section class="antigravity-card" style="padding: 28px 32px; margin-bottom: 28px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 14px;">

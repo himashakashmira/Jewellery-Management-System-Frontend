@@ -1428,6 +1428,49 @@
             <i class="fa-solid fa-truck-fast text-gold"></i>
             <span>Islandwide insured secure courier delivery within 24–48 hours. Cash on Delivery and Online Card payment supported.</span>
           </div>
+
+          <!-- Verified Patron Reviews Section -->
+          <div class="detail-reviews-container" style="margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(197,160,89,0.25);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <h4 style="font-family:'Playfair Display', serif; font-size:16px; font-weight:700; color:var(--text-main); margin:0; display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-feather-pointed" style="color:var(--gold-primary);"></i> <span>Patron Reviews</span>
+              </h4>
+              <span id="patronReviewEligibilityBadge" style="font-size:11px; font-weight:700; padding:2px 8px; border-radius:12px; background:#FAF9F6; border:1px solid rgba(197,160,89,0.3); color:var(--gold-deep);"></span>
+            </div>
+
+            <!-- Review Submission Form (Visible only if customer purchased the item) -->
+            <div id="patronReviewFormBox" style="display:none; background:#FAF9F6; border:1.5px solid rgba(197,160,89,0.4); border-radius:12px; padding:16px; margin-bottom:16px;">
+              <div style="font-size:12px; font-weight:700; color:var(--gold-deep); text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-crown" style="color:var(--gold-primary);"></i> <span>Leave a Verified Patron Review</span>
+              </div>
+              <div style="margin-bottom:10px;">
+                <label style="display:block; font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:4px;">Rating</label>
+                <div id="reviewRatingStarPicker" style="display:flex; gap:6px; font-size:18px; color:#D4AF37; cursor:pointer;">
+                  <i class="fa-solid fa-star star-pick" data-val="1"></i>
+                  <i class="fa-solid fa-star star-pick" data-val="2"></i>
+                  <i class="fa-solid fa-star star-pick" data-val="3"></i>
+                  <i class="fa-solid fa-star star-pick" data-val="4"></i>
+                  <i class="fa-solid fa-star star-pick" data-val="5"></i>
+                </div>
+              </div>
+              <div style="margin-bottom:12px;">
+                <label style="display:block; font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:4px;">Artisan Experience Feedback</label>
+                <textarea id="reviewCommentText" rows="2" class="global-search-input" style="width:100%; border-radius:8px; padding:8px 12px; font-size:12px; background:#FFF; resize:vertical; border:1px solid rgba(197,160,89,0.3);" placeholder="Share your experience regarding the craftsmanship, luster, and feel..."></textarea>
+              </div>
+              <button type="button" id="btnSubmitPatronReview" class="btn-primary-gold" style="width:100%; justify-content:center; padding:10px; font-size:12px;">
+                <i class="fa-solid fa-check"></i> <span>Publish Verified Review</span>
+              </button>
+            </div>
+
+            <!-- Ineligibility Notice -->
+            <div id="patronReviewNoticeBox" style="display:none; font-size:11.5px; color:var(--text-muted); background:#F9FAFB; border:1px dashed #D1D5DB; border-radius:8px; padding:10px 14px; margin-bottom:14px; align-items:center; gap:8px;">
+              <i class="fa-solid fa-shield-halved" style="color:var(--gold-primary);"></i>
+              <span id="patronReviewNoticeText">Reviews are exclusively reserved for patrons who have purchased this piece.</span>
+            </div>
+
+            <!-- Reviews Stream -->
+            <div id="patronReviewsList" style="display:flex; flex-direction:column; gap:10px; max-height:220px; overflow-y:auto; padding-right:4px;"></div>
+          </div>
         </div>
       </div>
     </div>

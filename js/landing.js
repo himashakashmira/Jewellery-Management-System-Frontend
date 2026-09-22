@@ -175,15 +175,27 @@ function getLifestyleItems() {
 let currentModalItem = null;
 
 function renderLifestyleProductCard(item) {
-  const badgeHtml = (item.stock && item.stock <= 3)
-    ? `<span class="badge-tag highlight">Low Stock</span>`
-    : (item.rating >= 4.9 ? `<span class="badge-tag highlight">Bestseller</span>` : `<span class="badge-tag">Atelier 18K</span>`);
+  const stockQty = (item.stock !== undefined && item.stock !== null) ? parseInt(item.stock) : 10;
+  const isOutOfStock = stockQty <= 0;
+  const isLowStock = !isOutOfStock && stockQty <= 3;
+
+  const badgeHtml = isOutOfStock
+    ? `<span class="badge-tag" style="background:#ef4444;color:#fff;">Out of Stock</span>`
+    : (isLowStock
+        ? `<span class="badge-tag highlight"><i class="fa-solid fa-triangle-exclamation"></i> Only ${stockQty} left</span>`
+        : (item.rating >= 4.9 ? `<span class="badge-tag highlight">Bestseller</span>` : `<span class="badge-tag">Atelier 18K</span>`));
 
   const categoryName = item.category || 'necklaces';
   const displayMaterial = item.material || '18K PVD • Anti-Tarnish';
   const displayPrice = 'Rs. ' + Number(item.price || 14500).toLocaleString('en-US');
   const displayRating = item.rating || 4.9;
   const displayReviews = item.reviews || 45;
+
+  const stockBadgeText = isOutOfStock
+    ? `<span style="color:#ef4444; font-size:11px; font-weight:700;"><i class="fa-solid fa-circle-xmark"></i> Out of Stock (0 in store)</span>`
+    : (isLowStock
+        ? `<span style="color:#b91c1c; font-size:11px; font-weight:700;"><i class="fa-solid fa-triangle-exclamation"></i> Stock: <strong>${stockQty} in store</strong></span>`
+        : `<span style="color:var(--text-muted); font-size:11px;">Stock: <strong style="color:var(--text-main);">${stockQty} in store</strong></span>`);
 
   return `
     <article class="product-card" 
@@ -212,14 +224,17 @@ function renderLifestyleProductCard(item) {
           </div>
           <span>(${displayRating} &bull; ${displayReviews} reviews)</span>
         </div>
+        <div class="product-stock-line" style="margin-top:4px; margin-bottom:8px;">
+          ${stockBadgeText}
+        </div>
         <div class="product-footer-row">
           <div class="product-price-block">
             <span class="price-currency-tag">Fixed Price</span>
             <span class="product-fixed-price">${displayPrice}</span>
           </div>
-          <button type="button" class="btn-add-to-cart" onclick="event.stopPropagation(); handleQuickAddToCart('${item.id}', this);">
+          <button type="button" class="btn-add-to-cart" onclick="event.stopPropagation(); handleQuickAddToCart('${item.id}', this);" ${isOutOfStock ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''}>
             <i class="fa-solid fa-bag-shopping"></i>
-            <span>Add to Cart</span>
+            <span>${isOutOfStock ? 'Sold Out' : 'Add to Cart'}</span>
           </button>
         </div>
       </div>
@@ -253,6 +268,36 @@ function loadLifestyleProducts() {
   }
 
   container.innerHTML = items.map(renderLifestyleProductCard).join('');
+
+  // Synchronize in background with live backend inventory
+  fetch('http://localhost:8080/api/v1/inventory/all')
+    .then(res => res.json())
+    .then(products => {
+      if (Array.isArray(products) && products.length > 0) {
+        const backendImt = products.filter(p => p.itemType === 'IMITATION');
+        if (backendImt.length > 0) {
+          const currentLocal = getLifestyleItems();
+          const merged = backendImt.map(bp => {
+            const match = currentLocal.find(lp => String(lp.id) === String(bp.id) || lp.name === bp.name);
+            return {
+              id: bp.id,
+              name: bp.name,
+              itemType: 'IMITATION',
+              category: match ? match.category : 'necklaces',
+              price: bp.price || 14500,
+              material: bp.material || '18K PVD Champagne Gold',
+              image: bp.image || (match ? match.image : 'assets/prod-necklace.jpg'),
+              stock: (bp.stock !== undefined && bp.stock !== null) ? bp.stock : (match && match.stock !== undefined ? match.stock : 10),
+              rating: match ? match.rating : 5.0,
+              reviews: match ? match.reviews : 1
+            };
+          });
+          localStorage.setItem('aurum_inventory_imitation', JSON.stringify(merged));
+          container.innerHTML = merged.map(renderLifestyleProductCard).join('');
+        }
+      }
+    })
+    .catch(() => {});
 }
 
 // Global modal triggers
@@ -289,19 +334,32 @@ window.openProductDetailModal = function(itemId) {
   if (modalRatingText) modalRatingText.textContent = `(${item.rating || 4.9} • ${item.reviews || 54} certified patron reviews)`;
   if (modalQtyInput) modalQtyInput.value = '1';
 
+  const stockQty = (item.stock !== undefined && item.stock !== null) ? parseInt(item.stock) : 10;
   if (modalStock) {
-    if (item.stock && item.stock <= 3) {
+    if (stockQty <= 0) {
       modalStock.className = 'detail-stock-status low-stock';
-      modalStock.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Limited Availability: Only ${item.stock} left in atelier`;
+      modalStock.style.background = '#fee2e2';
+      modalStock.style.color = '#b91c1c';
+      modalStock.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Out of Stock (0 in store)`;
+    } else if (stockQty <= 3) {
+      modalStock.className = 'detail-stock-status low-stock';
+      modalStock.style.background = '';
+      modalStock.style.color = '';
+      modalStock.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Limited Availability: Only ${stockQty} in store`;
     } else {
       modalStock.className = 'detail-stock-status';
-      modalStock.innerHTML = `<i class="fa-solid fa-circle-check"></i> In Stock & Ready to Dispatch`;
+      modalStock.style.background = '';
+      modalStock.style.color = '';
+      modalStock.innerHTML = `<i class="fa-solid fa-circle-check"></i> In Stock & Ready to Dispatch (Stock: ${stockQty} in store)`;
     }
   }
 
   if (modalBadge) {
     modalBadge.textContent = '18K PVD Lifestyle';
   }
+
+  // Configure Patron Reviews UI
+  setupPatronReviewsUI(item);
 
   if (overlay) {
     overlay.classList.add('active');
@@ -318,6 +376,252 @@ window.closeProductDetailModal = function() {
     document.body.style.overflow = '';
   }
 };
+
+// ─── Verified Patron Reviews System ──────────────────────────────────────────
+let selectedReviewRating = 5;
+
+function hasPatronPurchasedPiece(item) {
+  const patron = getAuthenticatedPatron();
+  if (!patron || (!patron.username && !patron.customerId)) return false;
+
+  try {
+    const orders = JSON.parse(localStorage.getItem('aurum_orders') || '[]');
+    const purchased = orders.some(order => {
+      const patronMatch = (order.customerId && patron.customerId && String(order.customerId) === String(patron.customerId)) ||
+                          (order.patron && patron.username && order.patron.toLowerCase() === patron.username.toLowerCase()) ||
+                          (order.customerName && patron.username && order.customerName.toLowerCase() === patron.username.toLowerCase());
+      if (!patronMatch) return false;
+
+      return order.items && order.items.some(it => {
+        return (it.id && String(it.id) === String(item.id)) ||
+               (it.productId && String(it.productId) === String(item.id)) ||
+               (it.title && it.title.trim().toLowerCase() === item.name.trim().toLowerCase()) ||
+               (it.name && it.name.trim().toLowerCase() === item.name.trim().toLowerCase());
+      });
+    });
+
+    if (purchased) return true;
+  } catch (e) {
+    console.error("Error checking order history", e);
+  }
+
+  return false;
+}
+
+function setupPatronReviewsUI(item) {
+  const formBox = document.getElementById('patronReviewFormBox');
+  const noticeBox = document.getElementById('patronReviewNoticeBox');
+  const noticeText = document.getElementById('patronReviewNoticeText');
+  const badgeEl = document.getElementById('patronReviewEligibilityBadge');
+  const commentInput = document.getElementById('reviewCommentText');
+
+  if (commentInput) commentInput.value = '';
+  selectedReviewRating = 5;
+  highlightReviewStars(5);
+
+  const isAuth = isUserAuthenticated();
+  const hasPurchased = hasPatronPurchasedPiece(item);
+
+  if (hasPurchased) {
+    if (formBox) formBox.style.display = 'block';
+    if (noticeBox) noticeBox.style.display = 'none';
+    if (badgeEl) {
+      badgeEl.innerHTML = '<i class="fa-solid fa-certificate" style="color:#10b981;"></i> Verified Buyer Eligible';
+      badgeEl.style.color = '#10B981';
+      badgeEl.style.borderColor = 'rgba(16,185,129,0.3)';
+    }
+  } else {
+    if (formBox) formBox.style.display = 'none';
+    if (noticeBox) {
+      noticeBox.style.display = 'flex';
+      if (!isAuth) {
+        noticeText.textContent = "Please sign in as a patron to review imitation pieces you've purchased.";
+      } else {
+        noticeText.textContent = "Verified Patron Reviews: Reserved exclusively for patrons who have purchased this piece.";
+      }
+    }
+    if (badgeEl) {
+      badgeEl.innerHTML = isAuth ? '<i class="fa-solid fa-lock"></i> Purchase Required to Review' : '<i class="fa-solid fa-user-lock"></i> Sign In to Review';
+      badgeEl.style.color = 'var(--text-muted)';
+      badgeEl.style.borderColor = '#D1D5DB';
+    }
+  }
+
+  renderProductReviews(item);
+}
+
+function renderProductReviews(item) {
+  const listEl = document.getElementById('patronReviewsList');
+  if (!listEl) return;
+
+  let storedReviews = [];
+  try {
+    const raw = localStorage.getItem('aurum_reviews_' + item.id);
+    if (raw) storedReviews = JSON.parse(raw);
+  } catch (e) {}
+
+  if (!storedReviews || storedReviews.length === 0) {
+    storedReviews = [
+      {
+        id: 1,
+        customerName: "Dilshan Samarasinghe",
+        rating: 5,
+        comment: "Exquisite craftsmanship! The 18K champagne PVD luster looks identical to solid gold without fading.",
+        createdAt: "2 days ago",
+        verifiedPurchase: true
+      },
+      {
+        id: 2,
+        customerName: "Kavindi Jayawardena",
+        rating: 5,
+        comment: "Wore it daily including swimming. Anti-tarnish finish is completely waterproof as promised.",
+        createdAt: "1 week ago",
+        verifiedPurchase: true
+      }
+    ];
+    try {
+      localStorage.setItem('aurum_reviews_' + item.id, JSON.stringify(storedReviews));
+    } catch (e) {}
+  }
+
+  fetch('http://localhost:8080/api/v1/reviews/product/' + item.id)
+    .then(res => res.json())
+    .then(backendReviews => {
+      if (Array.isArray(backendReviews) && backendReviews.length > 0) {
+        backendReviews.forEach(br => {
+          if (!storedReviews.some(sr => sr.id === br.id)) {
+            storedReviews.unshift({
+              id: br.id,
+              customerName: br.customerName,
+              rating: br.rating,
+              comment: br.comment,
+              createdAt: "Verified Patron",
+              verifiedPurchase: true
+            });
+          }
+        });
+        displayReviewListHtml(listEl, storedReviews);
+      }
+    })
+    .catch(() => {});
+
+  displayReviewListHtml(listEl, storedReviews);
+}
+
+function displayReviewListHtml(listEl, reviews) {
+  if (!reviews || reviews.length === 0) {
+    listEl.innerHTML = '<div style="font-size:12px;color:var(--text-muted);padding:8px 0;font-style:italic;">No reviews yet. Be the first verified patron to review this piece!</div>';
+    return;
+  }
+
+  listEl.innerHTML = reviews.map(r => {
+    let starsHtml = '';
+    for (let s = 1; s <= 5; s++) {
+      starsHtml += (s <= r.rating) ? '<i class="fa-solid fa-star"></i>' : '<i class="fa-regular fa-star" style="opacity:0.3;"></i>';
+    }
+
+    return `
+      <div style="background:#FFF; border:1px solid #F3F4F6; border-radius:10px; padding:12px; box-shadow:0 1px 3px rgba(0,0,0,0.04);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <strong style="font-size:12.5px; color:var(--text-main);">${escapeHtml(r.customerName || 'Verified Patron')}</strong>
+            <span style="font-size:10px; background:#dcfce7; color:#15803d; padding:1px 6px; border-radius:8px; font-weight:700;"><i class="fa-solid fa-check"></i> Verified Purchase</span>
+          </div>
+          <span style="font-size:11px; color:var(--text-muted);">${escapeHtml(r.createdAt || 'Recent')}</span>
+        </div>
+        <div style="font-size:12px; color:#D4AF37; margin-bottom:6px;">${starsHtml}</div>
+        <div style="font-size:12.5px; color:var(--text-secondary); line-height:1.4;">${escapeHtml(r.comment)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function highlightReviewStars(rating) {
+  selectedReviewRating = rating;
+  const stars = document.querySelectorAll('#reviewRatingStarPicker .star-pick');
+  stars.forEach(star => {
+    const val = parseInt(star.getAttribute('data-val'));
+    if (val <= rating) {
+      star.className = 'fa-solid fa-star star-pick';
+    } else {
+      star.className = 'fa-regular fa-star star-pick';
+    }
+  });
+}
+
+function submitPatronReview() {
+  if (!currentModalItem) return;
+
+  const patron = getAuthenticatedPatron();
+  if (!patron || (!patron.username && !patron.customerId)) {
+    showToast('Please sign in as a patron to leave a review.');
+    return;
+  }
+
+  const comment = (document.getElementById('reviewCommentText')?.value || '').trim();
+  if (!comment) {
+    showToast('Please share your thoughts on the craftsmanship and finish.');
+    return;
+  }
+
+  const newReview = {
+    id: Date.now(),
+    customerName: patron.fullName || patron.username || 'Valued Patron',
+    rating: selectedReviewRating,
+    comment: comment,
+    createdAt: 'Just now',
+    verifiedPurchase: true
+  };
+
+  try {
+    const existing = JSON.parse(localStorage.getItem('aurum_reviews_' + currentModalItem.id) || '[]');
+    existing.unshift(newReview);
+    localStorage.setItem('aurum_reviews_' + currentModalItem.id, JSON.stringify(existing));
+  } catch (e) {}
+
+  try {
+    const imtItems = getLifestyleItems();
+    const itemMatch = imtItems.find(i => String(i.id) === String(currentModalItem.id));
+    if (itemMatch) {
+      itemMatch.reviews = (itemMatch.reviews || 0) + 1;
+      itemMatch.rating = Math.round(((itemMatch.rating * (itemMatch.reviews - 1) + selectedReviewRating) / itemMatch.reviews) * 10) / 10;
+      currentModalItem.reviews = itemMatch.reviews;
+      currentModalItem.rating = itemMatch.rating;
+      localStorage.setItem('aurum_inventory_imitation', JSON.stringify(imtItems));
+    }
+  } catch (e) {}
+
+  const payload = {
+    productId: currentModalItem.id,
+    customerId: patron.customerId ? parseInt(patron.customerId) : 1,
+    customerName: newReview.customerName,
+    rating: selectedReviewRating,
+    comment: comment,
+    verifiedPurchase: true
+  };
+
+  fetch('http://localhost:8080/api/v1/reviews/submit', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': patron.token ? ('Bearer ' + patron.token) : ''
+    },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+
+  const modalRatingText = document.getElementById('modalDetailRatingText');
+  if (modalRatingText) {
+    modalRatingText.textContent = `(${currentModalItem.rating} • ${currentModalItem.reviews} certified patron reviews)`;
+  }
+
+  const commentInput = document.getElementById('reviewCommentText');
+  if (commentInput) commentInput.value = '';
+
+  renderProductReviews(currentModalItem);
+  loadLifestyleProducts();
+
+  showToast('✓ Verified patron review published with distinction!');
+}
 
 window.toggleCardWishlist = function(btn) {
   btn.classList.toggle('active');
@@ -422,6 +726,21 @@ function initProductDetailModal() {
         setTimeout(window.openAurumCart, 300);
       }
     });
+  }
+
+  // Star picker events
+  const starPicks = document.querySelectorAll('#reviewRatingStarPicker .star-pick');
+  starPicks.forEach(star => {
+    star.addEventListener('click', () => {
+      const val = parseInt(star.getAttribute('data-val')) || 5;
+      highlightReviewStars(val);
+    });
+  });
+
+  // Submit review button
+  const btnSubmitReview = document.getElementById('btnSubmitPatronReview');
+  if (btnSubmitReview) {
+    btnSubmitReview.addEventListener('click', submitPatronReview);
   }
 
   document.addEventListener('keydown', (e) => {

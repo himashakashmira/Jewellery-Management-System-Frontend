@@ -148,12 +148,15 @@ function saveStoredImitationItems(items) {
 function getStoredGoldItems() {
     try {
         var raw = localStorage.getItem("aurum_inventory_gold");
-        if (raw) return JSON.parse(raw);
+        if (raw) {
+            var parsed = JSON.parse(raw);
+            return parsed.filter(function (it) { return it.status !== "SOLD"; });
+        }
     } catch (e) {
         console.error("Error reading gold items:", e);
     }
     localStorage.setItem("aurum_inventory_gold", JSON.stringify(DEFAULT_GOLD_ITEMS));
-    return DEFAULT_GOLD_ITEMS;
+    return DEFAULT_GOLD_ITEMS.filter(function (it) { return it.status !== "SOLD"; });
 }
 
 function saveStoredGoldItems(items) {
@@ -168,6 +171,16 @@ $(document).ready(function () {
 
     // Initialize inventory state and load items
     loadInventory();
+
+    // Check for edit piece query parameter (e.g. from notification alert)
+    var urlParams = new URLSearchParams(window.location.search);
+    var editId = urlParams.get('edit');
+    if (editId) {
+        setTimeout(function () {
+            var numId = parseInt(editId);
+            openEditModal(isNaN(numId) ? editId : numId);
+        }, 600);
+    }
 });
 
 // ─── 1. Load Inventory & Synchronize ──────────────────────────────────────────
@@ -202,10 +215,16 @@ function loadInventory() {
             }
 
             renderInventoryGrid();
+            if (typeof refreshHeaderNotifications === 'function') {
+                refreshHeaderNotifications();
+            }
         },
         error: function () {
             console.warn("[Inventory] Backend unavailable. Loading from Atelier Storage.");
             renderInventoryGrid();
+            if (typeof refreshHeaderNotifications === 'function') {
+                refreshHeaderNotifications();
+            }
         }
     });
 }
@@ -271,7 +290,9 @@ function buildInventoryCard(p) {
     if (isImitation) {
         var retailPrice = p.price ? formatPrice(p.price) : "Rs. 14,500";
         var material = p.material || "18K PVD Champagne Gold";
-        var stock = p.stock || 10;
+        var rawStock = (p.stock !== undefined && p.stock !== null) ? p.stock : 10;
+        var stock = parseInt(rawStock);
+        if (isNaN(stock)) stock = 0;
 
         badgeHTML = `
             <div class="inventory-badges-top">
@@ -280,11 +301,15 @@ function buildInventoryCard(p) {
             </div>
         `;
 
+        var stockHtml = (stock <= 3)
+            ? `<span style="color:#e11d48;font-weight:700;"><i class="fa-solid fa-triangle-exclamation"></i> Stock: <strong>${stock} in store</strong></span>`
+            : `<span>Stock: <strong>${stock} in store</strong></span>`;
+
         specsHTML = `
             <div class="inventory-specs-row">
                 <span>Finish: <strong>${material}</strong></span>
                 <span>&bull;</span>
-                <span>Stock: <strong>${stock} in store</strong></span>
+                ${stockHtml}
             </div>
         `;
 
@@ -338,6 +363,11 @@ function buildInventoryCard(p) {
                 <div class="inventory-price-row">
                     ${priceRowHTML}
                     <div style="display:flex;gap:6px;">
+                        ${!isImitation ? `
+                        <button class="header-action-btn" style="width:32px;height:32px;color:var(--gold-deep);" title="Mark Piece as Sold (Archived into Reports)" onclick="markGoldPieceSold(${p.id})">
+                            <i class="fa-solid fa-hand-holding-dollar" style="font-size:11px;"></i>
+                        </button>
+                        ` : ''}
                         <button class="header-action-btn" style="width:32px;height:32px;" title="Edit" onclick="openEditModal(${p.id})">
                             <i class="fa-solid fa-pen" style="font-size:11px;"></i>
                         </button>
@@ -488,7 +518,8 @@ function saveItem() {
             labourCost: labour,
             categoryId: 1,
             material: "22K Solid Gold",
-            image: image
+            image: image,
+            status: "AVAILABLE"
         };
 
         var goldItems = getStoredGoldItems();
@@ -496,7 +527,7 @@ function saveItem() {
         saveStoredGoldItems(goldItems);
 
         switchInventoryTab('gold');
-        showInvToast("✓ Gold heirloom registered into vault catalog!");
+        showInvToast("✓ Gold heirloom registered as Available in vault catalog!");
     }
 
     // Attempt backend POST /inventory/save
@@ -510,7 +541,9 @@ function saveItem() {
         itemType: newItem.itemType,
         image: newItem.image,
         price: newItem.price || 0,
-        material: newItem.material || ""
+        material: newItem.material || "",
+        stock: (newItem.stock !== undefined && newItem.stock !== null) ? newItem.stock : 10,
+        status: "AVAILABLE"
     };
 
     $.ajax({
@@ -552,6 +585,8 @@ function openEditModal(id) {
     $("#edit-item-labour").val(p.labourCost || "");
     $("#edit-item-price").val(p.price || "");
     $("#edit-item-material").val(p.material || "");
+    var curStock = (p.stock !== undefined && p.stock !== null) ? p.stock : 10;
+    $("#edit-item-stock").val(curStock);
 
     if (p.image) {
         setPreviewImage(p.image, 'edit');
@@ -570,6 +605,8 @@ function updateItem() {
     var type = $("#edit-item-type").val();
     var name = $("#edit-item-name").val().trim();
     var image = $("#item-image-data-edit").val() || "";
+    var stockVal = parseInt($("#edit-item-stock").val());
+    var stock = !isNaN(stockVal) ? stockVal : 10;
 
     var backendDTO = {
         name: name,
@@ -579,8 +616,21 @@ function updateItem() {
         wastage: parseFloat($("#edit-item-wastage").val()) || 0,
         labourCost: parseFloat($("#edit-item-labour").val()) || 0,
         price: parseFloat($("#edit-item-price").val()) || 0,
-        material: $("#edit-item-material").val().trim() || ""
+        material: $("#edit-item-material").val().trim() || "",
+        stock: stock
     };
+
+    // Update local storage imitation items immediately
+    var imtItems = getStoredImitationItems();
+    var foundImt = imtItems.find(function(x) { return String(x.id) === String(_editingItemId); });
+    if (foundImt) {
+        foundImt.name = name;
+        if (image) foundImt.image = image;
+        foundImt.price = backendDTO.price;
+        foundImt.material = backendDTO.material;
+        foundImt.stock = stock;
+        saveStoredImitationItems(imtItems);
+    }
 
     $.ajax({
         url: (typeof BASE_URL !== "undefined" ? BASE_URL : "http://localhost:8080/api/v1") + "/inventory/update/" + _editingItemId,
@@ -614,6 +664,40 @@ function deleteItem(id) {
     });
 }
 
+// ─── 9.1 Mark Gold Piece as Sold ──────────────────────────────────────────────
+function markGoldPieceSold(id) {
+    if (!confirm("Confirm marking this gold piece as SOLD? It will be removed from the active inventory & POS UI, but safely preserved in the database to appear in the Sales & Financial Reports.")) {
+        return;
+    }
+
+    var token = localStorage.getItem("token") || "";
+
+    // Update in local cache
+    try {
+        var rawGold = localStorage.getItem("aurum_inventory_gold");
+        if (rawGold) {
+            var items = JSON.parse(rawGold);
+            items.forEach(function (g) {
+                if (String(g.id) === String(id)) {
+                    g.status = "SOLD";
+                }
+            });
+            localStorage.setItem("aurum_inventory_gold", JSON.stringify(items));
+        }
+    } catch (e) {}
+
+    // Send PUT /inventory/{id}/sell to backend
+    $.ajax({
+        url: (typeof BASE_URL !== "undefined" ? BASE_URL : "http://localhost:8080/api/v1") + "/inventory/" + id + "/sell",
+        method: "PUT",
+        headers: token ? { "Authorization": "Bearer " + token } : {},
+        complete: function () {
+            loadInventory();
+            showInvToast("✓ Gold piece marked as SOLD and recorded in Reports!");
+        }
+    });
+}
+
 // ─── 10. Helpers ──────────────────────────────────────────────────────────────
 function formatPrice(num) {
     return "Rs. " + Math.round(num).toLocaleString('en-US');
@@ -635,3 +719,4 @@ window.saveItem = saveItem;
 window.openEditModal = openEditModal;
 window.updateItem = updateItem;
 window.deleteItem = deleteItem;
+window.markGoldPieceSold = markGoldPieceSold;

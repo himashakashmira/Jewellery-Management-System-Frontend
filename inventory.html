@@ -250,11 +250,17 @@
           <span>22K: <span class="gold-val">Rs. 347,000</span></span>
         </div>
 
-        <!-- Notification Bell -->
-        <button class="header-action-btn" title="Atelier Notifications">
-          <i class="fa-regular fa-bell"></i>
-          <span class="header-badge-dot"></span>
-        </button>
+        <!-- Notification Bell & Low-Stock Alerts -->
+        <div class="notification-dropdown-wrapper" style="position: relative;">
+          <button class="header-action-btn" id="headerNotificationBtn" title="Atelier Notifications" onclick="toggleNotificationDropdown(event)">
+            <i class="fa-regular fa-bell"></i>
+            <span class="header-badge-dot" id="headerNotificationBadge" style="display:none;"></span>
+            <span class="header-badge-count" id="headerNotificationCount" style="display:none; position:absolute; top:-4px; right:-4px; background:#e11d48; color:#fff; font-size:10px; font-weight:800; border-radius:10px; padding:1px 5px; line-height:1.2; box-shadow:0 2px 6px rgba(225,29,72,0.4);">0</span>
+          </button>
+          <div class="notification-dropdown-panel" id="headerNotificationPanel" style="display:none; position:absolute; top:calc(100% + 12px); right:0; width:360px; max-width:90vw; background:rgba(255,255,255,0.98); backdrop-filter:blur(24px); border:1.5px solid rgba(197,160,89,0.35); border-radius:var(--radius-lg); box-shadow:0 16px 40px rgba(0,0,0,0.15); z-index:1000; overflow:hidden;">
+            <!-- Populated dynamically by common.js / initNotificationSystem -->
+          </div>
+        </div>
 
         <!-- User Profile: Amal Mendis - Admin -->
         <div class="user-profile-badge" title="Account Settings">
@@ -552,15 +558,22 @@
 
       <!-- Edit Imitation Fields -->
       <div id="imitation-fields-edit" style="display: none; background: #FAF9F6; border: 1px solid rgba(197,160,89,0.3); border-radius: var(--radius-md); padding: 14px; margin-bottom: 16px;">
+        <div style="font-size: 11.5px; font-weight: 700; color: var(--gold-deep); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-sparkles"></i> <span>Lifestyle Store Configuration</span>
+        </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
           <div>
-            <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Retail Price (LKR)</label>
-            <input type="number" id="edit-item-price" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF; width: 100%;">
+            <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Retail Price (LKR) *</label>
+            <input type="number" id="edit-item-price" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF; width: 100%;" placeholder="e.g. 14500">
           </div>
           <div>
-            <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Material</label>
-            <input type="text" id="edit-item-material" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF; width: 100%;">
+            <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Stock Units in Store *</label>
+            <input type="number" id="edit-item-stock" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF; width: 100%;" min="0" placeholder="e.g. 10">
           </div>
+        </div>
+        <div>
+          <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Material &amp; Finish</label>
+          <input type="text" id="edit-item-material" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF; width: 100%;" placeholder="e.g. 18K PVD Gold &bull; Anti-Tarnish">
         </div>
       </div>
 

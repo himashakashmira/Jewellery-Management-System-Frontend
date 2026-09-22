@@ -5,6 +5,7 @@
 var posProducts         = [];           // all inventory items from database
 var cartItems           = [];           // items added to the active bill: [{id, productId, name, karat, price, qty, image}]
 var activePosCategory   = 'heritage';   // 'heritage' (Gold) or 'lifestyle' (Imitation)
+var selectedPaymentMethod = 'CASH';
 var liveRates           = { rate22K: 43375, rate24K: 47125 };
 var currentDocketNumber = generateDocketNumber();
 
@@ -412,6 +413,78 @@ function applyPatronDiscount() {
     renderReceipt();
 }
 
+function selectPosPaymentMethod(method) {
+    var allowedMethods = ['CASH', 'CARD', 'WIRE'];
+    if (allowedMethods.indexOf(method) === -1) return;
+
+    selectedPaymentMethod = method;
+    $('.payment-method-btn').each(function () {
+        var isSelected = $(this).data('payment-method') === selectedPaymentMethod;
+        $(this).toggleClass('selected', isSelected).attr('aria-pressed', isSelected ? 'true' : 'false');
+    });
+}
+
+function escapeInvoiceHtml(value) {
+    return String(value == null ? '' : value).replace(/[&<>'"]/g, function (character) {
+        return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[character];
+    });
+}
+
+function populatePrintableInvoice(docketCode, patronName, grandTotalText) {
+    var totalPieces = 0;
+    var itemRows = cartItems.map(function (item) {
+        totalPieces += item.qty;
+        return '<tr>' +
+            '<td><strong>' + escapeInvoiceHtml(item.name) + '</strong><small>' + escapeInvoiceHtml(item.karat) + '</small></td>' +
+            '<td class="invoice-number">' + item.qty + '</td>' +
+            '<td class="invoice-number">' + escapeInvoiceHtml(formatLKR(item.price)) + '</td>' +
+            '<td class="invoice-number">' + escapeInvoiceHtml(formatLKR(item.price * item.qty)) + '</td>' +
+        '</tr>';
+    }).join('');
+
+    document.getElementById('pos-print-invoice').innerHTML =
+        '<header class="invoice-branding">' +
+            '<div class="invoice-brand-mark">A</div>' +
+            '<div><h1>AURUM JEWELS</h1><p>ATELIER &amp; FINE JEWELLERY</p></div>' +
+            '<div class="invoice-title"><strong>SALES INVOICE</strong><span>' + escapeInvoiceHtml(docketCode) + '</span></div>' +
+        '</header>' +
+        '<div class="invoice-shop-details"><span>Colombo Flagship Boutique</span><span>Official Sales Receipt</span></div>' +
+        '<div class="invoice-meta-grid">' +
+            '<div><span>Bill To</span><strong>' + escapeInvoiceHtml(patronName.split('·')[0].trim()) + '</strong></div>' +
+            '<div><span>Invoice Date</span><strong>' + escapeInvoiceHtml(new Date().toLocaleDateString('en-GB')) + '</strong></div>' +
+            '<div><span>Payment Method</span><strong>' + escapeInvoiceHtml(selectedPaymentMethod) + '</strong></div>' +
+            '<div><span>Total Pieces</span><strong>' + totalPieces + '</strong></div>' +
+        '</div>' +
+        '<table class="invoice-items-table"><thead><tr><th>Item Description</th><th>Qty</th><th>Unit Price</th><th>Amount</th></tr></thead><tbody>' + itemRows + '</tbody></table>' +
+        '<div class="invoice-total-area">' +
+            '<div class="invoice-grand-total"><span>Grand Total</span><strong>' + escapeInvoiceHtml(grandTotalText) + '</strong></div>' +
+        '</div>' +
+        '<section class="invoice-terms">' +
+            '<h2>Terms &amp; Conditions</h2>' +
+            '<ol>' +
+                '<li>Gold prices are based on the prevailing gold rate at the time of purchase.</li>' +
+                '<li>The original invoice must be presented for any exchange, resale, return, or after-sales service.</li>' +
+                '<li>Within 3 days of purchase: Items may be exchanged or resold without deducting the making charges and wastage charges, subject to shop policy and item condition.</li>' +
+                '<li>After 3 days of purchase: When reselling or exchanging the purchased item, the applicable making charges and wastage charges will be deducted from the item\'s value.</li>' +
+                '<li>When exchanging an item for another jewellery item, the making charges and wastage charges applicable to the new item must be paid by the customer.</li>' +
+                '<li>Custom-made jewellery cannot be exchanged or returned.</li>' +
+                '<li>Repairs, alterations, and other services may be subject to additional charges.</li>' +
+                '<li>The item and invoice details should be checked before leaving the premises.</li>' +
+            '</ol>' +
+        '</section>' +
+        '<footer class="invoice-footer"><strong>Thank you for choosing AURUM JEWELS.</strong><span>Official sales invoice</span></footer>';
+}
+
+function printPosInvoice() {
+    window.print();
+}
+
 // ─── 8. Complete Sale & Place Order in Database ───────────────────────────────
 function processSaleInvoice() {
     if (cartItems.length === 0) {
@@ -426,6 +499,7 @@ function processSaleInvoice() {
 
     var orderPayload = {
         customerId: customerIdVal,
+        paymentMethod: selectedPaymentMethod,
         discount:   0.0,
         items: cartItems.map(function (item) {
             return {
@@ -450,6 +524,7 @@ function processSaleInvoice() {
 
             // Populate receipt modal
             document.getElementById("receiptModalSubtext").innerText = "Invoice " + docketCode + " issued and audited";
+            populatePrintableInvoice(docketCode, patronName, grandTotalText);
             document.getElementById("receiptModalContent").innerHTML =
                 '<div style="display:flex;justify-content:space-between;margin-bottom:8px;">' +
                     '<span style="color:var(--text-muted);">Invoice Docket:</span>' +
@@ -462,6 +537,10 @@ function processSaleInvoice() {
                 '<div style="display:flex;justify-content:space-between;margin-bottom:8px;">' +
                     '<span style="color:var(--text-muted);">Purchased:</span>' +
                     '<strong>' + totalPieces + ' Pieces</strong>' +
+                '</div>' +
+                '<div style="display:flex;justify-content:space-between;margin-bottom:8px;">' +
+                    '<span style="color:var(--text-muted);">Payment:</span>' +
+                    '<strong>' + selectedPaymentMethod + '</strong>' +
                 '</div>' +
                 '<div style="display:flex;justify-content:space-between;padding-top:10px;margin-top:6px;border-top:1px solid var(--border-light);">' +
                     '<span style="font-weight:800;text-transform:uppercase;">Amount Paid:</span>' +
@@ -489,6 +568,7 @@ function processSaleInvoice() {
 // ─── 9. Reset POS Bill ────────────────────────────────────────────────────────
 function resetPosBill() {
     cartItems = [];
+    selectPosPaymentMethod('CASH');
     renderReceipt();
     console.log("[POS] Transaction completed. Ready for next patron.");
 }
@@ -501,5 +581,7 @@ window.addToPosBill        = addToPosBill;
 window.updateQty           = updateQty;
 window.removeItem          = removeItem;
 window.applyPatronDiscount = applyPatronDiscount;
+window.selectPosPaymentMethod = selectPosPaymentMethod;
+window.printPosInvoice = printPosInvoice;
 window.processSaleInvoice  = processSaleInvoice;
 window.resetPosBill        = resetPosBill;

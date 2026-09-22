@@ -68,5 +68,10 @@ function applyRoleSecurity() {
         $('#nav-gold-rates').hide();
         $('#nav-reports').hide();
         $('.btn-admin-only').hide();
+        $('.staff-approval-action').show();
+    } else if (role === "ROLE_ADMIN") {
+        // The admin panel does not need the approve section
+        $('.staff-approval-action').hide();
+        $('.btn-approve-order').hide();
     }
 }

@@ -1466,7 +1466,11 @@ function initWishlistButtons() {
     const orderRecord = {
       orderRef,
       orderDate,
+      orderType: 'IMITATION',
+      status: 'PENDING_APPROVAL',
       patron: patron.username,
+      customerName: recipientName,
+      customerContact: recipientPhone,
       customerId: patron.customerId,
       items: [...guestCart],
       subtotal,
@@ -1478,18 +1482,34 @@ function initWishlistButtons() {
     // Attempt backend POST /orders/place
     const orderPayload = {
       customerId: parseInt(patron.customerId) || 1,
+      orderType: "IMITATION",
+      orderRef: orderRef,
+      deliveryAddress: fullAddress,
+      paymentMethod: paymentLabel,
+      customerName: recipientName,
+      customerContact: recipientPhone,
+      status: "PENDING_APPROVAL",
       discount: 0.0,
       items: guestCart.map(item => ({
         productId: item.id || 1,
-        qty: item.qty
+        productName: item.title || item.name || "Imitation Piece",
+        itemType: "IMITATION",
+        price: item.price,
+        material: item.material || "18K PVD Gold",
+        qty: item.qty || 1
       }))
     };
+
+    const headers = {};
+    if (patron.token) {
+      headers["Authorization"] = "Bearer " + patron.token;
+    }
 
     $.ajax({
       url: "http://localhost:8080/api/v1/orders/place",
       method: "POST",
       contentType: "application/json",
-      headers: { "Authorization": "Bearer " + patron.token },
+      headers: headers,
       data: JSON.stringify(orderPayload),
       complete: function () {
         // Save order to persistent order history in storage
@@ -1516,7 +1536,7 @@ function initWishlistButtons() {
 
         // Advance to Step 5: Order Confirmation
         goToCheckoutStep(5);
-        showToast(`Order Placed! Reference: ${orderRef}`);
+        showToast(`Imitation Order Placed! Reference: ${orderRef} (Pending Staff Approval)`);
       }
     });
   }

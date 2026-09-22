@@ -45,7 +45,11 @@ function handleLogin() {
                 localStorage.setItem("token", response.token);
                 localStorage.setItem("role", response.role);
                 localStorage.setItem("username", username);
-                localStorage.setItem("customerId", response.customerId);
+                if (response.customerId) {
+                    localStorage.setItem("customerId", response.customerId);
+                } else {
+                    localStorage.removeItem("customerId");
+                }
 
                 console.log("[AURUM Auth] Token saved to localStorage. Redirecting to dashboard...");
 

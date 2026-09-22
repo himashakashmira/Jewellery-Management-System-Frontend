@@ -1831,3 +1831,113 @@ button {
   align-items: center;
   gap: 5px;
 }
+
+/* ==========================================================================
+   PRINT SPECIFICATIONS FOR LUXURY INVOICES & RECEIPT DOCKETS
+   ========================================================================== */
+@media print {
+  /* Hide all dashboard chrome, navigation, headers, floating widgets and modal backdrops */
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #sidebar-container,
+  .top-header,
+  .sub-header-bar,
+  .page-action-row,
+  .btn,
+  .btn-white-outline,
+  .btn-gold-primary,
+  .btn-gold-secondary,
+  .btn-add-piece-floating,
+  .gold-ticker-tape,
+  .metric-card-grid,
+  .pos-catalog-col,
+  .pos-sticky-summary,
+  .search-filter-card,
+  .table-card-wrapper,
+  .footer-copyright,
+  .no-print,
+  #receiptDocketModal .modal-header button,
+  #receiptDocketModal .modal-footer {
+    display: none !important;
+  }
+
+  /* Reset layout structure for printing */
+  .app-layout,
+  .main-content,
+  .page-container,
+  .content-area {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+  }
+
+  /* Modal container becomes a seamless page container */
+  .modal,
+  #receiptDocketModal {
+    position: static !important;
+    display: block !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .modal-backdrop {
+    display: none !important;
+  }
+
+  .modal-dialog {
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .modal-content {
+    border: none !important;
+    box-shadow: none !important;
+    background: #FFFFFF !important;
+    padding: 0 !important;
+  }
+
+  /* Target invoice docket content directly */
+  .printable-invoice-docket,
+  #docket-printable-area,
+  .receipt-sheet {
+    display: block !important;
+    width: 100% !important;
+    max-width: 780px !important;
+    margin: 0 auto !important;
+    padding: 24px !important;
+    box-shadow: none !important;
+    border: 1px solid #D0D0D0 !important;
+    page-break-inside: avoid !important;
+  }
+
+  .printable-invoice-docket table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  .printable-invoice-docket table th,
+  .printable-invoice-docket table td {
+    border-bottom: 1px solid #E5E7EB !important;
+    padding: 8px 10px !important;
+    color: #111827 !important;
+  }
+
+  .printable-invoice-docket .docket-total-row {
+    font-size: 14pt !important;
+    font-weight: bold !important;
+  }
+}
+

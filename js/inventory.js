@@ -184,9 +184,22 @@ function loadInventory() {
         success: function (products) {
             _allLoadedProducts = products || [];
 
-            // Sync with local store
-            var imt = getStoredImitationItems();
-            var gold = getStoredGoldItems();
+            if (products && products.length > 0) {
+                var goldList = [];
+                var imtList = [];
+                $.each(products, function (i, p) {
+                    if (p.itemType === "IMITATION") {
+                        imtList.push(p);
+                    } else {
+                        goldList.push(p);
+                    }
+                });
+                saveStoredGoldItems(goldList);
+                saveStoredImitationItems(imtList);
+            } else {
+                saveStoredGoldItems([]);
+                saveStoredImitationItems([]);
+            }
 
             renderInventoryGrid();
         },
@@ -510,7 +523,7 @@ function saveItem() {
             closeAddPieceModal();
             $("#form-add-item")[0].reset();
             clearUploadedImage('add');
-            renderInventoryGrid();
+            loadInventory();
         }
     });
 }
@@ -552,64 +565,53 @@ function openEditModal(id) {
 
 function updateItem() {
     if (!_editingItemId) return;
+    var token = localStorage.getItem("token") || "";
 
-    var goldItems = getStoredGoldItems();
-    var imtItems = getStoredImitationItems();
+    var type = $("#edit-item-type").val();
+    var name = $("#edit-item-name").val().trim();
+    var image = $("#item-image-data-edit").val() || "";
 
-    var isImt = false;
-    var idx = goldItems.findIndex(function(x) { return x.id === _editingItemId; });
-    if (idx === -1) {
-        idx = imtItems.findIndex(function(x) { return x.id === _editingItemId; });
-        isImt = true;
-    }
+    var backendDTO = {
+        name: name,
+        itemType: type,
+        image: image,
+        weight: parseFloat($("#edit-item-weight").val()) || 0,
+        wastage: parseFloat($("#edit-item-wastage").val()) || 0,
+        labourCost: parseFloat($("#edit-item-labour").val()) || 0,
+        price: parseFloat($("#edit-item-price").val()) || 0,
+        material: $("#edit-item-material").val().trim() || ""
+    };
 
-    var targetList = isImt ? imtItems : goldItems;
-    if (idx !== -1) {
-        var item = targetList[idx];
-        item.name = $("#edit-item-name").val().trim();
-        item.itemType = $("#edit-item-type").val();
-        if ($("#item-image-data-edit").val()) {
-            item.image = $("#item-image-data-edit").val();
+    $.ajax({
+        url: (typeof BASE_URL !== "undefined" ? BASE_URL : "http://localhost:8080/api/v1") + "/inventory/update/" + _editingItemId,
+        method: "PUT",
+        contentType: "application/json",
+        headers: { "Authorization": "Bearer " + token },
+        data: JSON.stringify(backendDTO),
+        complete: function () {
+            document.getElementById("editPieceModal").style.display = "none";
+            _editingItemId = null;
+            loadInventory();
+            showInvToast("✓ Piece updated successfully!");
         }
-
-        if (item.itemType === 'IMITATION') {
-            item.price = parseFloat($("#edit-item-price").val()) || item.price;
-            item.material = $("#edit-item-material").val().trim() || item.material;
-        } else {
-            item.weight = parseFloat($("#edit-item-weight").val()) || item.weight;
-            item.wastage = parseFloat($("#edit-item-wastage").val()) || item.wastage;
-            item.labourCost = parseFloat($("#edit-item-labour").val()) || item.labourCost;
-        }
-
-        if (isImt) {
-            saveStoredImitationItems(imtItems);
-        } else {
-            saveStoredGoldItems(goldItems);
-        }
-    }
-
-    document.getElementById("editPieceModal").style.display = "none";
-    _editingItemId = null;
-    renderInventoryGrid();
-    showInvToast("✓ Piece updated successfully!");
+    });
 }
 
 // ─── 9. Delete Piece ──────────────────────────────────────────────────────────
 function deleteItem(id) {
     if (!confirm("Remove this piece from the atelier catalog? This cannot be undone.")) return;
 
-    var goldItems = getStoredGoldItems();
-    var imtItems = getStoredImitationItems();
+    var token = localStorage.getItem("token") || "";
 
-    var newGold = goldItems.filter(function(x) { return x.id !== id; });
-    var newImt = imtItems.filter(function(x) { return x.id !== id; });
-
-    saveStoredGoldItems(newGold);
-    saveStoredImitationItems(newImt);
-
-    $("#inv-card-" + id).fadeOut(300, function () { $(this).remove(); });
-    renderInventoryGrid();
-    showInvToast("Piece removed from catalog.");
+    $.ajax({
+        url: (typeof BASE_URL !== "undefined" ? BASE_URL : "http://localhost:8080/api/v1") + "/inventory/delete/" + id,
+        method: "DELETE",
+        headers: { "Authorization": "Bearer " + token },
+        complete: function () {
+            loadInventory();
+            showInvToast("Piece removed from catalog.");
+        }
+    });
 }
 
 // ─── 10. Helpers ──────────────────────────────────────────────────────────────

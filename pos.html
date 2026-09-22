@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -36,11 +36,11 @@
         <div style="display: flex; gap: 10px; margin-left: 20px;">
           <div class="header-rate-ticker">
             <span style="font-size: 10.5px; text-transform: uppercase;">22K Spot:</span>
-            <span class="gold-val">Rs. 43,375 / g</span>
+            <span class="gold-val" id="pos-spot-22k">Loading...</span>
           </div>
           <div class="header-rate-ticker">
             <span style="font-size: 10.5px; text-transform: uppercase;">24K Spot:</span>
-            <span class="gold-val">Rs. 47,125 / g</span>
+            <span class="gold-val" id="pos-spot-24k">Loading...</span>
           </div>
         </div>
       </div>
@@ -55,12 +55,12 @@
           <i class="fa-solid fa-cash-register"></i>
         </button>
 
-        <!-- User Profile: Amal Mendis - Admin -->
-        <div class="user-profile-badge" title="Cashier / Director">
-          <div class="user-avatar-gold">AM</div>
+        <!-- User Profile: Loaded from Auth Session -->
+        <div class="user-profile-badge" title="Active Cashier">
+          <div class="user-avatar-gold" id="pos-cashier-avatar">AU</div>
           <div class="user-info-text">
-            <span class="user-name-title">Amal Mendis</span>
-            <span class="user-role-tag">Admin &bull; Lead Cashier</span>
+            <span class="user-name-title" id="pos-cashier-name">Cashier</span>
+            <span class="user-role-tag" id="pos-cashier-role">Boutique Register</span>
           </div>
           <i class="fa-solid fa-chevron-down" style="font-size: 10px; color: var(--text-subtle); margin-left: 4px;"></i>
         </div>
@@ -110,7 +110,7 @@
               <i class="fa-solid fa-crown" style="color: var(--gold-primary); font-size: 14px;"></i>
               <h3 class="receipt-header-title font-serif">AURUM JEWELS</h3>
             </div>
-            <p class="receipt-header-meta">Colombo Flagship Boutique &bull; Invoice Docket #AUR-2026-9901</p>
+            <p class="receipt-header-meta">Colombo Flagship Boutique &bull; Invoice Docket <span id="pos-invoice-docket">#AUR-POS-001</span></p>
           </div>
 
           <!-- VIP Patron Selection -->
@@ -120,10 +120,7 @@
               <span style="font-size: 11.5px; text-transform: uppercase; font-weight: 700; color: var(--text-muted);">Patron:</span>
             </div>
             <select id="customer-select" class="receipt-client-select" onchange="applyPatronDiscount()"><!-- AJAX target -->
-              <option value="lady_vivienne">Lady Vivienne De Silva (5-Star Elite &bull; 5% Privilege)</option>
-              <option value="kavinda">Kavinda Senanayake (5-Star Elite)</option>
-              <option value="dilrukshi">Dilrukshi Alwis (4-Star Sovereign)</option>
-              <option value="walk_in">Walk-in Boutique Client</option>
+              <option value="0">Loading Patrons from Database...</option>
             </select>
           </div>
 
@@ -193,7 +190,7 @@
     <div style="text-align: center; margin-bottom: 18px;">
       <i class="fa-solid fa-circle-check" style="font-size: 34px; color: #10B981; margin-bottom: 10px;"></i>
       <h3 class="font-serif" style="font-size: 22px;">Sale Successfully Recorded</h3>
-      <p style="font-size: 12px; color: var(--text-muted);">Invoice #AUR-2026-9901 issued and audited</p>
+      <p style="font-size: 12px; color: var(--text-muted);" id="receiptModalSubtext">Invoice issued and audited</p>
     </div>
     <div id="receiptModalContent" style="background: var(--bg-light-gray); border: 1px dashed var(--border-gold); padding: 16px; border-radius: var(--radius-md); margin-bottom: 20px; font-size: 13px;">
     </div>

@@ -25,7 +25,7 @@ const INITIAL_MOCK_CART = [
   }
 ];
 
-let guestCart = (function() {
+let guestCart = (function () {
   try {
     const saved = localStorage.getItem('aurum_cart');
     if (saved) return JSON.parse(saved);
@@ -168,7 +168,7 @@ function getLifestyleItems() {
   // Seed default if absent
   try {
     localStorage.setItem('aurum_inventory_imitation', JSON.stringify(DEFAULT_LIFESTYLE_ITEMS));
-  } catch (e) {}
+  } catch (e) { }
   return [...DEFAULT_LIFESTYLE_ITEMS];
 }
 
@@ -182,8 +182,8 @@ function renderLifestyleProductCard(item) {
   const badgeHtml = isOutOfStock
     ? `<span class="badge-tag" style="background:#ef4444;color:#fff;">Out of Stock</span>`
     : (isLowStock
-        ? `<span class="badge-tag highlight"><i class="fa-solid fa-triangle-exclamation"></i> Only ${stockQty} left</span>`
-        : (item.rating >= 4.9 ? `<span class="badge-tag highlight">Bestseller</span>` : `<span class="badge-tag">Atelier 18K</span>`));
+      ? `<span class="badge-tag highlight"><i class="fa-solid fa-triangle-exclamation"></i> Only ${stockQty} left</span>`
+      : (item.rating >= 4.9 ? `<span class="badge-tag highlight">Bestseller</span>` : `<span class="badge-tag">Atelier 18K</span>`));
 
   const categoryName = item.category || 'necklaces';
   const displayMaterial = item.material || '18K PVD • Anti-Tarnish';
@@ -194,8 +194,8 @@ function renderLifestyleProductCard(item) {
   const stockBadgeText = isOutOfStock
     ? `<span style="color:#ef4444; font-size:11px; font-weight:700;"><i class="fa-solid fa-circle-xmark"></i> Out of Stock (0 in store)</span>`
     : (isLowStock
-        ? `<span style="color:#b91c1c; font-size:11px; font-weight:700;"><i class="fa-solid fa-triangle-exclamation"></i> Stock: <strong>${stockQty} in store</strong></span>`
-        : `<span style="color:var(--text-muted); font-size:11px;">Stock: <strong style="color:var(--text-main);">${stockQty} in store</strong></span>`);
+      ? `<span style="color:#b91c1c; font-size:11px; font-weight:700;"><i class="fa-solid fa-triangle-exclamation"></i> Stock: <strong>${stockQty} in store</strong></span>`
+      : `<span style="color:var(--text-muted); font-size:11px;">Stock: <strong style="color:var(--text-main);">${stockQty} in store</strong></span>`);
 
   return `
     <article class="product-card" 
@@ -297,11 +297,11 @@ function loadLifestyleProducts() {
         }
       }
     })
-    .catch(() => {});
+    .catch(() => { });
 }
 
 // Global modal triggers
-window.openProductDetailModal = function(itemId) {
+window.openProductDetailModal = function (itemId) {
   const items = getLifestyleItems();
   const item = items.find(i => String(i.id) === String(itemId));
   if (!item) return;
@@ -368,7 +368,7 @@ window.openProductDetailModal = function(itemId) {
   }
 };
 
-window.closeProductDetailModal = function() {
+window.closeProductDetailModal = function () {
   const overlay = document.getElementById('productDetailModalOverlay');
   if (overlay) {
     overlay.classList.remove('active');
@@ -388,15 +388,15 @@ function hasPatronPurchasedPiece(item) {
     const orders = JSON.parse(localStorage.getItem('aurum_orders') || '[]');
     const purchased = orders.some(order => {
       const patronMatch = (order.customerId && patron.customerId && String(order.customerId) === String(patron.customerId)) ||
-                          (order.patron && patron.username && order.patron.toLowerCase() === patron.username.toLowerCase()) ||
-                          (order.customerName && patron.username && order.customerName.toLowerCase() === patron.username.toLowerCase());
+        (order.patron && patron.username && order.patron.toLowerCase() === patron.username.toLowerCase()) ||
+        (order.customerName && patron.username && order.customerName.toLowerCase() === patron.username.toLowerCase());
       if (!patronMatch) return false;
 
       return order.items && order.items.some(it => {
         return (it.id && String(it.id) === String(item.id)) ||
-               (it.productId && String(it.productId) === String(item.id)) ||
-               (it.title && it.title.trim().toLowerCase() === item.name.trim().toLowerCase()) ||
-               (it.name && it.name.trim().toLowerCase() === item.name.trim().toLowerCase());
+          (it.productId && String(it.productId) === String(item.id)) ||
+          (it.title && it.title.trim().toLowerCase() === item.name.trim().toLowerCase()) ||
+          (it.name && it.name.trim().toLowerCase() === item.name.trim().toLowerCase());
       });
     });
 
@@ -458,7 +458,7 @@ function renderProductReviews(item) {
   try {
     const raw = localStorage.getItem('aurum_reviews_' + item.id);
     if (raw) storedReviews = JSON.parse(raw);
-  } catch (e) {}
+  } catch (e) { }
 
   if (!storedReviews || storedReviews.length === 0) {
     storedReviews = [
@@ -481,7 +481,7 @@ function renderProductReviews(item) {
     ];
     try {
       localStorage.setItem('aurum_reviews_' + item.id, JSON.stringify(storedReviews));
-    } catch (e) {}
+    } catch (e) { }
   }
 
   fetch('http://localhost:8080/api/v1/reviews/product/' + item.id)
@@ -503,7 +503,7 @@ function renderProductReviews(item) {
         displayReviewListHtml(listEl, storedReviews);
       }
     })
-    .catch(() => {});
+    .catch(() => { });
 
   displayReviewListHtml(listEl, storedReviews);
 }
@@ -577,7 +577,7 @@ function submitPatronReview() {
     const existing = JSON.parse(localStorage.getItem('aurum_reviews_' + currentModalItem.id) || '[]');
     existing.unshift(newReview);
     localStorage.setItem('aurum_reviews_' + currentModalItem.id, JSON.stringify(existing));
-  } catch (e) {}
+  } catch (e) { }
 
   try {
     const imtItems = getLifestyleItems();
@@ -589,7 +589,7 @@ function submitPatronReview() {
       currentModalItem.rating = itemMatch.rating;
       localStorage.setItem('aurum_inventory_imitation', JSON.stringify(imtItems));
     }
-  } catch (e) {}
+  } catch (e) { }
 
   const payload = {
     productId: currentModalItem.id,
@@ -607,7 +607,7 @@ function submitPatronReview() {
       'Authorization': patron.token ? ('Bearer ' + patron.token) : ''
     },
     body: JSON.stringify(payload)
-  }).catch(() => {});
+  }).catch(() => { });
 
   const modalRatingText = document.getElementById('modalDetailRatingText');
   if (modalRatingText) {
@@ -623,7 +623,7 @@ function submitPatronReview() {
   showToast('✓ Verified patron review published with distinction!');
 }
 
-window.toggleCardWishlist = function(btn) {
+window.toggleCardWishlist = function (btn) {
   btn.classList.toggle('active');
   const icon = btn.querySelector('i');
   if (btn.classList.contains('active')) {
@@ -634,7 +634,7 @@ window.toggleCardWishlist = function(btn) {
   }
 };
 
-window.handleQuickAddToCart = function(itemId, btn) {
+window.handleQuickAddToCart = function (itemId, btn) {
   const items = getLifestyleItems();
   const item = items.find(i => String(i.id) === String(itemId));
   if (!item) return;
@@ -886,7 +886,7 @@ function renderCart() {
   }
 }
 
-window.updateItemQty = function(index, delta) {
+window.updateItemQty = function (index, delta) {
   if (!guestCart[index]) return;
   guestCart[index].qty += delta;
   if (guestCart[index].qty <= 0) {
@@ -896,7 +896,7 @@ window.updateItemQty = function(index, delta) {
   renderCart();
 };
 
-window.removeCartItem = function(index) {
+window.removeCartItem = function (index) {
   if (!guestCart[index]) return;
   const removedTitle = guestCart[index].title;
   guestCart.splice(index, 1);
@@ -1146,562 +1146,562 @@ function initStoreFilters() {
 function initWishlistButtons() {
   const wishlistBtns = document.querySelectorAll('.card-wishlist-btn');
 
-    wishlistBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        btn.classList.toggle('active');
-        const icon = btn.querySelector('i');
-        if (btn.classList.contains('active')) {
-          icon.className = 'fa-solid fa-heart';
-          showToast('Saved to your private wishlist');
-        } else {
-          icon.className = 'fa-regular fa-heart';
-        }
-      });
+  wishlistBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      btn.classList.toggle('active');
+      const icon = btn.querySelector('i');
+      if (btn.classList.contains('active')) {
+        icon.className = 'fa-solid fa-heart';
+        showToast('Saved to your private wishlist');
+      } else {
+        icon.className = 'fa-regular fa-heart';
+      }
     });
-  }
+  });
+}
 
-  // ==========================================================================
-  // --- 10. LUXURY MULTI-STEP CHECKOUT ENGINE ---
-  // ==========================================================================
-  let currentCheckoutStep = 1;
-  let selectedPaymentMethod = 'cod'; // 'cod' or 'card'
+// ==========================================================================
+// --- 10. LUXURY MULTI-STEP CHECKOUT ENGINE ---
+// ==========================================================================
+let currentCheckoutStep = 1;
+let selectedPaymentMethod = 'cod'; // 'cod' or 'card'
 
-  function isUserAuthenticated() {
-    const token = localStorage.getItem('token');
-    const user = localStorage.getItem('username');
-    return !!(token && user);
-  }
+function isUserAuthenticated() {
+  const token = localStorage.getItem('token');
+  const user = localStorage.getItem('username');
+  return !!(token && user);
+}
 
-  function getAuthenticatedPatron() {
-    return {
-      token: localStorage.getItem('token'),
-      username: localStorage.getItem('username') || 'VIP Patron',
-      role: localStorage.getItem('role') || 'ROLE_CUSTOMER',
-      customerId: localStorage.getItem('customerId') || '1'
-    };
-  }
+function getAuthenticatedPatron() {
+  return {
+    token: localStorage.getItem('token'),
+    username: localStorage.getItem('username') || 'VIP Patron',
+    role: localStorage.getItem('role') || 'ROLE_CUSTOMER',
+    customerId: localStorage.getItem('customerId') || '1'
+  };
+}
 
-  function updateHeaderAuthUI() {
-    const headerLoginBtn = document.getElementById('headerLoginBtn');
-    if (!headerLoginBtn) return;
+function updateHeaderAuthUI() {
+  const headerLoginBtn = document.getElementById('headerLoginBtn');
+  if (!headerLoginBtn) return;
 
-    if (isUserAuthenticated()) {
-      const patron = getAuthenticatedPatron();
-      headerLoginBtn.className = 'header-patron-pill';
-      headerLoginBtn.innerHTML = `
+  if (isUserAuthenticated()) {
+    const patron = getAuthenticatedPatron();
+    headerLoginBtn.className = 'header-patron-pill';
+    headerLoginBtn.innerHTML = `
         <i class="fa-solid fa-crown text-gold"></i>
         <span>${patron.username.split('@')[0]}</span>
         <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 2px;"></i>
       `;
-      headerLoginBtn.onclick = (e) => {
-        e.preventDefault();
-        const choice = confirm(`Logged in as VIP Patron: ${patron.username}\n\nClick OK to visit your Member Vault, or Cancel to Sign Out.`);
-        if (choice) {
-          window.location.href = 'customer-portal.html';
-        } else {
-          switchCheckoutAccount();
-          showToast('Signed out of AURUM Vault');
-        }
-      };
-    } else {
-      headerLoginBtn.className = 'btn-member-login';
-      headerLoginBtn.innerHTML = `
+    headerLoginBtn.onclick = (e) => {
+      e.preventDefault();
+      const choice = confirm(`Logged in as VIP Patron: ${patron.username}\n\nClick OK to visit your Member Vault, or Cancel to Sign Out.`);
+      if (choice) {
+        window.location.href = 'customer-portal.html';
+      } else {
+        switchCheckoutAccount();
+        showToast('Signed out of AURUM Vault');
+      }
+    };
+  } else {
+    headerLoginBtn.className = 'btn-member-login';
+    headerLoginBtn.innerHTML = `
         <i class="fa-regular fa-user"></i>
         <span>Member Login</span>
       `;
-      headerLoginBtn.onclick = (e) => {
-        e.preventDefault();
-        const modalOverlay = document.getElementById('loginModalOverlay');
-        if (modalOverlay) {
-          modalOverlay.classList.add('active');
-          document.body.style.overflow = 'hidden';
-        }
-      };
-    }
+    headerLoginBtn.onclick = (e) => {
+      e.preventDefault();
+      const modalOverlay = document.getElementById('loginModalOverlay');
+      if (modalOverlay) {
+        modalOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    };
   }
+}
 
-  function initCheckoutEngine() {
-    // Backdrop click & Escape listener for checkout modal
-    const checkoutOverlay = document.getElementById('checkoutModalOverlay');
-    if (checkoutOverlay) {
-      checkoutOverlay.addEventListener('click', (e) => {
-        if (e.target === checkoutOverlay) {
-          closeCheckoutModal();
-        }
-      });
-    }
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && checkoutOverlay && checkoutOverlay.classList.contains('active')) {
+function initCheckoutEngine() {
+  // Backdrop click & Escape listener for checkout modal
+  const checkoutOverlay = document.getElementById('checkoutModalOverlay');
+  if (checkoutOverlay) {
+    checkoutOverlay.addEventListener('click', (e) => {
+      if (e.target === checkoutOverlay) {
         closeCheckoutModal();
       }
     });
-
-    // Format credit card inputs
-    const cardNumInput = document.getElementById('cardNumber');
-    if (cardNumInput) {
-      cardNumInput.addEventListener('input', (e) => {
-        let val = e.target.value.replace(/\D/g, '');
-        let formatted = '';
-        for (let i = 0; i < val.length && i < 16; i++) {
-          if (i > 0 && i % 4 === 0) formatted += ' ';
-          formatted += val[i];
-        }
-        e.target.value = formatted;
-      });
-    }
-
-    const cardExpiryInput = document.getElementById('cardExpiry');
-    if (cardExpiryInput) {
-      cardExpiryInput.addEventListener('input', (e) => {
-        let val = e.target.value.replace(/\D/g, '');
-        if (val.length >= 2) {
-          e.target.value = val.substring(0, 2) + ' / ' + val.substring(2, 4);
-        } else {
-          e.target.value = val;
-        }
-      });
-    }
-
-    const cardCvvInput = document.getElementById('cardCvv');
-    if (cardCvvInput) {
-      cardCvvInput.addEventListener('input', (e) => {
-        e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
-      });
-    }
   }
 
-  function openCheckoutModal() {
-    if (guestCart.length === 0) {
-      showToast('Your shopping bag is empty! Please add a piece first.');
-      return;
-    }
-
-    // Close slide-out drawer
-    const cartDrawer = document.getElementById('cartDrawer');
-    const cartBackdrop = document.getElementById('cartBackdrop');
-    if (cartDrawer) cartDrawer.classList.remove('active');
-    if (cartBackdrop) cartBackdrop.classList.remove('active');
-
-    const overlay = document.getElementById('checkoutModalOverlay');
-    if (!overlay) return;
-
-    overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-
-    // Refresh auth UI state inside Step 1
-    refreshCheckoutAuthState();
-
-    // Start at Step 1 (or proceed smoothly)
-    goToCheckoutStep(1);
-  }
-
-  function closeCheckoutModal(forceReset = false) {
-    const overlay = document.getElementById('checkoutModalOverlay');
-    if (overlay) {
-      overlay.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-    if (forceReset) {
-      currentCheckoutStep = 1;
-    }
-  }
-
-  function refreshCheckoutAuthState() {
-    const activeBox = document.getElementById('checkoutAuthActive');
-    const reqBox = document.getElementById('checkoutAuthRequired');
-    const patronName = document.getElementById('checkoutAuthPatronName');
-    const patronEmail = document.getElementById('checkoutAuthPatronEmail');
-    const addrFullName = document.getElementById('addrFullName');
-
-    if (isUserAuthenticated()) {
-      const patron = getAuthenticatedPatron();
-      if (activeBox) activeBox.style.display = 'block';
-      if (reqBox) reqBox.style.display = 'none';
-      if (patronName) patronName.textContent = patron.username;
-      if (patronEmail) patronEmail.textContent = patron.username.includes('@') ? patron.username : (patron.username + '@aurumjewels.lk');
-      if (addrFullName && !addrFullName.value) {
-        addrFullName.value = patron.username.split('@')[0];
-      }
-    } else {
-      if (activeBox) activeBox.style.display = 'none';
-      if (reqBox) reqBox.style.display = 'block';
-    }
-  }
-
-  function setCheckoutAuthTab(tab) {
-    const loginTabBtn = document.getElementById('checkoutTabLoginBtn');
-    const regTabBtn = document.getElementById('checkoutTabRegisterBtn');
-    const loginPane = document.getElementById('checkoutLoginTabPane');
-    const regPane = document.getElementById('checkoutRegisterTabPane');
-
-    if (tab === 'register') {
-      if (regTabBtn) regTabBtn.classList.add('active');
-      if (loginTabBtn) loginTabBtn.classList.remove('active');
-      if (regPane) regPane.style.display = 'block';
-      if (loginPane) loginPane.style.display = 'none';
-    } else {
-      if (loginTabBtn) loginTabBtn.classList.add('active');
-      if (regTabBtn) regTabBtn.classList.remove('active');
-      if (loginPane) loginPane.style.display = 'block';
-      if (regPane) regPane.style.display = 'none';
-    }
-  }
-
-  function submitCheckoutLogin() {
-    const username = (document.getElementById('checkoutLoginUser')?.value || '').trim();
-    const password = (document.getElementById('checkoutLoginPass')?.value || '').trim();
-
-    if (!username || !password) {
-      showToast('Please provide both username and password.');
-      return;
-    }
-
-    const submitBtn = document.getElementById('btnCheckoutLoginSubmit');
-    const originalHTML = submitBtn ? submitBtn.innerHTML : '';
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Verifying Patron Access...</span>';
-    }
-
-    // Attempt backend authentication
-    $.ajax({
-      url: "http://localhost:8080/api/v1/auth/authenticate",
-      method: "POST",
-      contentType: "application/json",
-      data: JSON.stringify({ username, password }),
-      success: function (res) {
-        const token = (res && res.token) ? res.token : ("aurum-token-" + Date.now());
-        const role = (res && res.role) ? res.role : "ROLE_CUSTOMER";
-        const customerId = (res && res.customerId) ? res.customerId : "1";
-
-        localStorage.setItem("token", token);
-        localStorage.setItem("role", role);
-        localStorage.setItem("username", username);
-        localStorage.setItem("customerId", customerId);
-
-        showToast(`Welcome back, ${username}!`);
-        refreshCheckoutAuthState();
-        updateHeaderAuthUI();
-
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalHTML;
-        }
-
-        // Seamlessly advance to Step 2: Delivery Address
-        goToCheckoutStep(2);
-      },
-      error: function (xhr) {
-        console.warn("[AURUM Checkout] Backend /authenticate unavailable or failed (" + xhr.status + "). Using seamless patron session.");
-        // Fallback for demo or local environment without backend running
-        localStorage.setItem("token", "aurum-patron-session-" + Date.now());
-        localStorage.setItem("role", "ROLE_CUSTOMER");
-        localStorage.setItem("username", username);
-        localStorage.setItem("customerId", "1");
-
-        showToast(`Authenticated Patron Session Active: ${username}`);
-        refreshCheckoutAuthState();
-        updateHeaderAuthUI();
-
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalHTML;
-        }
-
-        // Advance to Step 2
-        goToCheckoutStep(2);
-      }
-    });
-  }
-
-  function submitCheckoutRegister() {
-    const fullName = (document.getElementById('checkoutRegName')?.value || '').trim();
-    const email = (document.getElementById('checkoutRegEmail')?.value || '').trim();
-    const phone = (document.getElementById('checkoutRegPhone')?.value || '').trim();
-    const password = (document.getElementById('checkoutRegPass')?.value || '').trim();
-
-    if (!fullName || !email || !phone || !password) {
-      showToast('Please fill out all registration fields.');
-      return;
-    }
-
-    const submitBtn = document.getElementById('btnCheckoutRegSubmit');
-    const originalHTML = submitBtn ? submitBtn.innerHTML : '';
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Creating VIP Credentials...</span>';
-    }
-
-    const payload = {
-      fullName: fullName,
-      username: email,
-      contact: phone,
-      password: password,
-      role: "CUSTOMER"
-    };
-
-    $.ajax({
-      url: "http://localhost:8080/api/v1/auth/register",
-      method: "POST",
-      contentType: "application/json",
-      data: JSON.stringify(payload),
-      success: function (res) {
-        localStorage.setItem("token", "aurum-reg-token-" + Date.now());
-        localStorage.setItem("role", "ROLE_CUSTOMER");
-        localStorage.setItem("username", fullName);
-        localStorage.setItem("customerId", (res && res.id) ? res.id : "1");
-
-        showToast(`VIP Account Created! Welcome, ${fullName}`);
-        refreshCheckoutAuthState();
-        updateHeaderAuthUI();
-
-        // Pre-fill delivery address with newly registered details
-        const addrFullName = document.getElementById('addrFullName');
-        const addrPhone = document.getElementById('addrPhone');
-        if (addrFullName) addrFullName.value = fullName;
-        if (addrPhone) addrPhone.value = phone;
-
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalHTML;
-        }
-
-        goToCheckoutStep(2);
-      },
-      error: function (xhr) {
-        console.warn("[AURUM Checkout] Backend /register offline (" + xhr.status + "). Activated demo patron session.");
-        localStorage.setItem("token", "aurum-reg-token-" + Date.now());
-        localStorage.setItem("role", "ROLE_CUSTOMER");
-        localStorage.setItem("username", fullName);
-        localStorage.setItem("customerId", "1");
-
-        showToast(`VIP Account Registered: ${fullName}`);
-        refreshCheckoutAuthState();
-        updateHeaderAuthUI();
-
-        const addrFullName = document.getElementById('addrFullName');
-        const addrPhone = document.getElementById('addrPhone');
-        if (addrFullName) addrFullName.value = fullName;
-        if (addrPhone) addrPhone.value = phone;
-
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalHTML;
-        }
-
-        goToCheckoutStep(2);
-      }
-    });
-  }
-
-  function switchCheckoutAccount() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("username");
-    localStorage.removeItem("customerId");
-    refreshCheckoutAuthState();
-    updateHeaderAuthUI();
-    goToCheckoutStep(1);
-    showToast('Signed out. Please sign in or register to place your order.');
-  }
-
-  function selectPaymentMethod(method) {
-    selectedPaymentMethod = method;
-
-    const optCod = document.getElementById('payOptionCod');
-    const optCard = document.getElementById('payOptionCard');
-    const codBox = document.getElementById('codDetailsBox');
-    const cardBox = document.getElementById('cardDetailsBox');
-
-    if (method === 'card') {
-      if (optCard) optCard.classList.add('selected');
-      if (optCod) optCod.classList.remove('selected');
-      if (codBox) codBox.style.display = 'none';
-      if (cardBox) cardBox.style.display = 'block';
-    } else {
-      if (optCod) optCod.classList.add('selected');
-      if (optCard) optCard.classList.remove('selected');
-      if (codBox) codBox.style.display = 'flex';
-      if (cardBox) cardBox.style.display = 'none';
-    }
-  }
-
-  function goToCheckoutStep(targetStep) {
-    // Validate progression
-    if (targetStep > currentCheckoutStep) {
-      // Rule 1: MANDATORY Sign In / Sign Up to leave Step 1
-      if (currentCheckoutStep === 1 || targetStep > 1) {
-        if (!isUserAuthenticated()) {
-          showToast('Mandatory: Please sign in or create an account before continuing!');
-          const notice = document.querySelector('.auth-mandatory-notice');
-          if (notice) {
-            notice.style.animation = 'none';
-            notice.offsetHeight; // trigger reflow
-            notice.style.animation = 'crestPulse 0.6s ease 2';
-          }
-          return;
-        }
-      }
-
-      // Rule 2: Delivery Address validation to leave Step 2
-      if (currentCheckoutStep === 2 || targetStep > 2) {
-        const name = (document.getElementById('addrFullName')?.value || '').trim();
-        const phone = (document.getElementById('addrPhone')?.value || '').trim();
-        const street = (document.getElementById('addrStreet')?.value || '').trim();
-        const city = (document.getElementById('addrCity')?.value || '').trim();
-
-        if (!name || !phone || !street || !city) {
-          showToast('Please fill in all required delivery address fields (*)');
-          const form = document.getElementById('checkoutAddressForm');
-          if (form) form.reportValidity();
-          return;
-        }
-      }
-
-      // Rule 3: Payment details validation to leave Step 3
-      if (currentCheckoutStep === 3 || targetStep > 3) {
-        if (selectedPaymentMethod === 'card') {
-          const cardHolder = (document.getElementById('cardHolderName')?.value || '').trim();
-          const cardNum = (document.getElementById('cardNumber')?.value || '').trim();
-          const cardExp = (document.getElementById('cardExpiry')?.value || '').trim();
-          const cardCvv = (document.getElementById('cardCvv')?.value || '').trim();
-
-          if (!cardHolder || cardNum.length < 15 || cardExp.length < 5 || cardCvv.length < 3) {
-            showToast('Please enter valid credit or debit card payment details.');
-            return;
-          }
-        }
-      }
-    }
-
-    currentCheckoutStep = targetStep;
-
-    // Update Panes Display
-    for (let i = 1; i <= 5; i++) {
-      const pane = document.getElementById('checkoutPane' + i);
-      if (pane) {
-        if (i === currentCheckoutStep) {
-          pane.classList.add('active');
-        } else {
-          pane.classList.remove('active');
-        }
-      }
-    }
-
-    // Update Stepper Visuals (Steps 1 to 4)
-    const progressEl = document.getElementById('checkoutStepperProgress');
-    if (progressEl) {
-      const percentages = { 1: 0, 2: 33.3, 3: 66.6, 4: 100, 5: 100 };
-      progressEl.style.width = (percentages[currentCheckoutStep] || 0) + '%';
-    }
-
-    for (let i = 1; i <= 4; i++) {
-      const node = document.getElementById('stepNode' + i);
-      const circle = document.getElementById('stepCircle' + i);
-      if (node && circle) {
-        if (i < currentCheckoutStep) {
-          node.className = 'checkout-step-node completed';
-          circle.innerHTML = '<i class="fa-solid fa-check"></i>';
-        } else if (i === currentCheckoutStep) {
-          node.className = 'checkout-step-node active';
-          circle.textContent = i;
-        } else {
-          node.className = 'checkout-step-node';
-          circle.textContent = i;
-        }
-      }
-    }
-
-    // Render Review Data when reaching Step 4
-    if (currentCheckoutStep === 4) {
-      renderCheckoutReview();
-    }
-
-    // Update Footer Navigation Buttons
-    updateCheckoutFooterButtons();
-  }
-
-  function updateCheckoutFooterButtons() {
-    const footer = document.getElementById('checkoutModalFooter');
-    const btnBack = document.getElementById('btnCheckoutBack');
-    const btnBackText = document.getElementById('btnCheckoutBackText');
-    const btnNext = document.getElementById('btnCheckoutNext');
-    const btnNextText = document.getElementById('btnCheckoutNextText');
-    const btnNextIcon = document.getElementById('btnCheckoutNextIcon');
-
-    if (!footer || !btnBack || !btnNext) return;
-
-    if (currentCheckoutStep === 5) {
-      footer.style.display = 'none';
-      return;
-    }
-
-    footer.style.display = 'flex';
-
-    if (currentCheckoutStep === 1) {
-      btnBackText.textContent = 'Return to Bag';
-      btnNextText.textContent = 'Proceed to Delivery';
-      btnNextIcon.className = 'fa-solid fa-arrow-right';
-      btnNext.style.background = '';
-    } else if (currentCheckoutStep === 2) {
-      btnBackText.textContent = 'Back to Account';
-      btnNextText.textContent = 'Proceed to Payment';
-      btnNextIcon.className = 'fa-solid fa-arrow-right';
-      btnNext.style.background = '';
-    } else if (currentCheckoutStep === 3) {
-      btnBackText.textContent = 'Back to Delivery';
-      btnNextText.textContent = 'Review Luxury Order';
-      btnNextIcon.className = 'fa-solid fa-arrow-right';
-      btnNext.style.background = '';
-    } else if (currentCheckoutStep === 4) {
-      btnBackText.textContent = 'Back to Payment';
-      btnNextText.textContent = 'Place Luxury Order';
-      btnNextIcon.className = 'fa-solid fa-crown';
-      btnNext.style.background = 'linear-gradient(135deg, #B8860B 0%, #D4AF37 50%, #AA771C 100%)';
-    }
-  }
-
-  function handleCheckoutNext() {
-    if (currentCheckoutStep === 4) {
-      submitAurumOrder();
-    } else {
-      goToCheckoutStep(currentCheckoutStep + 1);
-    }
-  }
-
-  function handleCheckoutBack() {
-    if (currentCheckoutStep === 1) {
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && checkoutOverlay && checkoutOverlay.classList.contains('active')) {
       closeCheckoutModal();
-      window.openAurumCart?.();
-    } else {
-      goToCheckoutStep(currentCheckoutStep - 1);
+    }
+  });
+
+  // Format credit card inputs
+  const cardNumInput = document.getElementById('cardNumber');
+  if (cardNumInput) {
+    cardNumInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '');
+      let formatted = '';
+      for (let i = 0; i < val.length && i < 16; i++) {
+        if (i > 0 && i % 4 === 0) formatted += ' ';
+        formatted += val[i];
+      }
+      e.target.value = formatted;
+    });
+  }
+
+  const cardExpiryInput = document.getElementById('cardExpiry');
+  if (cardExpiryInput) {
+    cardExpiryInput.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '');
+      if (val.length >= 2) {
+        e.target.value = val.substring(0, 2) + ' / ' + val.substring(2, 4);
+      } else {
+        e.target.value = val;
+      }
+    });
+  }
+
+  const cardCvvInput = document.getElementById('cardCvv');
+  if (cardCvvInput) {
+    cardCvvInput.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+    });
+  }
+}
+
+function openCheckoutModal() {
+  if (guestCart.length === 0) {
+    showToast('Your shopping bag is empty! Please add a piece first.');
+    return;
+  }
+
+  // Close slide-out drawer
+  const cartDrawer = document.getElementById('cartDrawer');
+  const cartBackdrop = document.getElementById('cartBackdrop');
+  if (cartDrawer) cartDrawer.classList.remove('active');
+  if (cartBackdrop) cartBackdrop.classList.remove('active');
+
+  const overlay = document.getElementById('checkoutModalOverlay');
+  if (!overlay) return;
+
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+
+  // Refresh auth UI state inside Step 1
+  refreshCheckoutAuthState();
+
+  // Start at Step 1 (or proceed smoothly)
+  goToCheckoutStep(1);
+}
+
+function closeCheckoutModal(forceReset = false) {
+  const overlay = document.getElementById('checkoutModalOverlay');
+  if (overlay) {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  if (forceReset) {
+    currentCheckoutStep = 1;
+  }
+}
+
+function refreshCheckoutAuthState() {
+  const activeBox = document.getElementById('checkoutAuthActive');
+  const reqBox = document.getElementById('checkoutAuthRequired');
+  const patronName = document.getElementById('checkoutAuthPatronName');
+  const patronEmail = document.getElementById('checkoutAuthPatronEmail');
+  const addrFullName = document.getElementById('addrFullName');
+
+  if (isUserAuthenticated()) {
+    const patron = getAuthenticatedPatron();
+    if (activeBox) activeBox.style.display = 'block';
+    if (reqBox) reqBox.style.display = 'none';
+    if (patronName) patronName.textContent = patron.username;
+    if (patronEmail) patronEmail.textContent = patron.username.includes('@') ? patron.username : (patron.username + '@aurumjewels.lk');
+    if (addrFullName && !addrFullName.value) {
+      addrFullName.value = patron.username.split('@')[0];
+    }
+  } else {
+    if (activeBox) activeBox.style.display = 'none';
+    if (reqBox) reqBox.style.display = 'block';
+  }
+}
+
+function setCheckoutAuthTab(tab) {
+  const loginTabBtn = document.getElementById('checkoutTabLoginBtn');
+  const regTabBtn = document.getElementById('checkoutTabRegisterBtn');
+  const loginPane = document.getElementById('checkoutLoginTabPane');
+  const regPane = document.getElementById('checkoutRegisterTabPane');
+
+  if (tab === 'register') {
+    if (regTabBtn) regTabBtn.classList.add('active');
+    if (loginTabBtn) loginTabBtn.classList.remove('active');
+    if (regPane) regPane.style.display = 'block';
+    if (loginPane) loginPane.style.display = 'none';
+  } else {
+    if (loginTabBtn) loginTabBtn.classList.add('active');
+    if (regTabBtn) regTabBtn.classList.remove('active');
+    if (loginPane) loginPane.style.display = 'block';
+    if (regPane) regPane.style.display = 'none';
+  }
+}
+
+function submitCheckoutLogin() {
+  const username = (document.getElementById('checkoutLoginUser')?.value || '').trim();
+  const password = (document.getElementById('checkoutLoginPass')?.value || '').trim();
+
+  if (!username || !password) {
+    showToast('Please provide both username and password.');
+    return;
+  }
+
+  const submitBtn = document.getElementById('btnCheckoutLoginSubmit');
+  const originalHTML = submitBtn ? submitBtn.innerHTML : '';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Verifying Patron Access...</span>';
+  }
+
+  // Attempt backend authentication
+  $.ajax({
+    url: "http://localhost:8080/api/v1/auth/authenticate",
+    method: "POST",
+    contentType: "application/json",
+    data: JSON.stringify({ username, password }),
+    success: function (res) {
+      const token = (res && res.token) ? res.token : ("aurum-token-" + Date.now());
+      const role = (res && res.role) ? res.role : "ROLE_CUSTOMER";
+      const customerId = (res && res.customerId) ? res.customerId : "1";
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", role);
+      localStorage.setItem("username", username);
+      localStorage.setItem("customerId", customerId);
+
+      showToast(`Welcome back, ${username}!`);
+      refreshCheckoutAuthState();
+      updateHeaderAuthUI();
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalHTML;
+      }
+
+      // Seamlessly advance to Step 2: Delivery Address
+      goToCheckoutStep(2);
+    },
+    error: function (xhr) {
+      console.warn("[AURUM Checkout] Backend /authenticate unavailable or failed (" + xhr.status + "). Using seamless patron session.");
+      // Fallback for demo or local environment without backend running
+      localStorage.setItem("token", "aurum-patron-session-" + Date.now());
+      localStorage.setItem("role", "ROLE_CUSTOMER");
+      localStorage.setItem("username", username);
+      localStorage.setItem("customerId", "1");
+
+      showToast(`Authenticated Patron Session Active: ${username}`);
+      refreshCheckoutAuthState();
+      updateHeaderAuthUI();
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalHTML;
+      }
+
+      // Advance to Step 2
+      goToCheckoutStep(2);
+    }
+  });
+}
+
+function submitCheckoutRegister() {
+  const fullName = (document.getElementById('checkoutRegName')?.value || '').trim();
+  const email = (document.getElementById('checkoutRegEmail')?.value || '').trim();
+  const phone = (document.getElementById('checkoutRegPhone')?.value || '').trim();
+  const password = (document.getElementById('checkoutRegPass')?.value || '').trim();
+
+  if (!fullName || !email || !phone || !password) {
+    showToast('Please fill out all registration fields.');
+    return;
+  }
+
+  const submitBtn = document.getElementById('btnCheckoutRegSubmit');
+  const originalHTML = submitBtn ? submitBtn.innerHTML : '';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Creating VIP Credentials...</span>';
+  }
+
+  const payload = {
+    fullName: fullName,
+    username: email,
+    contact: phone,
+    password: password,
+    role: "CUSTOMER"
+  };
+
+  $.ajax({
+    url: "http://localhost:8080/api/v1/auth/register",
+    method: "POST",
+    contentType: "application/json",
+    data: JSON.stringify(payload),
+    success: function (res) {
+      localStorage.setItem("token", "aurum-reg-token-" + Date.now());
+      localStorage.setItem("role", "ROLE_CUSTOMER");
+      localStorage.setItem("username", fullName);
+      localStorage.setItem("customerId", (res && res.id) ? res.id : "1");
+
+      showToast(`VIP Account Created! Welcome, ${fullName}`);
+      refreshCheckoutAuthState();
+      updateHeaderAuthUI();
+
+      // Pre-fill delivery address with newly registered details
+      const addrFullName = document.getElementById('addrFullName');
+      const addrPhone = document.getElementById('addrPhone');
+      if (addrFullName) addrFullName.value = fullName;
+      if (addrPhone) addrPhone.value = phone;
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalHTML;
+      }
+
+      goToCheckoutStep(2);
+    },
+    error: function (xhr) {
+      console.warn("[AURUM Checkout] Backend /register offline (" + xhr.status + "). Activated demo patron session.");
+      localStorage.setItem("token", "aurum-reg-token-" + Date.now());
+      localStorage.setItem("role", "ROLE_CUSTOMER");
+      localStorage.setItem("username", fullName);
+      localStorage.setItem("customerId", "1");
+
+      showToast(`VIP Account Registered: ${fullName}`);
+      refreshCheckoutAuthState();
+      updateHeaderAuthUI();
+
+      const addrFullName = document.getElementById('addrFullName');
+      const addrPhone = document.getElementById('addrPhone');
+      if (addrFullName) addrFullName.value = fullName;
+      if (addrPhone) addrPhone.value = phone;
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalHTML;
+      }
+
+      goToCheckoutStep(2);
+    }
+  });
+}
+
+function switchCheckoutAccount() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  localStorage.removeItem("username");
+  localStorage.removeItem("customerId");
+  refreshCheckoutAuthState();
+  updateHeaderAuthUI();
+  goToCheckoutStep(1);
+  showToast('Signed out. Please sign in or register to place your order.');
+}
+
+function selectPaymentMethod(method) {
+  selectedPaymentMethod = method;
+
+  const optCod = document.getElementById('payOptionCod');
+  const optCard = document.getElementById('payOptionCard');
+  const codBox = document.getElementById('codDetailsBox');
+  const cardBox = document.getElementById('cardDetailsBox');
+
+  if (method === 'card') {
+    if (optCard) optCard.classList.add('selected');
+    if (optCod) optCod.classList.remove('selected');
+    if (codBox) codBox.style.display = 'none';
+    if (cardBox) cardBox.style.display = 'block';
+  } else {
+    if (optCod) optCod.classList.add('selected');
+    if (optCard) optCard.classList.remove('selected');
+    if (codBox) codBox.style.display = 'flex';
+    if (cardBox) cardBox.style.display = 'none';
+  }
+}
+
+function goToCheckoutStep(targetStep) {
+  // Validate progression
+  if (targetStep > currentCheckoutStep) {
+    // Rule 1: MANDATORY Sign In / Sign Up to leave Step 1
+    if (currentCheckoutStep === 1 || targetStep > 1) {
+      if (!isUserAuthenticated()) {
+        showToast('Mandatory: Please sign in or create an account before continuing!');
+        const notice = document.querySelector('.auth-mandatory-notice');
+        if (notice) {
+          notice.style.animation = 'none';
+          notice.offsetHeight; // trigger reflow
+          notice.style.animation = 'crestPulse 0.6s ease 2';
+        }
+        return;
+      }
+    }
+
+    // Rule 2: Delivery Address validation to leave Step 2
+    if (currentCheckoutStep === 2 || targetStep > 2) {
+      const name = (document.getElementById('addrFullName')?.value || '').trim();
+      const phone = (document.getElementById('addrPhone')?.value || '').trim();
+      const street = (document.getElementById('addrStreet')?.value || '').trim();
+      const city = (document.getElementById('addrCity')?.value || '').trim();
+
+      if (!name || !phone || !street || !city) {
+        showToast('Please fill in all required delivery address fields (*)');
+        const form = document.getElementById('checkoutAddressForm');
+        if (form) form.reportValidity();
+        return;
+      }
+    }
+
+    // Rule 3: Payment details validation to leave Step 3
+    if (currentCheckoutStep === 3 || targetStep > 3) {
+      if (selectedPaymentMethod === 'card') {
+        const cardHolder = (document.getElementById('cardHolderName')?.value || '').trim();
+        const cardNum = (document.getElementById('cardNumber')?.value || '').trim();
+        const cardExp = (document.getElementById('cardExpiry')?.value || '').trim();
+        const cardCvv = (document.getElementById('cardCvv')?.value || '').trim();
+
+        if (!cardHolder || cardNum.length < 15 || cardExp.length < 5 || cardCvv.length < 3) {
+          showToast('Please enter valid credit or debit card payment details.');
+          return;
+        }
+      }
     }
   }
 
-  function renderCheckoutReview() {
-    const reviewCount = document.getElementById('reviewItemsCount');
-    const reviewList = document.getElementById('reviewItemsList');
-    const reviewAddress = document.getElementById('reviewAddressContent');
-    const reviewPayment = document.getElementById('reviewPaymentContent');
-    const reviewSubtotal = document.getElementById('reviewSubtotal');
-    const reviewGrandTotal = document.getElementById('reviewGrandTotal');
+  currentCheckoutStep = targetStep;
 
-    if (!reviewList) return;
+  // Update Panes Display
+  for (let i = 1; i <= 5; i++) {
+    const pane = document.getElementById('checkoutPane' + i);
+    if (pane) {
+      if (i === currentCheckoutStep) {
+        pane.classList.add('active');
+      } else {
+        pane.classList.remove('active');
+      }
+    }
+  }
 
-    let subtotal = 0;
-    let totalQty = 0;
-    reviewList.innerHTML = '';
+  // Update Stepper Visuals (Steps 1 to 4)
+  const progressEl = document.getElementById('checkoutStepperProgress');
+  if (progressEl) {
+    const percentages = { 1: 0, 2: 33.3, 3: 66.6, 4: 100, 5: 100 };
+    progressEl.style.width = (percentages[currentCheckoutStep] || 0) + '%';
+  }
 
-    guestCart.forEach(item => {
-      const linePrice = item.price * item.qty;
-      subtotal += linePrice;
-      totalQty += item.qty;
+  for (let i = 1; i <= 4; i++) {
+    const node = document.getElementById('stepNode' + i);
+    const circle = document.getElementById('stepCircle' + i);
+    if (node && circle) {
+      if (i < currentCheckoutStep) {
+        node.className = 'checkout-step-node completed';
+        circle.innerHTML = '<i class="fa-solid fa-check"></i>';
+      } else if (i === currentCheckoutStep) {
+        node.className = 'checkout-step-node active';
+        circle.textContent = i;
+      } else {
+        node.className = 'checkout-step-node';
+        circle.textContent = i;
+      }
+    }
+  }
 
-      const row = document.createElement('div');
-      row.className = 'review-item-row';
-      row.innerHTML = `
+  // Render Review Data when reaching Step 4
+  if (currentCheckoutStep === 4) {
+    renderCheckoutReview();
+  }
+
+  // Update Footer Navigation Buttons
+  updateCheckoutFooterButtons();
+}
+
+function updateCheckoutFooterButtons() {
+  const footer = document.getElementById('checkoutModalFooter');
+  const btnBack = document.getElementById('btnCheckoutBack');
+  const btnBackText = document.getElementById('btnCheckoutBackText');
+  const btnNext = document.getElementById('btnCheckoutNext');
+  const btnNextText = document.getElementById('btnCheckoutNextText');
+  const btnNextIcon = document.getElementById('btnCheckoutNextIcon');
+
+  if (!footer || !btnBack || !btnNext) return;
+
+  if (currentCheckoutStep === 5) {
+    footer.style.display = 'none';
+    return;
+  }
+
+  footer.style.display = 'flex';
+
+  if (currentCheckoutStep === 1) {
+    btnBackText.textContent = 'Return to Bag';
+    btnNextText.textContent = 'Proceed to Delivery';
+    btnNextIcon.className = 'fa-solid fa-arrow-right';
+    btnNext.style.background = '';
+  } else if (currentCheckoutStep === 2) {
+    btnBackText.textContent = 'Back to Account';
+    btnNextText.textContent = 'Proceed to Payment';
+    btnNextIcon.className = 'fa-solid fa-arrow-right';
+    btnNext.style.background = '';
+  } else if (currentCheckoutStep === 3) {
+    btnBackText.textContent = 'Back to Delivery';
+    btnNextText.textContent = 'Review Luxury Order';
+    btnNextIcon.className = 'fa-solid fa-arrow-right';
+    btnNext.style.background = '';
+  } else if (currentCheckoutStep === 4) {
+    btnBackText.textContent = 'Back to Payment';
+    btnNextText.textContent = 'Place Luxury Order';
+    btnNextIcon.className = 'fa-solid fa-crown';
+    btnNext.style.background = 'linear-gradient(135deg, #B8860B 0%, #D4AF37 50%, #AA771C 100%)';
+  }
+}
+
+function handleCheckoutNext() {
+  if (currentCheckoutStep === 4) {
+    submitAurumOrder();
+  } else {
+    goToCheckoutStep(currentCheckoutStep + 1);
+  }
+}
+
+function handleCheckoutBack() {
+  if (currentCheckoutStep === 1) {
+    closeCheckoutModal();
+    window.openAurumCart?.();
+  } else {
+    goToCheckoutStep(currentCheckoutStep - 1);
+  }
+}
+
+function renderCheckoutReview() {
+  const reviewCount = document.getElementById('reviewItemsCount');
+  const reviewList = document.getElementById('reviewItemsList');
+  const reviewAddress = document.getElementById('reviewAddressContent');
+  const reviewPayment = document.getElementById('reviewPaymentContent');
+  const reviewSubtotal = document.getElementById('reviewSubtotal');
+  const reviewGrandTotal = document.getElementById('reviewGrandTotal');
+
+  if (!reviewList) return;
+
+  let subtotal = 0;
+  let totalQty = 0;
+  reviewList.innerHTML = '';
+
+  guestCart.forEach(item => {
+    const linePrice = item.price * item.qty;
+    subtotal += linePrice;
+    totalQty += item.qty;
+
+    const row = document.createElement('div');
+    row.className = 'review-item-row';
+    row.innerHTML = `
         <div class="review-item-info">
           <img src="${item.img}" alt="${item.title}" class="review-item-img">
           <div>
@@ -1711,206 +1711,275 @@ function initWishlistButtons() {
         </div>
         <div class="review-item-price">Rs. ${linePrice.toLocaleString('en-US')}</div>
       `;
-      reviewList.appendChild(row);
-    });
+    reviewList.appendChild(row);
+  });
 
-    if (reviewCount) reviewCount.textContent = totalQty;
-    if (reviewSubtotal) reviewSubtotal.textContent = 'Rs. ' + subtotal.toLocaleString('en-US');
-    if (reviewGrandTotal) reviewGrandTotal.textContent = 'Rs. ' + subtotal.toLocaleString('en-US');
+  if (reviewCount) reviewCount.textContent = totalQty;
+  if (reviewSubtotal) reviewSubtotal.textContent = 'Rs. ' + subtotal.toLocaleString('en-US');
+  if (reviewGrandTotal) reviewGrandTotal.textContent = 'Rs. ' + subtotal.toLocaleString('en-US');
 
-    // Review Address
-    const name = document.getElementById('addrFullName')?.value || 'Valued Patron';
-    const phone = document.getElementById('addrPhone')?.value || '';
-    const street = document.getElementById('addrStreet')?.value || '';
-    const city = document.getElementById('addrCity')?.value || '';
-    const postal = document.getElementById('addrPostalCode')?.value || '';
-    const notes = document.getElementById('addrNotes')?.value || '';
+  // Review Address
+  const name = document.getElementById('addrFullName')?.value || 'Valued Patron';
+  const phone = document.getElementById('addrPhone')?.value || '';
+  const street = document.getElementById('addrStreet')?.value || '';
+  const city = document.getElementById('addrCity')?.value || '';
+  const postal = document.getElementById('addrPostalCode')?.value || '';
+  const notes = document.getElementById('addrNotes')?.value || '';
 
-    if (reviewAddress) {
-      reviewAddress.innerHTML = `
+  if (reviewAddress) {
+    reviewAddress.innerHTML = `
         <strong>${name}</strong> (${phone})<br>
         ${street}, ${city}${postal ? ' - ' + postal : ''}<br>
         ${notes ? '<em style="color:var(--text-muted);font-size:12px;">Note: ' + notes + '</em>' : ''}
       `;
-    }
+  }
 
-    // Review Payment
-    if (reviewPayment) {
-      if (selectedPaymentMethod === 'card') {
-        const cardNum = document.getElementById('cardNumber')?.value || '•••• 4242';
-        const last4 = cardNum.replace(/\s/g, '').slice(-4) || '4242';
-        reviewPayment.innerHTML = `
+  // Review Payment
+  if (reviewPayment) {
+    if (selectedPaymentMethod === 'card') {
+      const cardNum = document.getElementById('cardNumber')?.value || '•••• 4242';
+      const last4 = cardNum.replace(/\s/g, '').slice(-4) || '4242';
+      reviewPayment.innerHTML = `
           <div style="display:flex;align-items:center;gap:8px;">
             <i class="fa-solid fa-credit-card text-gold"></i>
             <span><strong>Credit / Debit Card</strong> ending in •••• ${last4}</span>
           </div>
           <span style="font-size:11.5px;color:#10B981;"><i class="fa-solid fa-shield-check"></i> 256-Bit Encrypted Settlement</span>
         `;
-      } else {
-        reviewPayment.innerHTML = `
+    } else {
+      reviewPayment.innerHTML = `
           <div style="display:flex;align-items:center;gap:8px;">
             <i class="fa-solid fa-hand-holding-dollar text-gold"></i>
             <span><strong>Cash on Delivery (COD)</strong></span>
           </div>
           <span style="font-size:11.5px;color:var(--text-secondary);">Doorstep payment upon parcel inspection</span>
         `;
-      }
     }
   }
+}
 
-  function submitAurumOrder() {
-    const btnNext = document.getElementById('btnCheckoutNext');
-    if (btnNext) {
-      btnNext.disabled = true;
-      btnNext.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Forging Order Heirlooms...</span>';
-    }
-
-    const patron = getAuthenticatedPatron();
-    const orderRef = 'AUR-' + new Date().getFullYear() + '-' + Math.floor(10000 + Math.random() * 90000);
-    const orderDate = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-
-    let subtotal = 0;
-    guestCart.forEach(i => subtotal += (i.price * i.qty));
-
-    const recipientName = document.getElementById('addrFullName')?.value || patron.username;
-    const recipientPhone = document.getElementById('addrPhone')?.value || '';
-    const street = document.getElementById('addrStreet')?.value || '';
-    const city = document.getElementById('addrCity')?.value || '';
-    const fullAddress = `${street}, ${city} (${recipientPhone})`;
-
-    const paymentLabel = selectedPaymentMethod === 'card' ?
-      ('Credit Card (•••• ' + (document.getElementById('cardNumber')?.value.slice(-4) || '4242') + ')') :
-      'Cash on Delivery (COD)';
-
-    const orderRecord = {
-      orderRef,
-      orderDate,
-      orderType: 'IMITATION',
-      status: 'PENDING_APPROVAL',
-      patron: patron.username,
-      customerName: recipientName,
-      customerContact: recipientPhone,
-      customerId: patron.customerId,
-      items: [...guestCart],
-      subtotal,
-      grandTotal: subtotal,
-      paymentMethod: paymentLabel,
-      deliveryAddress: fullAddress
-    };
-
-    // Attempt backend POST /orders/place
-    const orderPayload = {
-      customerId: parseInt(patron.customerId) || 1,
-      orderType: "IMITATION",
-      orderRef: orderRef,
-      deliveryAddress: fullAddress,
-      paymentMethod: paymentLabel,
-      customerName: recipientName,
-      customerContact: recipientPhone,
-      status: "PENDING_APPROVAL",
-      discount: 0.0,
-      items: guestCart.map(item => ({
-        productId: item.id || 1,
-        productName: item.title || item.name || "Imitation Piece",
-        itemType: "IMITATION",
-        price: item.price,
-        material: item.material || "18K PVD Gold",
-        qty: item.qty || 1
-      }))
-    };
-
-    const headers = {};
-    if (patron.token) {
-      headers["Authorization"] = "Bearer " + patron.token;
-    }
-
-    $.ajax({
-      url: "http://localhost:8080/api/v1/orders/place",
-      method: "POST",
-      contentType: "application/json",
-      headers: headers,
-      data: JSON.stringify(orderPayload),
-      complete: function () {
-        // Save order to persistent order history in storage
-        try {
-          const pastOrders = JSON.parse(localStorage.getItem('aurum_orders') || '[]');
-          pastOrders.unshift(orderRecord);
-          localStorage.setItem('aurum_orders', JSON.stringify(pastOrders));
-          localStorage.setItem('aurum_last_order', JSON.stringify(orderRecord));
-        } catch (e) {
-          console.error("[AURUM Orders] Error storing order history", e);
-        }
-
-        // Render Confirmation Screen Details
-        populateReceiptConfirmation(orderRecord);
-
-        // Clear Cart
-        guestCart = [];
-        saveCartToStorage();
-        renderCart();
-
-        if (btnNext) {
-          btnNext.disabled = false;
-        }
-
-        // Advance to Step 5: Order Confirmation
-        goToCheckoutStep(5);
-        showToast(`Imitation Order Placed! Reference: ${orderRef} (Pending Staff Approval)`);
-      }
-    });
+function submitAurumOrder() {
+  const btnNext = document.getElementById('btnCheckoutNext');
+  if (btnNext) {
+    btnNext.disabled = true;
+    btnNext.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>Forging Order Heirlooms...</span>';
   }
 
-  function populateReceiptConfirmation(order) {
-    const refEl = document.getElementById('receiptOrderRef');
-    const dateEl = document.getElementById('receiptOrderDate');
-    const patronEl = document.getElementById('receiptPatron');
-    const paymentEl = document.getElementById('receiptPayment');
-    const addrEl = document.getElementById('receiptAddress');
-    const tableBody = document.getElementById('receiptItemsTableBody');
-    const totalEl = document.getElementById('receiptGrandTotal');
+  const patron = getAuthenticatedPatron();
+  const orderRef = 'AUR-' + new Date().getFullYear() + '-' + Math.floor(10000 + Math.random() * 90000);
+  const orderDate = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
-    if (refEl) refEl.textContent = order.orderRef;
-    if (dateEl) dateEl.textContent = order.orderDate;
-    if (patronEl) patronEl.textContent = order.patron;
-    if (paymentEl) paymentEl.textContent = order.paymentMethod;
-    if (addrEl) addrEl.textContent = order.deliveryAddress;
-    if (totalEl) totalEl.textContent = 'Rs. ' + order.grandTotal.toLocaleString('en-US');
+  let subtotal = 0;
+  guestCart.forEach(i => subtotal += (i.price * i.qty));
 
-    if (tableBody) {
-      tableBody.innerHTML = '';
-      order.items.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
+  const recipientName = document.getElementById('addrFullName')?.value || patron.username;
+  const recipientPhone = document.getElementById('addrPhone')?.value || '';
+  const street = document.getElementById('addrStreet')?.value || '';
+  const city = document.getElementById('addrCity')?.value || '';
+  const fullAddress = `${street}, ${city} (${recipientPhone})`;
+
+  const paymentLabel = selectedPaymentMethod === 'card' ?
+    ('Credit Card (•••• ' + (document.getElementById('cardNumber')?.value.slice(-4) || '4242') + ')') :
+    'Cash on Delivery (COD)';
+
+  const orderRecord = {
+    orderRef,
+    orderDate,
+    orderType: 'IMITATION',
+    status: 'PENDING_APPROVAL',
+    patron: patron.username,
+    customerName: recipientName,
+    customerContact: recipientPhone,
+    customerId: patron.customerId,
+    items: [...guestCart],
+    subtotal,
+    grandTotal: subtotal,
+    paymentMethod: paymentLabel,
+    deliveryAddress: fullAddress
+  };
+
+  // Attempt backend POST /orders/place
+  const orderPayload = {
+    customerId: parseInt(patron.customerId) || 1,
+    orderType: "IMITATION",
+    orderRef: orderRef,
+    deliveryAddress: fullAddress,
+    paymentMethod: paymentLabel,
+    customerName: recipientName,
+    customerContact: recipientPhone,
+    status: "PENDING_APPROVAL",
+    discount: 0.0,
+    items: guestCart.map(item => ({
+      productId: item.id || 1,
+      productName: item.title || item.name || "Imitation Piece",
+      itemType: "IMITATION",
+      price: item.price,
+      material: item.material || "18K PVD Gold",
+      qty: item.qty || 1
+    }))
+  };
+
+  const headers = {};
+  if (patron.token) {
+    headers["Authorization"] = "Bearer " + patron.token;
+  }
+
+  $.ajax({
+    url: "http://localhost:8080/api/v1/orders/place",
+    method: "POST",
+    contentType: "application/json",
+    headers: headers,
+    data: JSON.stringify(orderPayload),
+    complete: function () {
+      // Save order to persistent order history in storage
+      try {
+        const pastOrders = JSON.parse(localStorage.getItem('aurum_orders') || '[]');
+        pastOrders.unshift(orderRecord);
+        localStorage.setItem('aurum_orders', JSON.stringify(pastOrders));
+        localStorage.setItem('aurum_last_order', JSON.stringify(orderRecord));
+      } catch (e) {
+        console.error("[AURUM Orders] Error storing order history", e);
+      }
+
+      // Render Confirmation Screen Details
+      populateReceiptConfirmation(orderRecord);
+
+      // Clear Cart
+      guestCart = [];
+      saveCartToStorage();
+      renderCart();
+
+      if (btnNext) {
+        btnNext.disabled = false;
+      }
+
+      // Advance to Step 5: Order Confirmation
+      goToCheckoutStep(5);
+      showToast(`Imitation Order Placed! Reference: ${orderRef} (Pending Staff Approval)`);
+    }
+  });
+}
+
+function populateReceiptConfirmation(order) {
+  const refEl = document.getElementById('receiptOrderRef');
+  const dateEl = document.getElementById('receiptOrderDate');
+  const patronEl = document.getElementById('receiptPatron');
+  const paymentEl = document.getElementById('receiptPayment');
+  const addrEl = document.getElementById('receiptAddress');
+  const tableBody = document.getElementById('receiptItemsTableBody');
+  const totalEl = document.getElementById('receiptGrandTotal');
+
+  if (refEl) refEl.textContent = order.orderRef;
+  if (dateEl) dateEl.textContent = order.orderDate;
+  if (patronEl) patronEl.textContent = order.patron;
+  if (paymentEl) paymentEl.textContent = order.paymentMethod;
+  if (addrEl) addrEl.textContent = order.deliveryAddress;
+  if (totalEl) totalEl.textContent = 'Rs. ' + order.grandTotal.toLocaleString('en-US');
+
+  if (tableBody) {
+    tableBody.innerHTML = '';
+    order.items.forEach(item => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
           <td><strong>${item.title}</strong><br><small style="color:var(--text-muted);">${item.material}</small></td>
           <td>${item.qty}</td>
           <td class="text-right">Rs. ${(item.price * item.qty).toLocaleString('en-US')}</td>
         `;
-        tableBody.appendChild(tr);
-      });
-    }
+      tableBody.appendChild(tr);
+    });
+  }
+}
+
+function printReceiptArea() {
+  window.print();
+}
+
+// ChatBot widget functions:
+
+function finishAndCloseCheckout() {
+  closeCheckoutModal(true);
+  showToast('Your cart has been refreshed. Explore more fine jewellery pieces.');
+}
+
+function toggleChatWindow() {
+  const chatWindow = document.getElementById("chatbot-window");
+  if (chatWindow.style.display === "none" || chatWindow.style.display === "") {
+    chatWindow.style.display = "flex";
+  } else {
+    chatWindow.style.display = "none";
+  }
+}
+
+async function sendChatMessage() {
+  const inputElem = document.getElementById("chatbot-input");
+  const messagesBox = document.getElementById("chatbot-messages");
+  const userText = inputElem.value.trim();
+
+  if (!userText) return;
+
+  // 1. User message එක UI එකේ පෙන්වීම
+  messagesBox.innerHTML += `
+    <div style="align-self: flex-end; background: #1a1a1a; color: #fff; padding: 10px 14px; border-radius: 14px 14px 2px 14px; max-width: 80%; line-height: 1.4;">
+      ${userText}
+    </div>
+  `;
+  inputElem.value = "";
+  messagesBox.scrollTop = messagesBox.scrollHeight;
+
+  // 2. Typing indicator එකක් පෙන්වීම
+  const tempLoadingId = "bot-loading-" + Date.now();
+  messagesBox.innerHTML += `
+    <div id="${tempLoadingId}" style="align-self: flex-start; background: #eee; color: #777; padding: 8px 12px; border-radius: 14px; font-size: 12px;">
+      Aurum AI සිතමින් පවතී...
+    </div>
+  `;
+  messagesBox.scrollTop = messagesBox.scrollHeight;
+
+  // 3. Backend API එක Call කිරීම
+  try {
+    const res = await fetch("http://localhost:8080/api/v1/chatbot/ask", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message: userText })
+    });
+
+    const data = await res.json();
+    document.getElementById(tempLoadingId).remove();
+
+    // Line breaks සහ Markdown formatting ලස්සනට පෙන්වීම
+    const formattedReply = data.reply ? data.reply.replace(/\n/g, "<br>").replace(/\*\*(.*?)\*\*/g, "<b>$1</b>") : "පිළිතුරක් නොලැබුණි.";
+
+    messagesBox.innerHTML += `
+      <div style="align-self: flex-start; background: #f0e6c8; color: #222; padding: 10px 14px; border-radius: 14px 14px 14px 2px; max-width: 80%; line-height: 1.4;">
+        ${formattedReply}
+      </div>
+    `;
+  } catch (error) {
+    document.getElementById(tempLoadingId).remove();
+    messagesBox.innerHTML += `
+      <div style="align-self: flex-start; background: #ffebee; color: #c62828; padding: 8px 12px; border-radius: 10px; font-size: 12px;">
+        සමාවෙන්න, සම්බන්ධතාවයේ දෝෂයක් මතු විය.
+      </div>
+    `;
   }
 
-  function printReceiptArea() {
-    window.print();
-  }
+  messagesBox.scrollTop = messagesBox.scrollHeight;
+}
 
-  function finishAndCloseCheckout() {
-    closeCheckoutModal(true);
-    showToast('Your cart has been refreshed. Explore more fine jewellery pieces.');
-  }
-
-  // Expose global window APIs for HTML interaction
-  window.openCheckoutModal = openCheckoutModal;
-  window.closeCheckoutModal = closeCheckoutModal;
-  window.goToCheckoutStep = goToCheckoutStep;
-  window.handleCheckoutNext = handleCheckoutNext;
-  window.handleCheckoutBack = handleCheckoutBack;
-  window.setCheckoutAuthTab = setCheckoutAuthTab;
-  window.submitCheckoutLogin = submitCheckoutLogin;
-  window.submitCheckoutRegister = submitCheckoutRegister;
-  window.switchCheckoutAccount = switchCheckoutAccount;
-  window.selectPaymentMethod = selectPaymentMethod;
-  window.submitAurumOrder = submitAurumOrder;
-  window.printReceiptArea = printReceiptArea;
-  window.finishAndCloseCheckout = finishAndCloseCheckout;
-  window.updateHeaderAuthUI = updateHeaderAuthUI;
+// Expose global window APIs for HTML interaction
+window.openCheckoutModal = openCheckoutModal;
+window.closeCheckoutModal = closeCheckoutModal;
+window.goToCheckoutStep = goToCheckoutStep;
+window.handleCheckoutNext = handleCheckoutNext;
+window.handleCheckoutBack = handleCheckoutBack;
+window.setCheckoutAuthTab = setCheckoutAuthTab;
+window.submitCheckoutLogin = submitCheckoutLogin;
+window.submitCheckoutRegister = submitCheckoutRegister;
+window.switchCheckoutAccount = switchCheckoutAccount;
+window.selectPaymentMethod = selectPaymentMethod;
+window.submitAurumOrder = submitAurumOrder;
+window.printReceiptArea = printReceiptArea;
+window.finishAndCloseCheckout = finishAndCloseCheckout;
+window.updateHeaderAuthUI = updateHeaderAuthUI;

@@ -142,10 +142,16 @@
           </button>
         </div>
 
-        <button class="btn-gold-primary" id="btn-intake-repair" onclick="openNewRepairModal();" style="font-size: 12px; padding: 9px 20px;"><!-- AJAX target -->
-          <i class="fa-solid fa-plus"></i>
-          <span>Intake New Repair Docket</span>
-        </button>
+        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+          <a href="repairs-report.html" class="btn-white-outline" style="font-size: 12px; padding: 9px 18px; display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
+            <i class="fa-solid fa-chart-pie" style="color: var(--gold-deep);"></i>
+            <span>View Repairs Report</span>
+          </a>
+          <button class="btn-gold-primary" id="btn-intake-repair" onclick="openNewRepairModal();" style="font-size: 12px; padding: 9px 20px;"><!-- AJAX target -->
+            <i class="fa-solid fa-plus"></i>
+            <span>Intake New Repair Docket</span>
+          </button>
+        </div>
       </div>
 
       <!-- ACTIVE REPAIRS AS HORIZONTAL FLOATING CARDS (Per Requirement) -->
@@ -155,47 +161,150 @@
         <!-- Real repair cards are injected here by repairs.js on page load -->
       </section>
 
-
-
     </main>
   </div>
 </div>
 
 <!-- NEW REPAIR DOCKET MODAL -->
-<div id="repairModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.5); backdrop-filter: blur(16px); z-index: 100; align-items: center; justify-content: center; padding: 20px;">
-  <div style="background: rgba(255,255,255,0.96); backdrop-filter: blur(28px); border: 1.5px solid rgba(197,160,89,0.4); border-radius: var(--radius-xl); box-shadow: var(--shadow-floating-hover); width: 100%; max-width: 500px; padding: 34px; position: relative;">
-    <button onclick="closeNewRepairModal()" style="position: absolute; top: 18px; right: 18px; width: 32px; height: 32px; border-radius: 50%; background: #FFF; border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center;">
+<div id="repairModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.45); backdrop-filter: blur(12px); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: #FFFFFF; border: 1.5px solid var(--gold-primary); border-radius: var(--radius-xl); box-shadow: var(--shadow-floating-hover); width: 100%; max-width: 540px; max-height: 92vh; overflow-y: auto; padding: 32px; position: relative;">
+    <button onclick="closeNewRepairModal()" style="position: absolute; top: 18px; right: 18px; width: 32px; height: 32px; border-radius: 50%; background: #F9FAFB; border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; cursor: pointer;">
       <i class="fa-solid fa-xmark"></i>
     </button>
     <div style="text-align: center; margin-bottom: 20px;">
-      <i class="fa-solid fa-screwdriver-wrench" style="color: var(--gold-primary); font-size: 22px; margin-bottom: 6px;"></i>
+      <i class="fa-solid fa-screwdriver-wrench" style="color: var(--gold-primary); font-size: 24px; margin-bottom: 6px;"></i>
       <h3 class="font-serif" style="font-size: 22px; font-weight: 700;">Intake Repair Docket</h3>
-      <p style="font-size: 12px; color: var(--text-muted);">Log patron heirloom or custom restoration into atelier queue</p>
+      <p style="font-size: 12px; color: var(--text-muted);">Auto-registers customer and enqueues piece for atelier master bench</p>
     </div>
+
+    <div style="font-size: 11.5px; color: var(--gold-deep); background: #FAF9F6; border: 1px solid var(--border-gold); padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; line-height: 1.45;">
+      <i class="fa-solid fa-circle-check" style="margin-right: 4px;"></i>
+      <strong>Automated Patron Registration:</strong> New patrons are automatically enrolled into the database. Email notifications are automatically dispatched on every status milestone if email is provided.
+    </div>
+
     <form id="form-repair-docket" onsubmit="event.preventDefault(); registerRepair();">
-      <div style="margin-bottom: 12px;">
-        <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Customer ID</label>
-        <input type="number" id="repair-customer-id" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" placeholder="e.g. 1" required>
-      </div>
-      <div style="margin-bottom: 12px;">
-        <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Jewellery Item Description</label>
-        <input type="text" id="item-name" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" placeholder="e.g. 22K Solid Gold Bangle" required>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
-        <div>
-          <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Service Fee (LKR)</label>
-          <input type="text" id="service-fee" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" placeholder="Rs. 25,000" required><!-- AJAX target -->
+      <!-- Patron Details Section -->
+      <div style="margin-bottom: 14px;">
+        <span style="display:block; font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--gold-deep); letter-spacing: 0.05em; margin-bottom: 8px;">
+          <i class="fa-solid fa-user-tag"></i> 1. Patron Information
+        </span>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+          <div>
+            <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; color: var(--text-muted);">Patron Name *</label>
+            <input type="text" id="repair-customer-name" class="global-search-input" style="border-radius: var(--radius-md); padding: 9px 12px; background: #FFF;" placeholder="e.g. Lady Vivienne De Silva" required>
+          </div>
+          <div>
+            <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; color: var(--text-muted);">Mobile Number *</label>
+            <input type="tel" id="repair-customer-phone" class="global-search-input" style="border-radius: var(--radius-md); padding: 9px 12px; background: #FFF;" placeholder="e.g. +94 77 123 4567" required>
+          </div>
         </div>
-        <div>
-          <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--text-muted);">Target Date</label>
-          <input type="date" id="target-date" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF;" required><!-- AJAX target -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div>
+            <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; color: var(--text-muted);">Email Address (Optional)</label>
+            <input type="email" id="repair-customer-email" class="global-search-input" style="border-radius: var(--radius-md); padding: 9px 12px; background: #FFF;" placeholder="For auto email updates">
+          </div>
+          <div>
+            <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; color: var(--text-muted);">Address (Optional)</label>
+            <input type="text" id="repair-customer-address" class="global-search-input" style="border-radius: var(--radius-md); padding: 9px 12px; background: #FFF;" placeholder="e.g. Colombo 07">
+          </div>
         </div>
       </div>
-      <button type="submit" id="btn-register-repair" class="btn-gold-primary" style="width: 100%; justify-content: center; padding: 13px;"><!-- AJAX target -->
+
+      <!-- Restoration Piece Details -->
+      <div style="margin-bottom: 14px; padding-top: 10px; border-top: 1px dashed var(--border-light);">
+        <span style="display:block; font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--gold-deep); letter-spacing: 0.05em; margin-bottom: 8px;">
+          <i class="fa-solid fa-gem"></i> 2. Restoration Specifications
+        </span>
+        <div style="margin-bottom: 10px;">
+          <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; color: var(--text-muted);">Jewellery Piece Description *</label>
+          <input type="text" id="item-name" class="global-search-input" style="border-radius: var(--radius-md); padding: 9px 12px; background: #FFF;" placeholder="e.g. 22K Solid Gold Filigree Choker" required>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <label style="display:block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; color: var(--text-muted);">Work Scope & Bench Instructions</label>
+          <input type="text" id="repair-description" class="global-search-input" style="border-radius: var(--radius-md); padding: 9px 12px; background: #FFF;" placeholder="e.g. Laser solder broken link, re-tip sapphire prong, 22K gold plate">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+          <div>
+            <label style="display:block; font-size: 10.5px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; color: var(--text-muted);">Handed Over *</label>
+            <input type="date" id="repair-received-date" class="global-search-input" style="border-radius: var(--radius-md); padding: 8px 10px; background: #FFF; font-size: 12px;" required>
+          </div>
+          <div>
+            <label style="display:block; font-size: 10.5px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; color: var(--text-muted);">Target Return *</label>
+            <input type="date" id="target-date" class="global-search-input" style="border-radius: var(--radius-md); padding: 8px 10px; background: #FFF; font-size: 12px;" required>
+          </div>
+          <div>
+            <label style="display:block; font-size: 10.5px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; color: var(--text-muted);">Fee (LKR) *</label>
+            <input type="number" id="service-fee" class="global-search-input" style="border-radius: var(--radius-md); padding: 8px 10px; background: #FFF; font-size: 12px;" placeholder="25000" required>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" id="btn-register-repair" class="btn-gold-primary" style="width: 100%; justify-content: center; padding: 13px; font-size: 13px; font-weight: 700; margin-top: 6px;">
         <i class="fa-solid fa-check"></i>
-        <span>Issue Ticket & Enqueue</span>
+        <span>Auto-Register Patron & Issue Docket</span>
       </button>
     </form>
+  </div>
+<!-- PATRON NOTIFICATION CONFIRMATION PROMPT MODAL -->
+<div id="notifyPromptModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(12px); z-index: 1000; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: #FFFFFF; border: 1.5px solid var(--gold-primary); border-radius: var(--radius-xl); box-shadow: var(--shadow-floating-hover); width: 100%; max-width: 500px; padding: 30px; position: relative;">
+    <button onclick="closeNotifyPromptModal()" style="position: absolute; top: 18px; right: 18px; width: 32px; height: 32px; border-radius: 50%; background: #F9FAFB; border: 1px solid var(--border-light); display: flex; align-items: center; justify-content: center; cursor: pointer;">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div style="text-align: center; margin-bottom: 20px;">
+      <div style="width: 54px; height: 54px; margin: 0 auto 12px; border-radius: 50%; background: #FAF9F6; border: 1.5px solid var(--gold-primary); display: flex; align-items: center; justify-content: center;">
+        <i class="fa-solid fa-envelope-circle-check" style="color: var(--gold-primary); font-size: 24px;"></i>
+      </div>
+      <h3 class="font-serif" style="font-size: 22px; font-weight: 700; margin-bottom: 4px;">Confirm Patron Notification</h3>
+      <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.4;">
+        Verify recipient details before dispatching the formal <strong>Ready for Collection</strong> notification email.
+      </p>
+    </div>
+
+    <!-- Hidden input to hold current repair ID -->
+    <input type="hidden" id="notify-repair-id" value="">
+
+    <!-- Docket Summary Card -->
+    <div style="background: #FAF9F6; border: 1px solid var(--border-gold); border-radius: var(--radius-md); padding: 16px; margin-bottom: 18px; font-size: 12.5px;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed var(--border-light); padding-bottom: 6px;">
+        <span style="color: var(--text-muted); font-weight: 600;">Docket Reference:</span>
+        <strong id="notify-docket-tag" style="color: var(--gold-deep); font-family: monospace; font-size: 13px;">#REP-0000</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed var(--border-light); padding-bottom: 6px;">
+        <span style="color: var(--text-muted); font-weight: 600;">Restoration Piece:</span>
+        <strong id="notify-piece-name" style="color: var(--text-main);">Jewellery Item</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed var(--border-light); padding-bottom: 6px;">
+        <span style="color: var(--text-muted); font-weight: 600;">Patron Name:</span>
+        <strong id="notify-patron-name" style="color: var(--text-main);">Patron Name</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: var(--text-muted); font-weight: 600;">Service Charge:</span>
+        <strong id="notify-service-charge" style="color: var(--gold-deep); font-weight: 700;">LKR 0.00</strong>
+      </div>
+    </div>
+
+    <!-- Recipient Email Input Field (editable/verifiable) -->
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; color: var(--text-muted);">
+        <i class="fa-solid fa-paper-plane" style="color: var(--gold-primary);"></i> Recipient Email Address *
+      </label>
+      <input type="email" id="notify-customer-email" class="global-search-input" style="border-radius: var(--radius-md); padding: 10px 14px; background: #FFF; width: 100%; border: 1px solid var(--border-gold);" placeholder="Enter patron email address" required>
+      <span style="display: block; font-size: 11px; color: var(--text-muted); margin-top: 5px;">
+        The official collection docket with boutique location & hours will be delivered to this address.
+      </span>
+    </div>
+
+    <!-- Actions (Prompt buttons) -->
+    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+      <button type="button" class="btn-white-outline" onclick="closeNotifyPromptModal()" style="padding: 10px 18px; font-size: 12.5px;">
+        Dismiss
+      </button>
+      <button type="button" id="btn-confirm-notify" class="btn-gold-primary" onclick="confirmSendNotification()" style="padding: 10px 22px; font-size: 12.5px;">
+        <i class="fa-solid fa-paper-plane"></i>
+        <span>Confirm & Send Email</span>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -206,6 +315,9 @@
   }
   function closeNewRepairModal() {
     document.getElementById('repairModal').style.display = 'none';
+  }
+  function closeNotifyPromptModal() {
+    document.getElementById('notifyPromptModal').style.display = 'none';
   }
 </script>
 

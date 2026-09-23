@@ -861,10 +861,12 @@
   </aside>
 
   <!-- 10. LUXURY MULTI-STEP CHECKOUT MODAL -->
-  <div id="checkoutModalOverlay" class="checkout-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="checkoutModalTitle">
+  <div id="checkoutModalOverlay" class="checkout-modal-overlay" role="dialog" aria-modal="true"
+    aria-labelledby="checkoutModalTitle">
     <div class="checkout-modal-container">
       <!-- Modal Close Button -->
-      <button id="checkoutModalCloseBtn" class="checkout-modal-close" onclick="closeCheckoutModal()" aria-label="Close Checkout">
+      <button id="checkoutModalCloseBtn" class="checkout-modal-close" onclick="closeCheckoutModal()"
+        aria-label="Close Checkout">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
@@ -877,7 +879,7 @@
 
         <div class="checkout-stepper">
           <div class="checkout-stepper-progress" id="checkoutStepperProgress"></div>
-          
+
           <div class="checkout-step-node active" id="stepNode1">
             <div class="step-circle" id="stepCircle1">1</div>
             <span class="step-label">Account</span>
@@ -902,12 +904,13 @@
 
       <!-- Modal Body (Steps 1 - 5) -->
       <div class="checkout-modal-body">
-        
+
         <!-- STEP 1: MANDATORY PATRON ACCOUNT -->
         <div class="checkout-step-pane active" id="checkoutPane1">
           <div class="step-pane-header">
             <h3>VIP Patron Authentication</h3>
-            <p>To reserve bullion heirlooms and ensure white-glove insured transit, an authenticated AURUM account is mandatory.</p>
+            <p>To reserve bullion heirlooms and ensure white-glove insured transit, an authenticated AURUM account is
+              mandatory.</p>
           </div>
 
           <!-- Authenticated View (if already signed in) -->
@@ -930,7 +933,8 @@
               </button>
             </div>
             <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">
-              <i class="fa-solid fa-shield-halved text-gold"></i> Your order and insured tracking will be securely linked to your personal vault account.
+              <i class="fa-solid fa-shield-halved text-gold"></i> Your order and insured tracking will be securely
+              linked to your personal vault account.
             </p>
           </div>
 
@@ -938,16 +942,19 @@
           <div id="checkoutAuthRequired">
             <div class="auth-mandatory-notice">
               <i class="fa-solid fa-lock"></i>
-              <span><strong>Sign In or Register Required:</strong> Please authenticate your patron account before providing delivery details and finalizing your order.</span>
+              <span><strong>Sign In or Register Required:</strong> Please authenticate your patron account before
+                providing delivery details and finalizing your order.</span>
             </div>
 
             <!-- Segmented Tabs for Checkout Auth -->
             <div class="modal-tabs-bar" style="margin-bottom: 20px;">
-              <button type="button" class="modal-tab-btn active" id="checkoutTabLoginBtn" onclick="setCheckoutAuthTab('login')">
+              <button type="button" class="modal-tab-btn active" id="checkoutTabLoginBtn"
+                onclick="setCheckoutAuthTab('login')">
                 <i class="fa-solid fa-key"></i>
                 <span>Sign In</span>
               </button>
-              <button type="button" class="modal-tab-btn" id="checkoutTabRegisterBtn" onclick="setCheckoutAuthTab('register')">
+              <button type="button" class="modal-tab-btn" id="checkoutTabRegisterBtn"
+                onclick="setCheckoutAuthTab('register')">
                 <i class="fa-solid fa-user-plus"></i>
                 <span>Create VIP Account</span>
               </button>
@@ -960,7 +967,8 @@
                   <label class="form-label" for="checkoutLoginUser">Email or Username</label>
                   <div class="form-input-wrap">
                     <i class="fa-regular fa-user"></i>
-                    <input type="text" id="checkoutLoginUser" class="form-input" placeholder="vip.member@aurumjewels.lk or username" required>
+                    <input type="text" id="checkoutLoginUser" class="form-input"
+                      placeholder="vip.member@aurumjewels.lk or username" required>
                   </div>
                 </div>
 
@@ -977,7 +985,9 @@
                     <input type="checkbox" checked id="checkoutRemember">
                     <span>Keep signed in for this session</span>
                   </label>
-                  <a href="#" class="forgot-link" onclick="event.preventDefault(); showToast('Password reset link sent to registered email');">Forgot Password?</a>
+                  <a href="#" class="forgot-link"
+                    onclick="event.preventDefault(); showToast('Password reset link sent to registered email');">Forgot
+                    Password?</a>
                 </div>
 
                 <button type="submit" id="btnCheckoutLoginSubmit" class="btn-modal-submit" style="margin-bottom: 8px;">
@@ -994,7 +1004,8 @@
                   <label class="form-label" for="checkoutRegName">Full Name</label>
                   <div class="form-input-wrap">
                     <i class="fa-regular fa-id-card"></i>
-                    <input type="text" id="checkoutRegName" class="form-input" placeholder="e.g. Lady Vivienne De Silva" required>
+                    <input type="text" id="checkoutRegName" class="form-input" placeholder="e.g. Lady Vivienne De Silva"
+                      required>
                   </div>
                 </div>
 
@@ -1003,7 +1014,8 @@
                     <label class="form-label" for="checkoutRegEmail">Email Address</label>
                     <div class="form-input-wrap">
                       <i class="fa-regular fa-envelope"></i>
-                      <input type="email" id="checkoutRegEmail" class="form-input" placeholder="vivienne@luxury.com" required>
+                      <input type="email" id="checkoutRegEmail" class="form-input" placeholder="vivienne@luxury.com"
+                        required>
                     </div>
                   </div>
 
@@ -1020,7 +1032,8 @@
                   <label class="form-label" for="checkoutRegPass">Create Password</label>
                   <div class="form-input-wrap">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" id="checkoutRegPass" class="form-input" placeholder="At least 6 characters" required>
+                    <input type="password" id="checkoutRegPass" class="form-input" placeholder="At least 6 characters"
+                      required>
                   </div>
                 </div>
 
@@ -1063,7 +1076,8 @@
               <label class="form-label" for="addrStreet">Street Address & Residence / Suite *</label>
               <div class="form-input-wrap">
                 <i class="fa-solid fa-location-dot"></i>
-                <input type="text" id="addrStreet" class="form-input" placeholder="No. 42, Queen's Road, Apartment 4B" required>
+                <input type="text" id="addrStreet" class="form-input" placeholder="No. 42, Queen's Road, Apartment 4B"
+                  required>
               </div>
             </div>
 
@@ -1102,7 +1116,8 @@
               <label class="form-label" for="addrNotes">Delivery Instructions / Concierge Note (Optional)</label>
               <div class="form-input-wrap">
                 <i class="fa-regular fa-comment-dots"></i>
-                <input type="text" id="addrNotes" class="form-input" placeholder="e.g. Seal with red wax seal / Leave with concierge">
+                <input type="text" id="addrNotes" class="form-input"
+                  placeholder="e.g. Seal with red wax seal / Leave with concierge">
               </div>
             </div>
           </form>
@@ -1145,14 +1160,16 @@
             <i class="fa-solid fa-shield-heart"></i>
             <div>
               <h5>White-Glove Doorstep Settlement</h5>
-              <p>No upfront charge needed. Our insured courier will bring your luxury package in a sealed presentation box. Please inspect seal before payment.</p>
+              <p>No upfront charge needed. Our insured courier will bring your luxury package in a sealed presentation
+                box. Please inspect seal before payment.</p>
             </div>
           </div>
 
           <!-- Card Details Input Box -->
           <div id="cardDetailsBox" class="card-details-box" style="display: none;">
             <div class="card-details-header">
-              <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--gold-deep); letter-spacing: 0.05em;">
+              <span
+                style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--gold-deep); letter-spacing: 0.05em;">
                 <i class="fa-solid fa-lock"></i> 256-Bit Encrypted Card Vault
               </span>
               <div class="card-brands-row">
@@ -1270,12 +1287,18 @@
               <i class="fa-solid fa-crown"></i>
             </div>
             <h3>Your Luxury Order is Confirmed!</h3>
-            <p class="success-sub">Thank you for patronizing AURUM. Your heirloom piece has been reserved and sent to our atelier for insured dispatch.</p>
+            <p class="success-sub">Thank you for patronizing AURUM. Your heirloom piece has been reserved and sent to
+              our atelier for insured dispatch.</p>
 
             <div class="luxury-receipt-container" id="printableReceiptArea">
-              <div style="text-align: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(197, 160, 89, 0.3);">
-                <div style="font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; letter-spacing: 0.15em;">AURUM JEWELS</div>
-                <div style="font-size: 11px; color: var(--gold-deep); letter-spacing: 0.1em; text-transform: uppercase;">Official Atelier Order Memorandum</div>
+              <div
+                style="text-align: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(197, 160, 89, 0.3);">
+                <div
+                  style="font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; letter-spacing: 0.15em;">
+                  AURUM JEWELS</div>
+                <div
+                  style="font-size: 11px; color: var(--gold-deep); letter-spacing: 0.1em; text-transform: uppercase;">
+                  Official Atelier Order Memorandum</div>
               </div>
 
               <div class="receipt-meta-grid">
@@ -1299,9 +1322,13 @@
                   <label>Insured Destination</label>
                   <span id="receiptAddress">No. 42, Queen's Road, Colombo</span>
                 </div>
-                <div class="receipt-meta-item" style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; background: #FEF3C7; padding: 9px 14px; border-radius: 6px; border: 1px solid #FDE68A; margin-top: 4px;">
-                  <span style="font-size: 11.5px; font-weight: 700; color: #92400E; text-transform: uppercase;"><i class="fa-solid fa-clock-rotate-left"></i> Verification Status</span>
-                  <span id="receiptOrderStatus" style="font-size: 11.5px; font-weight: 800; color: #B45309; text-transform: uppercase;">● Pending Staff Approval</span>
+                <div class="receipt-meta-item"
+                  style="grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; background: #FEF3C7; padding: 9px 14px; border-radius: 6px; border: 1px solid #FDE68A; margin-top: 4px;">
+                  <span style="font-size: 11.5px; font-weight: 700; color: #92400E; text-transform: uppercase;"><i
+                      class="fa-solid fa-clock-rotate-left"></i> Verification Status</span>
+                  <span id="receiptOrderStatus"
+                    style="font-size: 11.5px; font-weight: 800; color: #B45309; text-transform: uppercase;">● Pending
+                    Staff Approval</span>
                 </div>
               </div>
 
@@ -1359,7 +1386,8 @@
   <!-- ==========================================
        AURUM LUXURY PRODUCT DETAIL MODAL
        ========================================== -->
-  <div class="product-detail-modal-overlay" id="productDetailModalOverlay" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="product-detail-modal-overlay" id="productDetailModalOverlay" role="dialog" aria-modal="true"
+    aria-hidden="true">
     <div class="product-detail-modal">
       <button type="button" class="detail-modal-close-btn" id="closeDetailModalBtn" aria-label="Close Product View">
         <i class="fa-solid fa-xmark"></i>
@@ -1386,7 +1414,8 @@
 
           <div class="detail-rating-row">
             <div class="stars-gold" id="modalDetailStars">
-              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
             </div>
             <span id="modalDetailRatingText">(4.9 &bull; 84 certified patron reviews)</span>
           </div>
@@ -1394,16 +1423,19 @@
           <div class="detail-price-box">
             <span class="detail-price-label">Fixed Atelier Price</span>
             <div class="detail-price-val" id="modalDetailPrice">Rs. 14,500</div>
-            <span class="detail-stock-status" id="modalDetailStock"><i class="fa-solid fa-circle-check"></i> In Stock &amp; Ready to Dispatch</span>
+            <span class="detail-stock-status" id="modalDetailStock"><i class="fa-solid fa-circle-check"></i> In Stock
+              &amp; Ready to Dispatch</span>
           </div>
 
           <div class="detail-specs-block">
             <h4>Craftsmanship &amp; Specifications</h4>
             <ul class="detail-specs-list">
-              <li><strong>Material:</strong> <span id="modalDetailMaterial">18K PVD Gold Multi-Layered Over Stainless Steel</span></li>
+              <li><strong>Material:</strong> <span id="modalDetailMaterial">18K PVD Gold Multi-Layered Over Stainless
+                  Steel</span></li>
               <li><strong>Finish:</strong> <span>Brushed &amp; Mirror Polished Champagne Luster</span></li>
               <li><strong>Packaging:</strong> <span>Velvet AURUM Presentation Box with Certificate</span></li>
-              <li><strong>Warranty:</strong> <span>Lifetime Color Guarantee &amp; 1-Year Craftsmanship Warranty</span></li>
+              <li><strong>Warranty:</strong> <span>Lifetime Color Guarantee &amp; 1-Year Craftsmanship Warranty</span>
+              </li>
             </ul>
           </div>
 
@@ -1412,9 +1444,11 @@
             <div class="quantity-stepper-wrap">
               <span class="qty-label">Quantity:</span>
               <div class="quantity-stepper">
-                <button type="button" class="btn-qty" id="modalQtyMinus" aria-label="Decrease quantity"><i class="fa-solid fa-minus"></i></button>
+                <button type="button" class="btn-qty" id="modalQtyMinus" aria-label="Decrease quantity"><i
+                    class="fa-solid fa-minus"></i></button>
                 <input type="number" id="modalQtyInput" class="qty-input" value="1" min="1" max="99" readonly>
-                <button type="button" class="btn-qty" id="modalQtyPlus" aria-label="Increase quantity"><i class="fa-solid fa-plus"></i></button>
+                <button type="button" class="btn-qty" id="modalQtyPlus" aria-label="Increase quantity"><i
+                    class="fa-solid fa-plus"></i></button>
               </div>
             </div>
 
@@ -1426,26 +1460,36 @@
 
           <div class="detail-dispatch-note">
             <i class="fa-solid fa-truck-fast text-gold"></i>
-            <span>Islandwide insured secure courier delivery within 24–48 hours. Cash on Delivery and Online Card payment supported.</span>
+            <span>Islandwide insured secure courier delivery within 24–48 hours. Cash on Delivery and Online Card
+              payment supported.</span>
           </div>
 
           <!-- Verified Patron Reviews Section -->
-          <div class="detail-reviews-container" style="margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(197,160,89,0.25);">
+          <div class="detail-reviews-container"
+            style="margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(197,160,89,0.25);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-              <h4 style="font-family:'Playfair Display', serif; font-size:16px; font-weight:700; color:var(--text-main); margin:0; display:flex; align-items:center; gap:8px;">
-                <i class="fa-solid fa-feather-pointed" style="color:var(--gold-primary);"></i> <span>Patron Reviews</span>
+              <h4
+                style="font-family:'Playfair Display', serif; font-size:16px; font-weight:700; color:var(--text-main); margin:0; display:flex; align-items:center; gap:8px;">
+                <i class="fa-solid fa-feather-pointed" style="color:var(--gold-primary);"></i> <span>Patron
+                  Reviews</span>
               </h4>
-              <span id="patronReviewEligibilityBadge" style="font-size:11px; font-weight:700; padding:2px 8px; border-radius:12px; background:#FAF9F6; border:1px solid rgba(197,160,89,0.3); color:var(--gold-deep);"></span>
+              <span id="patronReviewEligibilityBadge"
+                style="font-size:11px; font-weight:700; padding:2px 8px; border-radius:12px; background:#FAF9F6; border:1px solid rgba(197,160,89,0.3); color:var(--gold-deep);"></span>
             </div>
 
             <!-- Review Submission Form (Visible only if customer purchased the item) -->
-            <div id="patronReviewFormBox" style="display:none; background:#FAF9F6; border:1.5px solid rgba(197,160,89,0.4); border-radius:12px; padding:16px; margin-bottom:16px;">
-              <div style="font-size:12px; font-weight:700; color:var(--gold-deep); text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
-                <i class="fa-solid fa-crown" style="color:var(--gold-primary);"></i> <span>Leave a Verified Patron Review</span>
+            <div id="patronReviewFormBox"
+              style="display:none; background:#FAF9F6; border:1.5px solid rgba(197,160,89,0.4); border-radius:12px; padding:16px; margin-bottom:16px;">
+              <div
+                style="font-size:12px; font-weight:700; color:var(--gold-deep); text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
+                <i class="fa-solid fa-crown" style="color:var(--gold-primary);"></i> <span>Leave a Verified Patron
+                  Review</span>
               </div>
               <div style="margin-bottom:10px;">
-                <label style="display:block; font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:4px;">Rating</label>
-                <div id="reviewRatingStarPicker" style="display:flex; gap:6px; font-size:18px; color:#D4AF37; cursor:pointer;">
+                <label
+                  style="display:block; font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:4px;">Rating</label>
+                <div id="reviewRatingStarPicker"
+                  style="display:flex; gap:6px; font-size:18px; color:#D4AF37; cursor:pointer;">
                   <i class="fa-solid fa-star star-pick" data-val="1"></i>
                   <i class="fa-solid fa-star star-pick" data-val="2"></i>
                   <i class="fa-solid fa-star star-pick" data-val="3"></i>
@@ -1454,25 +1498,79 @@
                 </div>
               </div>
               <div style="margin-bottom:12px;">
-                <label style="display:block; font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:4px;">Artisan Experience Feedback</label>
-                <textarea id="reviewCommentText" rows="2" class="global-search-input" style="width:100%; border-radius:8px; padding:8px 12px; font-size:12px; background:#FFF; resize:vertical; border:1px solid rgba(197,160,89,0.3);" placeholder="Share your experience regarding the craftsmanship, luster, and feel..."></textarea>
+                <label
+                  style="display:block; font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:4px;">Artisan
+                  Experience Feedback</label>
+                <textarea id="reviewCommentText" rows="2" class="global-search-input"
+                  style="width:100%; border-radius:8px; padding:8px 12px; font-size:12px; background:#FFF; resize:vertical; border:1px solid rgba(197,160,89,0.3);"
+                  placeholder="Share your experience regarding the craftsmanship, luster, and feel..."></textarea>
               </div>
-              <button type="button" id="btnSubmitPatronReview" class="btn-primary-gold" style="width:100%; justify-content:center; padding:10px; font-size:12px;">
+              <button type="button" id="btnSubmitPatronReview" class="btn-primary-gold"
+                style="width:100%; justify-content:center; padding:10px; font-size:12px;">
                 <i class="fa-solid fa-check"></i> <span>Publish Verified Review</span>
               </button>
             </div>
 
             <!-- Ineligibility Notice -->
-            <div id="patronReviewNoticeBox" style="display:none; font-size:11.5px; color:var(--text-muted); background:#F9FAFB; border:1px dashed #D1D5DB; border-radius:8px; padding:10px 14px; margin-bottom:14px; align-items:center; gap:8px;">
+            <div id="patronReviewNoticeBox"
+              style="display:none; font-size:11.5px; color:var(--text-muted); background:#F9FAFB; border:1px dashed #D1D5DB; border-radius:8px; padding:10px 14px; margin-bottom:14px; align-items:center; gap:8px;">
               <i class="fa-solid fa-shield-halved" style="color:var(--gold-primary);"></i>
-              <span id="patronReviewNoticeText">Reviews are exclusively reserved for patrons who have purchased this piece.</span>
+              <span id="patronReviewNoticeText">Reviews are exclusively reserved for patrons who have purchased this
+                piece.</span>
             </div>
 
             <!-- Reviews Stream -->
-            <div id="patronReviewsList" style="display:flex; flex-direction:column; gap:10px; max-height:220px; overflow-y:auto; padding-right:4px;"></div>
+            <div id="patronReviewsList"
+              style="display:flex; flex-direction:column; gap:10px; max-height:220px; overflow-y:auto; padding-right:4px;">
+            </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Floating Chatbot Widget -->
+  <div id="aurum-chatbot-container"
+    style="position: fixed; bottom: 30px; right: 30px; z-index: 9999; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+
+    <!-- Floating Button -->
+    <button id="chatbot-toggle-btn" onclick="toggleChatWindow()"
+      style="background: linear-gradient(135deg, #d4af37, #aa820a); color: #fff; border: none; border-radius: 50%; width: 60px; height: 60px; font-size: 26px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;">
+      💬
+    </button>
+
+    <!-- Chat Window -->
+    <div id="chatbot-window"
+      style="display: none; width: 360px; height: 480px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.25); flex-direction: column; overflow: hidden; border: 1px solid #e0cf9b;">
+
+      <!-- Chat Header -->
+      <div
+        style="background: #1a1a1a; color: #d4af37; padding: 14px 18px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #d4af37;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span>✨</span>
+          <span style="font-size: 16px; letter-spacing: 0.5px;">Aurum Assistant</span>
+        </div>
+        <span onclick="toggleChatWindow()" style="cursor: pointer; font-size: 18px; color: #bbb;">✕</span>
+      </div>
+
+      <!-- Chat Messages Body -->
+      <div id="chatbot-messages"
+        style="flex: 1; padding: 14px; overflow-y: auto; font-size: 13.5px; background: #faf9f6; display: flex; flex-direction: column; gap: 10px;">
+        <div
+          style="align-self: flex-start; background: #f0e6c8; color: #333; padding: 10px 14px; border-radius: 14px 14px 14px 2px; max-width: 80%; line-height: 1.4;">
+          ආයුබෝවන්! Aurum Jewellery වෙත සාදරයෙන් පිළිගනිමු. අද රන් මිල හෝ අපගේ ආභරණ පිළිබඳ ඕනෑම දෙයක් විමසන්න.
+        </div>
+      </div>
+
+      <!-- Input Footer -->
+      <div style="display: flex; border-top: 1px solid #eee; padding: 10px; background: #fff; gap: 8px;">
+        <input type="text" id="chatbot-input" placeholder="ප්‍රශ්නය මෙහි ලියන්න..."
+          style="flex: 1; border: 1px solid #ddd; padding: 10px 12px; border-radius: 8px; outline: none; font-size: 13.5px;"
+          onkeydown="if(event.key==='Enter') sendChatMessage()">
+        <button onclick="sendChatMessage()"
+          style="background: #d4af37; color: white; border: none; padding: 0 16px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.2s;">යවන්න</button>
+      </div>
+
     </div>
   </div>
 

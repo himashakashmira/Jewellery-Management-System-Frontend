@@ -35,6 +35,11 @@
   <!-- 2. MINIMALIST STICKY HEADER -->
   <header class="header-sticky">
     <div class="container header-container">
+      <!-- Mobile Navigation Hamburger Button -->
+      <button class="mobile-nav-toggle" id="mobileNavToggleBtn" aria-label="Toggle Navigation Menu" title="Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
       <!-- Left Navigation -->
       <nav class="nav-left">
         <a href="#heritage" class="nav-link">Heritage Gold</a>
@@ -57,7 +62,7 @@
       <div class="nav-right">
         <a href="#liveRates" class="gold-rates-pill" title="View Today's Bullion Rates">
           <i class="fa-solid fa-coins text-gold"></i>
-          <span>22K: <span class="rate-bold">Rs. 347K</span></span>
+          <span>22K: <span class="rate-bold" id="headerGoldRate22k">Rs. 347K</span></span>
         </a>
 
         <!-- Cart Trigger (Guest Shopping) -->
@@ -73,6 +78,52 @@
         </button>
       </div>
     </div>
+
+    <!-- Mobile Navigation Drawer / Slide-out Menu -->
+    <div class="mobile-nav-drawer" id="mobileNavDrawer">
+      <div class="mobile-nav-inner">
+        <div class="mobile-nav-header">
+          <div class="brand-logo-wrap" style="align-items: flex-start;">
+            <h2 class="brand-title font-serif" style="font-size: 20px;">AURUM</h2>
+            <div class="brand-subtitle">LUXURY ATELIER</div>
+          </div>
+          <button class="mobile-nav-close" id="mobileNavCloseBtn" aria-label="Close Navigation Menu">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <nav class="mobile-nav-links">
+          <a href="#heritage" class="mobile-nav-item">
+            <i class="fa-solid fa-crown"></i>
+            <span>Heritage Gold</span>
+          </a>
+          <a href="#lifestyleStore" class="mobile-nav-item">
+            <i class="fa-solid fa-gem"></i>
+            <span>Lifestyle (18K PVD)</span>
+          </a>
+          <a href="#repairs" class="mobile-nav-item">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+            <span>Artisan Restoration</span>
+          </a>
+          <a href="#liveRates" class="mobile-nav-item">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Daily Bullion Rates</span>
+          </a>
+          <a href="#boutiques" class="mobile-nav-item">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>Beliatta SriLanka</span>
+          </a>
+        </nav>
+
+        <div class="mobile-nav-actions">
+          <button class="btn-member-login-mobile" id="mobileDrawerLoginBtn">
+            <i class="fa-regular fa-user"></i>
+            <span>Member Login / Portal</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
   </header>
 
   <main>
@@ -180,13 +231,13 @@
           <div class="rate-box rate-box-highlight">
             <div class="rate-box-tag">
               <span class="karat-badge">22 Karat (91.6% Pure)</span>
-              <span class="trend-indicator"><i class="fa-solid fa-arrow-trend-up"></i> +0.45%</span>
+              <span class="trend-indicator"><i class="fa-solid fa-arrow-trend-up"></i> Live</span>
             </div>
             <div class="rate-denomination">1 Sovereign (8 Grams)</div>
-            <div class="rate-amount">Rs. 347,000</div>
+            <div class="rate-amount" id="liveRate22kSovereign">Rs. 347,000</div>
             <div class="rate-gram-subtext">
               <span>Per Gram Rate:</span>
-              <strong>Rs. 43,375</strong>
+              <strong id="liveRate22kGram">Rs. 43,375</strong>
             </div>
           </div>
 
@@ -194,13 +245,13 @@
           <div class="rate-box">
             <div class="rate-box-tag">
               <span class="karat-badge">24 Karat (99.9% Pure)</span>
-              <span class="trend-indicator"><i class="fa-solid fa-arrow-trend-up"></i> +0.38%</span>
+              <span class="trend-indicator"><i class="fa-solid fa-arrow-trend-up"></i> Live</span>
             </div>
             <div class="rate-denomination">1 Sovereign (8 Grams)</div>
-            <div class="rate-amount">Rs. 377,000</div>
+            <div class="rate-amount" id="liveRate24kSovereign">Rs. 377,000</div>
             <div class="rate-gram-subtext">
               <span>Per Gram Rate:</span>
-              <strong>Rs. 47,125</strong>
+              <strong id="liveRate24kGram">Rs. 47,125</strong>
             </div>
           </div>
 
@@ -208,13 +259,13 @@
           <div class="rate-box">
             <div class="rate-box-tag">
               <span class="karat-badge">18 Karat (75.0% Fine)</span>
-              <span class="trend-indicator"><i class="fa-solid fa-check"></i> Stable</span>
+              <span class="trend-indicator"><i class="fa-solid fa-check"></i> Benchmark</span>
             </div>
             <div class="rate-denomination">Benchmark Rate per Gram</div>
-            <div class="rate-amount">Rs. 35,340</div>
+            <div class="rate-amount" id="liveRate18kGram">Rs. 35,340</div>
             <div class="rate-gram-subtext">
               <span>Sovereign Equiv:</span>
-              <strong>Rs. 282,720</strong>
+              <strong id="liveRate18kSovereign">Rs. 282,720</strong>
             </div>
           </div>
         </div>

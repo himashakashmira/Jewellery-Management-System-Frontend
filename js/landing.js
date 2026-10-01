@@ -1,5 +1,5 @@
-// --- 1. LIVE GOLD RATES CONSTANTS (Sri Lankan Market standard) ---
-const GOLD_RATES = {
+// --- 1. LIVE GOLD RATES (Sri Lankan Market standard, dynamically synchronized) ---
+let GOLD_RATES = {
   '24K': { sovereign: 377000, gram: 47125 },
   '22K': { sovereign: 347000, gram: 43375 },
   '18K': { sovereign: 282720, gram: 35340 }
@@ -754,6 +754,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadLifestyleProducts();
   initProductDetailModal();
   initLiveRatesCalculator();
+  fetchLiveGoldRates();
   initCartDrawer();
   initLoginModal();
   initStoreFilters();
@@ -764,7 +765,158 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCart();
 });
 
-// --- 3. LIVE GOLD RATES CALCULATOR ---
+// --- 3. LIVE GOLD RATES CALCULATOR & DYNAMIC BULLION SYNC ---
+function formatBullionDate(dateInput) {
+  try {
+    const d = dateInput ? new Date(dateInput) : new Date();
+    if (isNaN(d.getTime())) return null;
+    const day = d.getDate();
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = months[d.getMonth()];
+    const year = d.getFullYear();
+    let hours = d.getHours();
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    return `${day} ${month}, ${year} (${hours}:${minutes} ${ampm})`;
+  } catch (e) {
+    return null;
+  }
+}
+
+function updateGoldRatesUI(rateData) {
+  if (!rateData) return;
+
+  const gram22 = Number(rateData.rate22K) || 43375;
+  const gram24 = Number(rateData.rate24K) || 47125;
+  const sov22 = gram22 * 8;
+  const sov24 = gram24 * 8;
+
+  // 18K fine rate benchmark (75% purity of 24K fine bullion)
+  const gram18 = Math.round(gram24 * 0.75);
+  const sov18 = gram18 * 8;
+
+  // Update in-memory rate dictionary for the calculator
+  GOLD_RATES['22K'] = { sovereign: sov22, gram: gram22 };
+  GOLD_RATES['24K'] = { sovereign: sov24, gram: gram24 };
+  GOLD_RATES['18K'] = { sovereign: sov18, gram: gram18 };
+
+  // 1. Header Navigation Live Bullion Pill
+  const headerPillRate = document.getElementById('headerGoldRate22k');
+  if (headerPillRate) {
+    headerPillRate.textContent = `Rs. ${Math.round(sov22 / 1000)}K`;
+  }
+
+  // 2. 22K Sovereign & Per Gram Display
+  const el22kSov = document.getElementById('liveRate22kSovereign');
+  if (el22kSov) {
+    el22kSov.textContent = `Rs. ${Math.round(sov22).toLocaleString('en-LK')}`;
+  }
+  const el22kGram = document.getElementById('liveRate22kGram');
+  if (el22kGram) {
+    el22kGram.textContent = `Rs. ${Math.round(gram22).toLocaleString('en-LK')}`;
+  }
+
+  // 3. 24K Sovereign & Per Gram Display
+  const el24kSov = document.getElementById('liveRate24kSovereign');
+  if (el24kSov) {
+    el24kSov.textContent = `Rs. ${Math.round(sov24).toLocaleString('en-LK')}`;
+  }
+  const el24kGram = document.getElementById('liveRate24kGram');
+  if (el24kGram) {
+    el24kGram.textContent = `Rs. ${Math.round(gram24).toLocaleString('en-LK')}`;
+  }
+
+  // 4. 18K Benchmark Gram & Sovereign Equivalent
+  const el18kGram = document.getElementById('liveRate18kGram');
+  if (el18kGram) {
+    el18kGram.textContent = `Rs. ${Math.round(gram18).toLocaleString('en-LK')}`;
+  }
+  const el18kSov = document.getElementById('liveRate18kSovereign');
+  if (el18kSov) {
+    el18kSov.textContent = `Rs. ${Math.round(sov18).toLocaleString('en-LK')}`;
+  }
+
+  // 5. Market Refreshed Timestamp Badge
+  const dateBadge = document.getElementById('liveDateBadge');
+  if (dateBadge) {
+    const formatted = formatBullionDate(rateData.updatedAt);
+    if (formatted) {
+      dateBadge.innerHTML = `<i class="fa-regular fa-calendar-check text-gold"></i> ${formatted}`;
+    }
+  }
+
+  // 6. Recalculate calculator result if already initialized
+  if (typeof window.recalculateGoldCalculator === 'function') {
+    window.recalculateGoldCalculator();
+  }
+
+  console.log('[AURUM Public] Gold rates synchronized with admin fixation:', { gram22, gram24, sov22, sov24, gram18, sov18 });
+}
+
+function fetchLiveGoldRates() {
+  // Check cached rate from localStorage for instant, zero-latency rendering
+  try {
+    const cached = localStorage.getItem('aurum_gold_rates');
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      updateGoldRatesUI(parsed);
+    }
+  } catch (e) {
+    console.warn('[AURUM Public] Error parsing cached rates:', e);
+  }
+
+  // Fetch real-time certified rate from backend
+  fetch('http://localhost:8080/api/v1/gold-rates/latest', {
+    method: 'GET',
+    headers: { 'Accept': 'application/json' }
+  })
+    .then(response => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      if (data && (data.rate22K || data.rate24K)) {
+        updateGoldRatesUI(data);
+        try {
+          localStorage.setItem('aurum_gold_rates', JSON.stringify({
+            rate22K: data.rate22K,
+            rate24K: data.rate24K,
+            updatedAt: data.updatedAt || new Date().toISOString()
+          }));
+        } catch (err) {
+          console.error('[AURUM Public] Failed to persist latest rates to storage:', err);
+        }
+      }
+    })
+    .catch(err => {
+      console.log('[AURUM Public] Notice: Backend rates fetch note (offline or baseline in use):', err.message);
+    });
+}
+
+// Instant cross-tab sync when admin commits fixation in another tab
+window.addEventListener('storage', (e) => {
+  if (e.key === 'aurum_gold_rates' && e.newValue) {
+    try {
+      const updated = JSON.parse(e.newValue);
+      updateGoldRatesUI(updated);
+    } catch (err) {
+      console.error('[AURUM Public] Storage event error:', err);
+    }
+  }
+});
+
+// Refresh rate when user switches back to the tab
+window.addEventListener('focus', () => {
+  fetchLiveGoldRates();
+});
+
+// Polling interval every 45 seconds to keep long-running public displays fresh
+setInterval(() => {
+  fetchLiveGoldRates();
+}, 45000);
+
 function initLiveRatesCalculator() {
   const karatSelect = document.getElementById('calcKarat');
   const unitSelect = document.getElementById('calcUnit');
@@ -794,6 +946,8 @@ function initLiveRatesCalculator() {
 
     resultDisplay.textContent = 'Rs. ' + Math.round(total).toLocaleString('en-US');
   }
+
+  window.recalculateGoldCalculator = recalculate;
 
   karatSelect.addEventListener('change', recalculate);
   unitSelect.addEventListener('change', recalculate);
@@ -1983,3 +2137,75 @@ window.submitAurumOrder = submitAurumOrder;
 window.printReceiptArea = printReceiptArea;
 window.finishAndCloseCheckout = finishAndCloseCheckout;
 window.updateHeaderAuthUI = updateHeaderAuthUI;
+
+// --- 15. MOBILE NAVIGATION DRAWER & BACKDROP ENGINE ---
+function initMobileNavigation() {
+  const toggleBtn = document.getElementById('mobileNavToggleBtn');
+  const closeBtn = document.getElementById('mobileNavCloseBtn');
+  const drawer = document.getElementById('mobileNavDrawer');
+  const backdrop = document.getElementById('mobileNavBackdrop');
+  const mobileLoginBtn = document.getElementById('mobileDrawerLoginBtn');
+  const navItems = document.querySelectorAll('.mobile-nav-item');
+
+  function openDrawer() {
+    if (drawer) drawer.classList.add('active');
+    if (backdrop) backdrop.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDrawer() {
+    if (drawer) drawer.classList.remove('active');
+    if (backdrop) backdrop.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      openDrawer();
+    });
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      closeDrawer();
+    });
+  }
+
+  if (backdrop) {
+    backdrop.addEventListener('click', function (e) {
+      e.stopPropagation();
+      closeDrawer();
+    });
+  }
+
+  navItems.forEach(item => {
+    item.addEventListener('click', function () {
+      closeDrawer();
+    });
+  });
+
+  if (mobileLoginBtn) {
+    mobileLoginBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      closeDrawer();
+      const headerLogin = document.getElementById('headerLoginBtn');
+      if (headerLogin) {
+        headerLogin.click();
+      }
+    });
+  }
+
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 992) {
+      closeDrawer();
+    }
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initMobileNavigation);
+} else {
+  initMobileNavigation();
+}

@@ -9,11 +9,34 @@ $(document).ready(function () {
         guardAuth();
     }
 
-    // 2. Fetch live metrics, sales ledger, and sold gold pieces from database
+    // 2. Fetch live metrics, sales ledger, sold gold pieces, and dynamic financial analytics
+    loadFinancialSummary();
+    loadMonthlyRevenueChart();
     loadExecutiveAnalytics();
     loadSalesLedger();
     loadSoldGoldItems();
     fetchHeaderRate();
+
+    // 3. Auto-update whenever sales data changes or tab refocuses
+    setInterval(function () {
+        loadFinancialSummary();
+        loadMonthlyRevenueChart();
+        loadExecutiveAnalytics();
+    }, 20000);
+
+    window.addEventListener('storage', function (e) {
+        if (e.key === 'aurum_orders' || e.key === 'aurum_gold_rates') {
+            loadFinancialSummary();
+            loadMonthlyRevenueChart();
+            loadExecutiveAnalytics();
+        }
+    });
+
+    window.addEventListener('focus', function () {
+        loadFinancialSummary();
+        loadMonthlyRevenueChart();
+        loadExecutiveAnalytics();
+    });
 });
 
 // ─── 1. Header Gold Spot Rate ────────────────────────────────────────────────
@@ -521,3 +544,185 @@ function formatDate(dStr) {
 window.viewOrderDocket = viewOrderDocket;
 window.loadSalesLedger = loadSalesLedger;
 window.loadSoldGoldItems = loadSoldGoldItems;
+window.loadFinancialSummary = loadFinancialSummary;
+window.loadMonthlyRevenueChart = loadMonthlyRevenueChart;
+
+// ─── 4. Dynamic Financial Analytics & Monthly Revenue Chart ──────────────────
+var MONTH_LABELS_DEFAULT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+var SVG_X_COORDS = [50, 122, 194, 267, 339, 411, 484, 556, 628, 701, 773, 845];
+
+function formatCompactLKR(val) {
+    if (val === null || val === undefined || isNaN(val)) return "Rs. 0";
+    var num = Number(val);
+    if (num >= 1000000) {
+        var m = num / 1000000;
+        return "Rs. " + (m % 1 === 0 ? m.toFixed(0) : m.toFixed(1)) + "M";
+    }
+    if (num >= 1000) {
+        var k = num / 1000;
+        return "Rs. " + (k % 1 === 0 ? k.toFixed(0) : k.toFixed(1)) + "K";
+    }
+    return "Rs. " + Math.round(num).toLocaleString("en-LK");
+}
+
+function loadFinancialSummary() {
+    var token = localStorage.getItem("token") || "";
+
+    $.ajax({
+        url: BASE_URL + "/dashboard/financial-summary",
+        method: "GET",
+        headers: token ? { "Authorization": "Bearer " + token } : {},
+        success: function (data) {
+            if (!data) return;
+
+            // 1. Current FY Revenue
+            if (data.currentYearRevenue !== undefined && data.currentYearRevenue !== null) {
+                $("#kpi-current-fy-revenue").text(formatLKR(data.currentYearRevenue));
+                if (data.currentYear) {
+                    $("#kpi-current-fy-label").text("Current FY " + data.currentYear + " Revenue");
+                }
+            }
+
+            // 2. Prior FY Benchmark
+            if (data.priorYearRevenue !== undefined && data.priorYearRevenue !== null) {
+                $("#kpi-prior-fy-revenue").text(formatLKR(data.priorYearRevenue));
+                if (data.priorYear) {
+                    $("#kpi-prior-fy-label").text("Prior FY " + data.priorYear + " Benchmark");
+                }
+            }
+
+            // 3. Net Operating Margin
+            if (data.netOperatingMargin !== null && data.netOperatingMargin !== undefined) {
+                $("#kpi-net-margin").text(data.netOperatingMargin.toFixed(1) + "% After Cost Deduction");
+            } else if (data.netOperatingMarginNote) {
+                $("#kpi-net-margin").text(data.netOperatingMarginNote);
+            }
+
+            // 4. Spot Rate
+            if (data.spotRate22K) {
+                $("#header-spot-rate").text("Rs. " + Number(data.spotRate22K).toLocaleString("en-LK") + " / g");
+            }
+
+            console.log("[Reports] Live financial summary synchronized from database:", data);
+        },
+        error: function (err) {
+            console.warn("[Reports] Notice: Could not load financial summary from API:", err);
+        }
+    });
+}
+
+function loadMonthlyRevenueChart() {
+    var token = localStorage.getItem("token") || "";
+
+    $.ajax({
+        url: BASE_URL + "/dashboard/monthly-revenue",
+        method: "GET",
+        headers: token ? { "Authorization": "Bearer " + token } : {},
+        success: function (data) {
+            if (!data) return;
+            renderMonthlyChart(data);
+        },
+        error: function (err) {
+            console.warn("[Reports] Notice: Could not load monthly revenue chart from API:", err);
+        }
+    });
+}
+
+function renderMonthlyChart(data) {
+    if (!data) return;
+
+    var currentMonthly = data.currentYearMonthly || [];
+    var priorMonthly = data.priorYearMonthly || [];
+    var maxScale = data.maxScaleValue || 8000000;
+    if (maxScale <= 0) maxScale = 8000000;
+
+    // 1. Dynamic SVG Background Grid Labels (y = 40, 95, 150, 205)
+    $("#svg-grid-label-4").text(formatCompactLKR(maxScale));
+    $("#svg-grid-label-3").text(formatCompactLKR(maxScale * 0.75));
+    $("#svg-grid-label-2").text(formatCompactLKR(maxScale * 0.50));
+    $("#svg-grid-label-1").text(formatCompactLKR(maxScale * 0.25));
+
+    function getY(val) {
+        if (val === null || val === undefined || isNaN(val)) val = 0;
+        var ratio = Math.min(1.0, Math.max(0.0, val / maxScale));
+        return 250 - (ratio * 210);
+    }
+
+    // 2. Compute Points for Current Year Curve & Area
+    var currentPoints = [];
+    var currentCoords = [];
+    for (var i = 0; i < 12; i++) {
+        var val = (currentMonthly[i] !== undefined && currentMonthly[i] !== null) ? currentMonthly[i] : 0;
+        var cx = SVG_X_COORDS[i];
+        var cy = getY(val);
+        currentCoords.push({ x: cx, y: cy, val: val, isProj: (data.isProjected && data.isProjected[i]) });
+        currentPoints.push(cx.toFixed(1) + "," + cy.toFixed(1));
+    }
+
+    var currentPointsStr = currentPoints.join(" ");
+    $("#svg-current-year-line").attr("points", currentPointsStr);
+    $("#svg-current-year-area").attr("points", "50,250 " + currentPointsStr + " 845,250");
+
+    // 3. Compute Points for Prior Year Ghost Line
+    var priorPoints = [];
+    for (var i = 0; i < 12; i++) {
+        var pVal = (priorMonthly[i] !== undefined && priorMonthly[i] !== null) ? priorMonthly[i] : 0;
+        var px = SVG_X_COORDS[i];
+        var py = getY(pVal);
+        priorPoints.push(px.toFixed(1) + "," + py.toFixed(1));
+    }
+    $("#svg-prior-year-line").attr("points", priorPoints.join(" "));
+
+    // 4. Render Dynamic SVG Data Points (Circles)
+    var circlesHtml = "";
+    for (var i = 0; i < 12; i++) {
+        var pt = currentCoords[i];
+        var isPeak = (i === data.peakMonthIndex);
+        var r = isPeak ? 6 : (pt.val > 0 ? 5 : 4);
+        var sw = isPeak ? 3.5 : (pt.val > 0 ? 3 : 2);
+        circlesHtml += '<circle cx="' + pt.x.toFixed(1) + '" cy="' + pt.y.toFixed(1) + '" r="' + r + '" fill="#FFFFFF" stroke="#C5A059" stroke-width="' + sw + '">' +
+            '<title>' + MONTH_LABELS_DEFAULT[i] + ': Rs. ' + Math.round(pt.val).toLocaleString("en-LK") + (pt.isProj ? ' (Projected)' : '') + '</title>' +
+            '</circle>';
+    }
+    $("#svg-data-points").html(circlesHtml);
+
+    // 5. Dynamic Peak Callout Badge
+    var peakIdx = (data.peakMonthIndex !== undefined && data.peakMonthIndex !== null) ? data.peakMonthIndex : 7;
+    var peakCoord = currentCoords[peakIdx] || { x: 685, y: 45 };
+    var peakVal = data.peakRevenue || 0;
+    var peakGrowth = data.peakGrowthPercentage || 0;
+    var peakName = data.peakMonthName || MONTH_LABELS_DEFAULT[peakIdx];
+
+    var badgeW = 160;
+    var badgeX = Math.max(10, Math.min(900 - badgeW - 10, peakCoord.x - (badgeW / 2)));
+    var badgeY = Math.max(8, peakCoord.y - 35);
+
+    $("#svg-peak-callout").attr("transform", "translate(" + badgeX.toFixed(1) + ", " + badgeY.toFixed(1) + ")");
+    var growthSign = peakGrowth >= 0 ? "+" : "";
+    var growthText = (peakVal > 0) ? (" (" + growthSign + Math.round(peakGrowth) + "%)") : "";
+    $("#svg-peak-text").text(peakName + " Peak: " + formatCompactLKR(peakVal) + growthText);
+
+    // 6. Dynamic Month Labels Row
+    var curMonth = new Date().getMonth(); // 0 to 11
+    var labelsHtml = "";
+    for (var i = 0; i < 12; i++) {
+        var mName = MONTH_LABELS_DEFAULT[i];
+        if (i === data.peakMonthIndex && peakVal > 0) {
+            labelsHtml += '<span style="color: var(--gold-deep); font-weight: 800;">' + mName + ' (Peak)</span>';
+        } else if (i === curMonth) {
+            labelsHtml += '<span style="font-weight: 700; color: var(--text-main);">' + mName + ' (Current)</span>';
+        } else if (data.isProjected && data.isProjected[i]) {
+            labelsHtml += '<span>' + mName + ' (Proj)</span>';
+        } else {
+            labelsHtml += '<span>' + mName + '</span>';
+        }
+    }
+    $("#chart-month-labels").html(labelsHtml);
+
+    console.log("[Reports] Live monthly revenue chart rendered from database:", {
+        currentMonthly: currentMonthly,
+        priorMonthly: priorMonthly,
+        peakMonth: peakName,
+        peakRevenue: peakVal
+    });
+}

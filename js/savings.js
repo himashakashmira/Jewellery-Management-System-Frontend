@@ -26,15 +26,32 @@ $(document).ready(function () {
             loadWalletBalance(selectedId);
         }
     });
+
+    // close modal on backdrop overlay click
+    $(document).on("click", "#depositModal", function (e) {
+        if (e.target === this) {
+            closeDepositModal(e);
+        }
+    });
+
+    // close modal on Escape key
+    $(document).on("keydown", function (e) {
+        if (e.key === "Escape" && $("#depositModal").is(":visible")) {
+            closeDepositModal(e);
+        }
+    });
 });
 
 // ─── 1. Populate #patron-selector from GET /customers/all ─────────────────────
 // Called on page load AND again each time the modal opens (to stay fresh)
 function loadPatronSelector() {
     var sel = $("#patron-selector");
+    var currentVal = sel.val();
 
-    // show a loading state while fetching the patron list
-    sel.empty().append('<option value="" disabled selected>Loading patrons...</option>');
+    // Only show loading placeholder if selector does not already have options
+    if (!sel.children("option").length || sel.children("option").length <= 1) {
+        sel.empty().append('<option value="" disabled selected>Loading patrons...</option>');
+    }
 
     // calling the get all customers api
     $.ajax({
@@ -43,7 +60,7 @@ function loadPatronSelector() {
         headers: { "Authorization": "Bearer " + localStorage.getItem("token") },
         success: function (customers) {
             // reset with placeholder first, then add each customer as an option
-            sel.empty().append('<option value="" disabled selected>Choose a registered patron...</option>');
+            sel.empty().append('<option value="" disabled ' + (!currentVal ? 'selected' : '') + '>Choose a registered patron...</option>');
 
             if (!customers || customers.length === 0) {
                 sel.append('<option value="" disabled>No patrons registered yet</option>');
@@ -54,14 +71,17 @@ function loadPatronSelector() {
             // loop through each customer and build an option: Name · Phone
             $.each(customers, function (i, c) {
                 var label = c.name + (c.contact ? "  ·  " + c.contact : "");
-                sel.append('<option value="' + c.id + '">' + label + '</option>');
+                var isSelected = (currentVal && String(c.id) === String(currentVal)) ? ' selected' : '';
+                sel.append('<option value="' + c.id + '"' + isSelected + '>' + label + '</option>');
             });
 
             console.log("[Savings] Patron selector populated:", customers.length, "patrons.");
         },
         error: function (err) {
             console.error("[Savings] Failed to load patron list:", err.status, err.statusText);
-            sel.empty().append('<option value="" disabled selected>Failed to load — try again</option>');
+            if (sel.children("option").length <= 1) {
+                sel.empty().append('<option value="" disabled selected>Failed to load — try again</option>');
+            }
         }
     });
 }
@@ -246,15 +266,33 @@ function addDepositToTable(amount, patronName, goldPreview) {
 }
 
 // ─── 7. Modal Toggle Functions ─────────────────────────────────────────────────
-function openDepositModal() {
+function openDepositModal(e) {
+    if (e && typeof e.preventDefault === "function") {
+        e.preventDefault();
+    }
+    const modal = document.getElementById("depositModal");
+    if (!modal) return;
+
+    // Prevent duplicate re-opening if already open
+    if (modal.style.display === "flex") {
+        return;
+    }
+
     // reload the live rate and refresh the patron list when modal opens
     loadLiveSpotRate();
     loadPatronSelector();
-    document.getElementById("depositModal").style.display = "flex";
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
 }
 
-function closeDepositModal() {
-    document.getElementById("depositModal").style.display = "none";
+function closeDepositModal(e) {
+    if (e && typeof e.preventDefault === "function") {
+        e.preventDefault();
+    }
+    const modal = document.getElementById("depositModal");
+    if (!modal) return;
+    modal.style.display = "none";
+    document.body.style.overflow = "";
 }
 
 // ─── 8. Toast Notification ────────────────────────────────────────────────────

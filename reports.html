@@ -228,43 +228,45 @@
 
             <!-- Horizontal Background Guide Lines -->
             <line x1="40" y1="40" x2="900" y2="40" stroke="rgba(0,0,0,0.05)" stroke-dasharray="5 5" />
-            <text x="0" y="44" fill="#98A2B3" font-size="11" font-family="Inter" font-weight="600">Rs. 8M</text>
+            <text id="svg-grid-label-4" x="0" y="44" fill="#98A2B3" font-size="11" font-family="Inter" font-weight="600">Rs. 8M</text>
 
             <line x1="40" y1="95" x2="900" y2="95" stroke="rgba(0,0,0,0.05)" stroke-dasharray="5 5" />
-            <text x="0" y="99" fill="#98A2B3" font-size="11" font-family="Inter" font-weight="600">Rs. 6M</text>
+            <text id="svg-grid-label-3" x="0" y="99" fill="#98A2B3" font-size="11" font-family="Inter" font-weight="600">Rs. 6M</text>
 
             <line x1="40" y1="150" x2="900" y2="150" stroke="rgba(0,0,0,0.05)" stroke-dasharray="5 5" />
-            <text x="0" y="154" fill="#98A2B3" font-size="11" font-family="Inter" font-weight="600">Rs. 4M</text>
+            <text id="svg-grid-label-2" x="0" y="154" fill="#98A2B3" font-size="11" font-family="Inter" font-weight="600">Rs. 4M</text>
 
             <line x1="40" y1="205" x2="900" y2="205" stroke="rgba(0,0,0,0.05)" stroke-dasharray="5 5" />
-            <text x="0" y="209" fill="#98A2B3" font-size="11" font-family="Inter" font-weight="600">Rs. 2M</text>
+            <text id="svg-grid-label-1" x="0" y="209" fill="#98A2B3" font-size="11" font-family="Inter" font-weight="600">Rs. 2M</text>
 
             <line x1="40" y1="250" x2="900" y2="250" stroke="rgba(0,0,0,0.08)" />
 
             <!-- Prior Year FY 2025 Ghost Line -->
-            <polyline points="50,225 125,220 205,210 285,195 365,185 445,175 525,160 605,140 685,115 765,130 845,110"
+            <polyline id="svg-prior-year-line" points="50,225 125,220 205,210 285,195 365,185 445,175 525,160 605,140 685,115 765,130 845,110"
                       fill="none" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="4 4" />
 
             <!-- FY 2026 Area Fill -->
-            <polygon points="50,250 50,190 125,180 205,165 285,150 365,135 445,120 525,100 605,75 685,45 765,60 845,40 845,250"
+            <polygon id="svg-current-year-area" points="50,250 50,190 125,180 205,165 285,150 365,135 445,120 525,100 605,75 685,45 765,60 845,40 845,250"
                      fill="url(#revenueGrowthGradient)" />
 
             <!-- FY 2026 Revenue Growth Line -->
-            <polyline points="50,190 125,180 205,165 285,150 365,135 445,120 525,100 605,75 685,45 765,60 845,40"
+            <polyline id="svg-current-year-line" points="50,190 125,180 205,165 285,150 365,135 445,120 525,100 605,75 685,45 765,60 845,40"
                       fill="none" stroke="#C5A059" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
 
             <!-- Highlight Data Points -->
-            <circle cx="50" cy="190" r="4.5" fill="#FFFFFF" stroke="#C5A059" stroke-width="3" />
-            <circle cx="205" cy="165" r="4.5" fill="#FFFFFF" stroke="#C5A059" stroke-width="3" />
-            <circle cx="365" cy="135" r="4.5" fill="#FFFFFF" stroke="#C5A059" stroke-width="3" />
-            <circle cx="525" cy="100" r="4.5" fill="#FFFFFF" stroke="#C5A059" stroke-width="3" />
-            <circle cx="685" cy="45" r="6" fill="#FFFFFF" stroke="#C5A059" stroke-width="3.5" />
-            <circle cx="845" cy="40" r="5" fill="#FFFFFF" stroke="#C5A059" stroke-width="3" />
+            <g id="svg-data-points">
+              <circle cx="50" cy="190" r="4.5" fill="#FFFFFF" stroke="#C5A059" stroke-width="3" />
+              <circle cx="205" cy="165" r="4.5" fill="#FFFFFF" stroke="#C5A059" stroke-width="3" />
+              <circle cx="365" cy="135" r="4.5" fill="#FFFFFF" stroke="#C5A059" stroke-width="3" />
+              <circle cx="525" cy="100" r="4.5" fill="#FFFFFF" stroke="#C5A059" stroke-width="3" />
+              <circle cx="685" cy="45" r="6" fill="#FFFFFF" stroke="#C5A059" stroke-width="3.5" />
+              <circle cx="845" cy="40" r="5" fill="#FFFFFF" stroke="#C5A059" stroke-width="3" />
+            </g>
 
             <!-- Peak Callout Badge (August Wedding Peak) -->
-            <g transform="translate(605, 10)">
+            <g id="svg-peak-callout" transform="translate(605, 10)">
               <rect width="160" height="28" rx="14" fill="#141518" filter="drop-shadow(0 4px 8px rgba(0,0,0,0.15))" />
-              <text x="80" y="18" fill="#FFFFFF" font-size="11" font-family="Inter" font-weight="700" text-anchor="middle">
+              <text id="svg-peak-text" x="80" y="18" fill="#FFFFFF" font-size="11" font-family="Inter" font-weight="700" text-anchor="middle">
                 Aug Peak: Rs. 8.4M (+24%)
               </text>
             </g>
@@ -272,7 +274,7 @@
         </div>
 
         <!-- Month Labels Row -->
-        <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600; color: var(--text-muted); margin-left: 36px; padding-top: 10px; border-top: 1px solid var(--border-subtle);">
+        <div id="chart-month-labels" style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600; color: var(--text-muted); margin-left: 36px; padding-top: 10px; border-top: 1px solid var(--border-subtle);">
           <span>Jan</span>
           <span>Feb</span>
           <span>Mar</span>
@@ -292,16 +294,16 @@
           <div style="display: flex; align-items: center; gap: 12px;">
             <div style="width: 14px; height: 14px; border-radius: 4px; background: var(--gold-primary);"></div>
             <div>
-              <span style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Current FY 2026 Revenue</span>
-              <p style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: var(--text-main); margin-top: 1px;">Rs. 48,250,000</p>
+              <span id="kpi-current-fy-label" style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Current FY 2026 Revenue</span>
+              <p id="kpi-current-fy-revenue" style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: var(--text-main); margin-top: 1px;">Rs. 48,250,000</p>
             </div>
           </div>
 
           <div style="display: flex; align-items: center; gap: 12px;">
             <div style="width: 14px; height: 14px; border-radius: 4px; background: #CBD5E1;"></div>
             <div>
-              <span style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Prior FY 2025 Benchmark</span>
-              <p style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: var(--text-muted); margin-top: 1px;">Rs. 40,750,000</p>
+              <span id="kpi-prior-fy-label" style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Prior FY 2025 Benchmark</span>
+              <p id="kpi-prior-fy-revenue" style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: var(--text-muted); margin-top: 1px;">Rs. 40,750,000</p>
             </div>
           </div>
 
@@ -311,7 +313,7 @@
             </div>
             <div>
               <span style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Net Operating Margin</span>
-              <p style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: #059669; margin-top: 1px;">24.6% After Assay</p>
+              <p id="kpi-net-margin" style="font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 800; color: #059669; margin-top: 1px;">24.6% After Assay</p>
             </div>
           </div>
         </div>

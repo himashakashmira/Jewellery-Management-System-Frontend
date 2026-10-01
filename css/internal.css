@@ -737,32 +737,66 @@ button {
   border: 1px solid rgba(217, 119, 6, 0.2);
 }
 
-/* Responsive */
-@media (max-width: 1200px) {
-  .metrics-row-4col {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* --- Base Responsive Navigation Components --- */
+.sidebar-toggle-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: #FFFFFF;
+  border: 1px solid var(--border-gold);
+  color: var(--gold-deep);
+  font-size: 16px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  flex-shrink: 0;
+  box-shadow: var(--shadow-floating-sm);
+  margin-right: 8px;
 }
 
-@media (max-width: 900px) {
-  .floating-sidebar {
-    position: fixed;
-    left: -290px;
-    height: calc(100vh - 20px);
-    margin: 10px;
-  }
-  .floating-sidebar.open {
-    left: 0;
-  }
-  .metrics-row-4col {
-    grid-template-columns: 1fr;
-  }
-  .top-header {
-    padding: 0 16px;
-  }
-  .content-body {
-    padding: 20px 16px;
-  }
+.sidebar-toggle-btn:hover {
+  background: var(--gold-subtle-bg);
+  border-color: var(--gold-primary);
+  color: var(--gold-primary);
+}
+
+.sidebar-close-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-full);
+  background: var(--bg-light-gray);
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.sidebar-close-btn:hover {
+  background: #FFFFFF;
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+
+.sidebar-backdrop.active {
+  opacity: 1;
+  visibility: visible;
 }
 
 /* ==========================================================================
@@ -1885,6 +1919,418 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 5px;
+}
+
+/* ==========================================================================
+   TABLET & MOBILE RESPONSIVE ENGINE (AURUM INTERNAL PORTAL)
+   Breakpoints:
+   - 1200px: Large Laptops / Small Desktops
+   - 1024px: Tablets Landscape / iPad Pro (Collapsible Off-Canvas Sidebar)
+   - 768px:  Tablets Portrait / iPad Standard (Fluid Stacking & Compact Headers)
+   - 540px:  Mobile Phones / Phablets (Touch Optimization & Full Flexibility)
+   - 380px:  Small Mobile Phones (Ultra Compact Navigation)
+   ========================================================================== */
+
+/* 1. Large Laptops / Desktops up to 1200px */
+@media (max-width: 1200px) {
+  .metrics-row-4col {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* 2. Tablet Devices & Below (max-width: 1024px) */
+@media (max-width: 1024px) {
+  /* Show Toggle Button and Close Button */
+  .sidebar-toggle-btn {
+    display: inline-flex !important;
+  }
+
+  .sidebar-close-btn {
+    display: inline-flex !important;
+  }
+
+  /* Off-canvas floating sidebar */
+  .floating-sidebar {
+    position: fixed !important;
+    top: 12px !important;
+    bottom: 12px !important;
+    left: -330px !important;
+    width: 290px !important;
+    max-width: 86vw !important;
+    height: calc(100vh - 24px) !important;
+    margin: 0 !important;
+    z-index: 1000 !important;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28) !important;
+    transition: left 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  .floating-sidebar.open {
+    left: 12px !important;
+  }
+
+  /* Body & App Wrapper */
+  .app-wrapper {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+
+  .main-viewport {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Top Header Bar */
+  .top-header {
+    height: 68px !important;
+    padding: 0 20px !important;
+  }
+
+  .global-search-wrap {
+    width: 220px !important;
+  }
+
+  .content-body {
+    padding: 22px 18px !important;
+    overflow-y: visible !important;
+  }
+
+  /* Dual & Split Grid Adaptations */
+  section[style*="grid-template-columns: 2fr 1fr"],
+  div[style*="grid-template-columns: 2fr 1fr"],
+  section[style*="grid-template-columns: 1.4fr 1fr"],
+  div[style*="grid-template-columns: 1.4fr 1fr"],
+  section[style*="grid-template-columns: 1.55fr 1fr"],
+  div[style*="grid-template-columns: 1.55fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  /* POS Dual-Pane Tablet & Mobile Experience */
+  .pos-viewport-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: calc(100vh - 68px) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pos-catalog-pane {
+    height: auto !important;
+    overflow: visible !important;
+    padding: 20px 18px !important;
+    border-right: none !important;
+    border-bottom: 2px solid rgba(197, 160, 89, 0.35) !important;
+  }
+
+  .pos-receipt-pane {
+    height: auto !important;
+    overflow: visible !important;
+    padding: 20px 18px !important;
+    background: #FFFFFF !important;
+  }
+
+  .floating-receipt-box {
+    position: static !important;
+    max-width: 100% !important;
+  }
+
+  .pos-grid-items {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)) !important;
+    gap: 14px !important;
+  }
+}
+
+/* 3. Tablets Portrait & Large Mobile Devices (max-width: 768px) */
+@media (max-width: 768px) {
+  .top-header {
+    height: 64px !important;
+    padding: 0 16px !important;
+  }
+
+  .header-left {
+    gap: 12px !important;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .page-breadcrumb .breadcrumb-tag {
+    font-size: 9px !important;
+    letter-spacing: 0.1em !important;
+  }
+
+  .page-breadcrumb .breadcrumb-title {
+    font-size: 16px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 180px !important;
+  }
+
+  .global-search-wrap {
+    width: 160px !important;
+  }
+
+  .global-search-input {
+    padding: 8px 12px 8px 34px !important;
+    font-size: 12px !important;
+  }
+
+  .search-shortcut-badge {
+    display: none !important;
+  }
+
+  .header-rate-ticker {
+    padding: 5px 10px !important;
+    font-size: 11px !important;
+    gap: 6px !important;
+  }
+
+  .content-body {
+    padding: 16px 14px !important;
+  }
+
+  /* 3-column Grids stack or collapse */
+  section[style*="grid-template-columns: repeat(3, 1fr)"],
+  div[style*="grid-template-columns: repeat(3, 1fr)"],
+  div[style*="grid-template-columns: 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .bullion-hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+
+  .bullion-rate-card {
+    padding: 24px 20px !important;
+  }
+
+  .bullion-price-sovereign-bold {
+    font-size: 34px !important;
+  }
+
+  /* Horizontal Repair Cards stack into modern mobile cards */
+  .repair-card-horizontal {
+    grid-template-columns: 1fr !important;
+    padding: 20px 18px !important;
+    gap: 16px !important;
+  }
+
+  .repair-actions-col {
+    flex-direction: row !important;
+    justify-content: flex-end !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  /* Table Horizontal Scrolling Wrapper */
+  .antigravity-table {
+    min-width: 620px !important;
+  }
+
+  div:has(> .antigravity-table),
+  .table-card-wrapper,
+  .patron-card-table > div,
+  .card-body-clean > div:has(> table) {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    width: 100% !important;
+  }
+
+  /* Header Card Clean Flex Wrap */
+  .card-header-clean {
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    padding: 18px 16px !important;
+  }
+}
+
+/* 4. Mobile Phones (max-width: 540px) */
+@media (max-width: 540px) {
+  .top-header {
+    height: 60px !important;
+    padding: 0 10px !important;
+    gap: 6px !important;
+  }
+
+  .header-left {
+    gap: 6px !important;
+  }
+
+  .sidebar-toggle-btn {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 15px !important;
+    margin-right: 4px !important;
+  }
+
+  .page-breadcrumb .breadcrumb-tag {
+    font-size: 8px !important;
+  }
+
+  .page-breadcrumb .breadcrumb-title {
+    font-size: 14px !important;
+    max-width: 130px !important;
+  }
+
+  .global-search-wrap {
+    display: none !important;
+  }
+
+  .header-right {
+    gap: 6px !important;
+  }
+
+  .header-rate-ticker {
+    display: none !important;
+  }
+
+  .header-action-btn {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 13px !important;
+  }
+
+  .user-profile-badge {
+    padding: 2px !important;
+    border-radius: var(--radius-full) !important;
+    background: transparent !important;
+    border: none !important;
+  }
+
+  .user-profile-badge .user-info-text,
+  .user-profile-badge i.fa-chevron-down {
+    display: none !important;
+  }
+
+  .user-avatar-gold {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 11px !important;
+  }
+
+  .content-body {
+    padding: 14px 10px !important;
+  }
+
+  /* 4-Column and 2-Column Metrics collapse to single column */
+  .metrics-row-4col {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .metric-card {
+    padding: 16px 14px !important;
+  }
+
+  .metric-val-main {
+    font-size: 22px !important;
+  }
+
+  /* Filter and Action Buttons Stacking */
+  div[style*="display: flex; justify-content: space-between"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  div[style*="display: flex; gap: 8px"],
+  div[style*="display: flex; gap: 10px"] {
+    flex-wrap: wrap !important;
+  }
+
+  /* POS Catalog Items */
+  .pos-grid-items {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .pos-item-details {
+    padding: 10px 8px !important;
+  }
+
+  .pos-item-name {
+    font-size: 12px !important;
+  }
+
+  .pos-item-spec {
+    font-size: 10px !important;
+    margin-bottom: 6px !important;
+  }
+
+  .pos-price-sans {
+    font-size: 12.5px !important;
+  }
+
+  .pos-mode-toggle-bar {
+    flex-direction: column !important;
+    gap: 6px !important;
+    padding: 6px !important;
+    border-radius: var(--radius-lg) !important;
+  }
+
+  .pos-toggle-tab {
+    width: 100% !important;
+    padding: 8px 10px !important;
+    font-size: 11.5px !important;
+    justify-content: center !important;
+  }
+
+  /* Savings Wallet Card */
+  section.antigravity-card[style*="padding: 36px 40px"] {
+    padding: 20px 16px !important;
+  }
+
+  #stat-wallet-grams {
+    font-size: 34px !important;
+  }
+
+  /* Modal Dialogs on Mobile Devices */
+  div[id*="Modal"] > div,
+  .modal-dialog,
+  .modal-content,
+  .modal-card {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+    padding: 20px 14px !important;
+    max-height: 90vh !important;
+    border-radius: var(--radius-lg) !important;
+  }
+
+  /* Modal Form 2-column and 3-column rows stack */
+  div[style*="grid-template-columns: 1fr 1fr"],
+  div[style*="grid-template-columns: 1fr 1fr 1fr"],
+  form div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Gold Fixation Calculator inputs */
+  #calc22KSovereign,
+  #calc24KSovereign {
+    font-size: 14px !important;
+    padding: 8px 10px !important;
+  }
+}
+
+/* 5. Extra Small Mobile Phones (max-width: 380px) */
+@media (max-width: 380px) {
+  .page-breadcrumb .breadcrumb-title {
+    max-width: 100px !important;
+    font-size: 13px !important;
+  }
+
+  .pos-grid-items {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 /* ==========================================================================

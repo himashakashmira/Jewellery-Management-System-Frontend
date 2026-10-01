@@ -9,7 +9,7 @@ $(document).ready(function () {
     loadLatestRates();
 });
 
-// ─── 1. Load Latest Rates (populate hero cards) ───────────────────────────────
+// Load Latest Rates.
 function loadLatestRates() {
     // calling the get latest rate api
     $.ajax({
@@ -37,6 +37,15 @@ function loadLatestRates() {
 
             // recalculate the sovereign amounts shown in modal
             calculateSovereignRates();
+
+            // Cache to localStorage for seamless cross-page sync
+            try {
+                localStorage.setItem("aurum_gold_rates", JSON.stringify({
+                    rate22K: gram22,
+                    rate24K: gram24,
+                    updatedAt: res.updatedAt || new Date().toISOString()
+                }));
+            } catch (storageErr) {}
 
             console.log("[Gold Rates] Loaded: 22K =", gram22, "| 24K =", gram24);
         },
@@ -103,6 +112,17 @@ function handleFixationSubmit(e) {
 
             // update header ticker instantly after publish
             $("#headerTicker22K").text("Rs. " + gram22.toLocaleString("en-LK") + "/g");
+
+            // Broadcast to localStorage to synchronize public landing page and open tabs
+            try {
+                localStorage.setItem("aurum_gold_rates", JSON.stringify({
+                    rate22K: gram22,
+                    rate24K: gram24,
+                    updatedAt: new Date().toISOString()
+                }));
+            } catch (storageErr) {
+                console.warn("[Gold Rates] Failed to broadcast to localStorage:", storageErr);
+            }
 
             // add new row to the fixation log table
             addRateToLogTable(gram22, gram24);

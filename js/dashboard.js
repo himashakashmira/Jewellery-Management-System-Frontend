@@ -69,6 +69,15 @@ function fetchGoldRates() {
                 $("#market-date").text(d.toLocaleDateString("en-LK", { day: "numeric", month: "short", year: "numeric" }));
             }
 
+            // Cache to localStorage for cross-page sync
+            try {
+                localStorage.setItem("aurum_gold_rates", JSON.stringify({
+                    rate22K: gramRate22,
+                    rate24K: gramRate24,
+                    updatedAt: res.updatedAt || new Date().toISOString()
+                }));
+            } catch (storageErr) {}
+
             console.log("[Dashboard] Gold rates loaded. 22K gram:", gramRate22, "| 24K gram:", gramRate24);
         },
         error: function (err) {

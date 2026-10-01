@@ -46,18 +46,84 @@ $(document).ready(function () {
         $('#sidebar-container').load('sidebar.html', function () {
             highlightActiveLink();
             applyRoleSecurity();
+            initResponsiveSidebar();
         });
     }
     applyRoleSecurity();
+    initResponsiveSidebar();
 });
 
 function highlightActiveLink() {
-    const currentPath = window.location.pathname.split("/").pop();
-    $('.nav-link').each(function () {
-        if ($(this).attr('href') === currentPath) {
+    const currentPath = window.location.pathname.split("/").pop() || "index.html";
+    $('.sidebar-link, .nav-link').each(function () {
+        const href = $(this).attr('href');
+        const page = $(this).attr('data-page');
+        if (href === currentPath || page === currentPath) {
             $(this).addClass('active');
         }
     });
+}
+
+/** Initialize mobile & tablet responsive navigation drawer and backdrop */
+function initResponsiveSidebar() {
+    // 1. Inject Hamburger toggle button into header-left if not already present
+    var headerLeft = $('.top-header .header-left');
+    if (headerLeft.length && !$('#sidebarToggleBtn').length) {
+        headerLeft.prepend(`
+            <button type="button" id="sidebarToggleBtn" class="sidebar-toggle-btn" aria-label="Toggle Navigation Menu" title="Toggle Navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        `);
+    }
+
+    // 2. Inject backdrop overlay if not present
+    if (!$('#sidebarBackdrop').length) {
+        $('body').append('<div id="sidebarBackdrop" class="sidebar-backdrop"></div>');
+    }
+
+    // 3. Bind toggle click
+    $(document).off('click', '#sidebarToggleBtn').on('click', '#sidebarToggleBtn', function (e) {
+        e.stopPropagation();
+        toggleSidebar();
+    });
+
+    // 4. Bind close button & backdrop click
+    $(document).off('click', '#sidebarCloseBtn, #sidebarBackdrop').on('click', '#sidebarCloseBtn, #sidebarBackdrop', function (e) {
+        e.stopPropagation();
+        closeSidebar();
+    });
+
+    // 5. Close sidebar when clicking links on mobile/tablet
+    $(document).off('click', '.sidebar-link').on('click', '.sidebar-link', function () {
+        if (window.innerWidth <= 1024) {
+            closeSidebar();
+        }
+    });
+
+    // 6. Automatically dismiss when resizing above tablet breakpoint
+    $(window).off('resize.sidebarResponsive').on('resize.sidebarResponsive', function () {
+        if (window.innerWidth > 1024) {
+            closeSidebar();
+        }
+    });
+}
+
+function toggleSidebar() {
+    var sidebar = $('.floating-sidebar');
+    var backdrop = $('#sidebarBackdrop');
+    if (sidebar.hasClass('open')) {
+        closeSidebar();
+    } else {
+        sidebar.addClass('open');
+        backdrop.addClass('active');
+        $('body').addClass('sidebar-opened');
+    }
+}
+
+function closeSidebar() {
+    $('.floating-sidebar').removeClass('open');
+    $('#sidebarBackdrop').removeClass('active');
+    $('body').removeClass('sidebar-opened');
 }
 
 function applyRoleSecurity() {
